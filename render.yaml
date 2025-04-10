@@ -18,4 +18,3 @@ databases:
   - name: homeservice
     databaseName: homeservice
     user: postgres
-    password: 1234
