@@ -76,19 +76,18 @@ WSGI_APPLICATION = 'HomeServices_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Homeservices1',
-        'USER': 'root',
-        # 'PASSWORD': 'admin',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
-        # 'PORT': '3306',
-        'PORT': '3308',
-        'OPTIONS': {
-            "init_command": "SET foreign_key_checks = 0;",
-        },
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'homeservice',    # The database you just created
+        'USER': 'myuser',   # Your PostgreSQL user
+        'PASSWORD': '', # Your PostgreSQL password
+        'HOST': 'localhost',
+        'PORT': '5432', 
+                    'OPTIONS': {
+            'client_encoding': 'UTF8',         },
+         # Default PostgreSQL port
     }
 }
+
 
 
 # Password validation
