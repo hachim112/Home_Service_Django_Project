@@ -12,7 +12,8 @@ from django.views import View
 from django.db import transaction
 from .models import Response, State, workers, users, ServiceCatogarys, Country, City, Feedback, ServiceRequests
 from .forms import stateform
-
+from django.contrib import messages
+from django.db.models import Q
 
 
 class Commenlib:
@@ -150,7 +151,7 @@ class home(LoginRequiredMixin, View):
         services = ServiceCatogarys.objects.all()
         feedbacks = Feedback.objects.select_related('User').all()
         all_services = list(ServiceCatogarys.objects.all())  # Convert QuerySet to a list
-        selected_services = random.sample(all_services, 3)  # Select 6 random services
+        selected_services = random.sample(all_services, 0)  # Select 6 random services
         print('services:', services)
         context = {
             'services': services,
@@ -540,25 +541,54 @@ class viewrequests(LoginRequiredMixin, View):
     
 class acceptrequest(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
-    def get(self,request,action,id):
-        request_records=ServiceRequests.objects.get(id=id)
-        
-        if action == 'accept' and request_records.status == False:
-            ServiceRequests.objects.filter(id=id).update(status=True)
-            assigned_worker=request.user
-            # worker_id=User.objects.get(username=assigned_worker)
-            userid = request.user.id
-            worker_id=workers.objects.get(admin=userid) 
-            response=Response.objects.create(requests=request_records,assigned_worker=worker_id,status=False)
-            return HttpResponseRedirect('/WorkerViewRequests')
-        
-        elif action == 'reject' and request_records.status == True:
-            ServiceRequests.objects.filter(id=id).update(status=False)
-            response=Response.objects.get(requests=request_records)
-            response.delete()
+    def get(self, request, action, id):
+        # Use transaction.atomic to ensure database consistency
+        with transaction.atomic():
+            # Get the service request and check if it's still available
+            request_record = ServiceRequests.objects.select_for_update().get(id=id)
+            
+            if action == 'accept' and request_record.status == False:
+                # Mark the request as assigned
+                request_record.status = True
+                request_record.save()
+                
+                # Get the worker details
+                userid = request.user.id
+                worker = workers.objects.get(admin=userid)
+                
+                # Create a response record linking the worker to the request
+                response = Response.objects.create(
+                    requests=request_record,
+                    assigned_worker=worker,
+                    status=False  # Not completed yet
+                )
+                
+                return HttpResponseRedirect('/WorkerpendingTask')
+            
+            elif action == 'reject' and request_record.status == True:
+                # This is for rejecting an already accepted request
+                request_record.status = False
+                request_record.save()
+                
+                response = Response.objects.get(requests=request_record)
+                response.delete()
+                
+                return HttpResponseRedirect('/WorkerpendingTask')
+            
+            else:
+                # If the request was already taken by another worker
+                if request_record.status == True:
+                    messages.error(request, "This request has already been accepted by another worker.")
+                return HttpResponseRedirect('/AvailableRequests')
+            
 
 
-            return HttpResponseRedirect('/WorkerViewRequests')
+
+
+
+
+
+
         
 class viewresponse(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
@@ -571,50 +601,60 @@ class viewresponse(LoginRequiredMixin, View):
     
 class workerviewresponse(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
-    def get(self,request):
+    def get(self, request):
         worker_id = request.user.id
-        print("worker_id", worker_id)
         assigned_responses = Response.objects.filter(assigned_worker__admin__id=worker_id)
-        Response_records=Response.objects.all()
-        context= {
-            'Response_records':assigned_responses,
+        
+        # Get user contact information for each response
+        for response in assigned_responses:
+            # Add user contact to the response object for template access
+            response.user_contact = response.requests.contact
+        
+        context = {
+            'Response_records': assigned_responses,
         }
-        return render(request,'workerpages/viewpending_task.html',context)
-
+        return render(request, 'workerpages/viewpending_task.html', context)
 
 class Viewappointment_history(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
     def get(self, request):
-            # Get the logged-in user's ID
-            user_id = request.user.id
+        # Get the logged-in user's ID
+        user_id = request.user.id
 
-            # Query request data for the logged-in user
-            requests_data = ServiceRequests.objects.filter(user__admin_id=user_id)
+        # Query request data for the logged-in user
+        requests_data = ServiceRequests.objects.filter(user__admin_id=user_id)
 
-            # Initialize lists to store request and response data
-            request_list = []
-            response_list = []
+        # Initialize lists to store request and response data
+        request_list = []
+        response_list = []
 
-            for request_data in requests_data:
-                # Check if a response exists for the request
-                response = Response.objects.filter(requests=request_data).first()
+        for request_data in requests_data:
+            # Check if a response exists for the request
+            response = Response.objects.filter(requests=request_data).first()
 
-                if response:
-                    # If a response exists, add it to the response list
-                    response_list.append(response)
-                else:
-                    # If no response exists, add the request to the request list
-                    request_list.append(request_data)
+            if response:
+                # Add worker contact information to the response
+                worker = response.assigned_worker
+                response.worker_contact = worker.contact_number
+                # Add the response to the list
+                response_list.append(response)
+            else:
+                # If no response exists, add the request to the request list
+                request_list.append(request_data)
 
-            context = {
-                'requests': request_list,
-                'responses': response_list,
-            }
+        context = {
+            'requests': request_list,
+            'responses': response_list,
+        }
 
-            return render(request, 'userpages/appointment_history.html', context)
+        return render(request, 'userpages/appointment_history.html', context)
     
 
 
+
+
+
+    
 class CancelRequest(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
     def get(self,request,id):
@@ -711,3 +751,35 @@ class reject(LoginRequiredMixin, View):
         return HttpResponseRedirect('/WorkerpendingTask')
 
         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class AvailableRequests(LoginRequiredMixin, View):
+    login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
+    def get(self, request):
+        # Get the current worker's designation
+        worker_id = request.user.id
+        worker = workers.objects.get(admin=worker_id)
+        worker_designation = worker.designation
+        
+        # Get all unassigned service requests that match the worker's designation
+        available_requests = ServiceRequests.objects.filter(
+            service__Name=worker_designation,
+            status=False  # Not yet assigned to any worker
+        )
+        
+        context = {
+            'available_requests': available_requests,
+        }
+        return render(request, 'workerpages/available_requests.html', context)

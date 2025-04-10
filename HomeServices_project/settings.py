@@ -78,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'homeservice',    # The database you just created
-        'USER': 'myuser',   # Your PostgreSQL user
-        'PASSWORD': '', # Your PostgreSQL password
+        'USER': 'postgres',   # Your PostgreSQL user
+        'PASSWORD': '1234', # Your PostgreSQL password
         'HOST': 'localhost',
         'PORT': '5432', 
                     'OPTIONS': {

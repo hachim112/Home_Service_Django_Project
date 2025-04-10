@@ -1,6 +1,10 @@
 {% extends "userpages/user_header_footer.html" %}
 {% block content %}
-{% load static %}
+{% load static %}<head>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
     <!-- Page Header Start -->
     <div class="container-fluid page-header py-5 mb-5">
         <div class="container py-5">
@@ -111,80 +115,103 @@
     </div>
     <!-- About End -->
 
+<!-- Team Section -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="section-title text-center">
+            <h1 class="display-5 mb-5">Team Members</h1>
+        </div>
+        <div class="row justify-content-center g-4">
 
-    <!-- Team Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="section-title text-center">
-                <h1 class="display-5 mb-5">Team Members</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item">
-                        <div class="overflow-hidden position-relative">
-                            <img class="img-fluid" src="{% static 'user_assets/img/team-1.jpg' %}" alt="">
-                            <div class="team-social">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
+            <!-- Team Member 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="team-member position-relative text-center">
+                    <div class="image-container position-relative overflow-hidden rounded-circle mx-auto" style="width: 220px; height: 220px;">
+                        <img src="{% static 'user_assets/img/team-1.jpg' %}" class="w-100 h-100 object-fit-cover team-img" alt="Team Member">
+                        <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+                            <div class="social-icons">
+                                <a class="btn btn-sm btn-square text-white bg-primary mx-1" href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-sm btn-square text-white bg-info mx-1" href="#"><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-sm btn-square text-white bg-danger mx-1" href="#"><i class="fab fa-instagram"></i></a>
                             </div>
-                        </div>
-                        <div class="text-center border border-5 border-light border-top-0 p-4">
-                            <h5 class="mb-0">Manu rajpet</h5>
-                            <small>HR Manager</small>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="team-item">
-                        <div class="overflow-hidden position-relative">
-                            <img class="img-fluid" src="{% static 'user_assets/img/team-2.jpg' %}" alt="">
-                            <div class="team-social">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center border border-5 border-light border-top-0 p-4">
-                            <h5 class="mb-0">Vasanth mohi</h5>
-                            <small>Co-Founder</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item">
-                        <div class="overflow-hidden position-relative">
-                            <img class="img-fluid" src="{% static 'user_assets/img/team-3.jpg' %}" alt="">
-                            <div class="team-social">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center border border-5 border-light border-top-0 p-4">
-                            <h5 class="mb-0">Devid smith</h5>
-                            <small>Founder,CEO</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="team-item">
-                        <div class="overflow-hidden position-relative">
-                            <img class="img-fluid" src="{% static 'user_assets/img/team-4.jpg' %}" alt="">
-                            <div class="team-social">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                        <div class="text-center border border-5 border-light border-top-0 p-4">
-                            <h5 class="mb-0">Karuna</h5>
-                            <small>Finance Manager</small>
-                        </div>
+                    <div class="mt-3">
+                        <h5 class="mb-0">David Smith</h5>
+                        <small class="text-muted">Founder, CEO</small>
                     </div>
                 </div>
             </div>
+
+            <!-- Team Member 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="team-member position-relative text-center">
+                    <div class="image-container position-relative overflow-hidden rounded-circle mx-auto" style="width: 220px; height: 220px;">
+                        <img src="{% static 'user_assets/img/team-3.jpg' %}" class="w-100 h-100 object-fit-cover team-img" alt="Team Member">
+                        <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+                            <div class="social-icons">
+                                <a class="btn btn-sm btn-square text-white bg-primary mx-1" href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-sm btn-square text-white bg-info mx-1" href="#"><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-sm btn-square text-white bg-danger mx-1" href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h5 class="mb-0">John Doe</h5>
+                        <small class="text-muted">Co-Founder</small>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
+</div>
+
+<!-- CSS for Hover Effect -->
+<style>
+    .image-container {
+        position: relative;
+    }
+
+    .team-img {
+        transition: 0.4s ease;
+    }
+
+    .overlay {
+        backdrop-filter: blur(5px);
+        background-color: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        transition: all 0.4s ease;
+        z-index: 1;
+    }
+
+    .social-icons {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+    }
+
+    .image-container:hover .team-img {
+        filter: blur(2px);
+        transform: scale(1.05);
+    }
+
+    .image-container:hover .overlay {
+        opacity: 1;
+    }
+
+    .image-container:hover .social-icons {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+</style>
+
+
+<!-- Team End -->
+
     <!-- Team End -->
     {% endblock %}

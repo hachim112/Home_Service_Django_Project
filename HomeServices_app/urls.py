@@ -87,5 +87,9 @@ urlpatterns = [
 
     
 
+
+
+    path('AvailableRequests/', views.AvailableRequests.as_view(), name='available_requests'),
+
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL)

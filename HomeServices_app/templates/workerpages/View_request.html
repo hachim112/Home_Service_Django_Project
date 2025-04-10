@@ -49,6 +49,7 @@
                                     <thead>
                                         <tr>
                                             <th>User </th>
+                                            <th>phone</th>
                                             <th>Reuested Service</th>
                                             <th>Problem Description </th>
                                             <th>Address</th>
@@ -66,6 +67,8 @@
 
 
                                             <td>{{records.user.admin.first_name}}</td>
+                                            <td>{{ records.requests.user.phone_number }}</td>
+
                                             <td>{{records.service.Name}}</td>
                                             <td>{{records.Problem_Description}}</td>
                                             <td>{{records.Address}} , {{records.House_No}} ,{{records.pin}}</td>

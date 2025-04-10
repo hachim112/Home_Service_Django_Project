@@ -105,6 +105,7 @@
                        <ul class="sub-menu children dropdown-menu">
                            <li><i class="menu-icon fa fa-tasks"></i><a href="{% url 'WorkerViewRequests' %}">Request</a></li>
                            <li><i class="menu-icon fa fa-area-chart"></i><a href="{% url 'WorkerpendingTask' %}">Pending tasks</a></li>
+                           <li><i class="menu-icon fa fa-bell"></i><a href="{% url 'available_requests' %}">Available Requests</a></li>
                        </ul>
                    </li>
 
@@ -128,8 +129,8 @@
         <header id="header" class="header">
             <div class="top-left">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="./"><img src="" alt="Home2Home"></a>
-                    <a class="navbar-brand hidden" href="./"><img src="" alt="Home2Home"></a>
+                    <a class="navbar-brand" href="./"><img src="/placeholder.svg" alt="Home2Home"></a>
+                    <a class="navbar-brand hidden" href="./"><img src="/placeholder.svg" alt="Home2Home"></a>
                     <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                 </div>
             </div>

@@ -1,46 +1,104 @@
-
-
-
 {% extends "userpages/user_header_footer.html" %}
 {% block content %}
 {% load static %}
 <div class="container mt-5">
     <h2>Appointment History</h2>
-<!-- Display request data in cards -->
-<h5>Request Data:</h5>
-{% for request_data in requests %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ request_data.service.Name }} || </h5>
-        <p class="card-text"> Requested Date: {{ request_data.dateofrequest|date:"Y-m-d" }}</p>
-        <p class="card-text">User: {{ request_data.user.admin.first_name }}</p>
-        <p><a class="btn btn-sm btn-warning">Status: Action needed</a>                  <a class=" btn btn-sm btn-danger" href="{% url 'CancelRequest' request_data.id %}">Cancel</a></p> 
-        <!-- Add more fields as needed -->
-    </div>
-</div>
-{% endfor %}
+    
+    <!-- Display request data in cards -->
+    <h5 class="mt-4 mb-3">Pending Requests</h5>
+    {% if requests %}
+        <div class="row">
+            {% for request_data in requests %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-warning">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">{{ request_data.service.Name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Requested Date:</strong> {{ request_data.dateofrequest|date:"F d, Y" }}</p>
+                        <p class="card-text"><strong>Problem:</strong> {{ request_data.Problem_Description }}</p>
+                        <p class="card-text"><strong>Address:</strong> {{ request_data.House_No }}, {{ request_data.Address }}, {{ request_data.city.name }}</p>
+                        <p class="card-text"><strong>Status:</strong> <span class="badge bg-warning text-dark">Waiting for worker</span></p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a class="btn btn-danger btn-sm" href="{% url 'CancelRequest' request_data.id %}">Cancel Request</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">You don't have any pending requests.</div>
+    {% endif %}
 
-<!-- Display response data in cards -->
-<h5>Response Data:</h5>
-{% for response in responses %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ response.requests.service.Name }} || Date: {{ response.requests.dateofrequest|date:"Y-m-d" }}</h5>
-        <h5>Requested Date: {{ response.Date|date:"Y-m-d" }} </h5>
-        <p class="card-text">Assigned To: {{ response.assigned_worker.admin.first_name }}</p>
-        <p class="card-text">User: {{ response.requests.user.admin.first_name }}</p>
-        <p class="card-text">Status:
-            {% if response.status == True %}
-            <span class="btn btn-sm btn-success">Completed</span>
-            {% else %}
-            <span class="btn btn-sm btn-warning">Pending</span>
-            {% endif %}
-            <!-- <a class="btn btn-sm btn-danger" href="">Cancel</a> -->
-        </p>
+    <!-- Display response data in cards -->
+    <h5 class="mt-4 mb-3">Assigned Requests</h5>
+    {% if responses %}
+        <div class="row">
+            {% for response in responses %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 {% if response.status %}border-success{% else %}border-primary{% endif %}">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">{{ response.requests.service.Name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Requested Date:</strong> {{ response.requests.dateofrequest|date:"F d, Y" }}</p>
+                        <p class="card-text"><strong>Assigned Date:</strong> {{ response.Date|date:"F d, Y" }}</p>
+                        <p class="card-text"><strong>Problem:</strong> {{ response.requests.Problem_Description }}</p>
+                        
+                        <!-- Worker Information Section -->
+                        <div class="worker-info mt-3 p-3 bg-light rounded">
+                            <h6 class="mb-2"><i class="fa fa-user-circle"></i> Worker Information</h6>
+                            <p class="mb-1"><strong>Name:</strong> {{ response.assigned_worker.admin.first_name }} {{ response.assigned_worker.admin.last_name }}</p>
+                            <p class="mb-1"><strong>Contact:</strong> {{ response.assigned_worker.contact_number }}</p>
+                            <p class="mb-0"><strong>Specialization:</strong> {{ response.assigned_worker.designation }}</p>
+                        </div>
+                        
+                        <p class="card-text mt-3"><strong>Status:</strong>
+                            {% if response.status == True %}
+                            <span class="badge bg-success">Completed</span>
+                            {% else %}
+                            <span class="badge bg-primary">In Progress</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        {% if not response.status %}
+                            <a class="btn btn-outline-secondary btn-sm" href="tel:{{ response.assigned_worker.contact_number }}">
+                                <i class="fa fa-phone"></i> Call Worker
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">You don't have any assigned requests yet.</div>
+    {% endif %}
+</div>
 
-        <!-- Add more fields as needed -->
-    </div>
-</div>
-{% endfor %}
-</div>
-{% endblock %} 
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<style>
+    .badge {
+        padding: 0.5em 0.8em;
+        font-weight: normal;
+    }
+    .worker-info {
+        border-left: 3px solid #007bff;
+    }
+    .card {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    .card-header {
+        border-bottom: 1px solid rgba(0,0,0,0.125);
+    }
+</style>
+{% endblock %}
