@@ -1,129 +1,160 @@
 {% extends "workerpages/worker_header_footer.html" %}
 {% block content %}
 {% load static %}
-<div class="content">
-    {% load static %}
-            <!-- Animated -->
-            <div class="animated fadeIn">
-                <!-- Widgets  -->
-                <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-1">
-                                        <i class="pe-7s-cash"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{completed_requests}}</span></div>
-                                            <div class="stat-heading">Total Request Finished</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<style>
+    .dashboard-container {
+        padding: 30px;
+    }
+    
+    .stat-card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+        margin-bottom: 25px;
+        background: white;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .stat-icon-container {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 24px;
+    }
+    
+    .stat-content {
+        flex: 1;
+    }
+    
+    .stat-number {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2c3e50;
+        line-height: 1;
+        margin-bottom: 5px;
+    }
+    
+    .stat-title {
+        font-size: 14px;
+        color: #7f8c8d;
+        font-weight: 500;
+    }
+    
+    .card-1 .stat-icon-container { background-color: rgba(52, 152, 219, 0.1); color: #3498db; }
+    .card-2 .stat-icon-container { background-color: rgba(46, 204, 113, 0.1); color: #2ecc71; }
+    .card-3 .stat-icon-container { background-color: rgba(241, 196, 15, 0.1); color: #f1c40f; }
+    .card-4 .stat-icon-container { background-color: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+    
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 15px;
+        }
+        
+        .stat-card {
+            margin-bottom: 15px;
+        }
+    }
+</style>
 
-                    <div class="col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-2">
-                                        <i class="pe-7s-cart"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{pending_requests}}</span></div>
-                                            <div class="stat-heading">Pending</div>
-                                        </div>
-                                    </div>
-                                </div>
+<div class="dashboard-container">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="card stat-card card-1">
+                    <div class="card-body">
+                        <div class="stat-widget-five d-flex align-items-center">
+                            <div class="stat-icon-container">
+                                <i class="fas fa-check-circle"></i>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-3">
-                                        <i class="pe-7s-browser"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{total_requests}}</span></div>
-                                            <div class="stat-heading">Total Requests</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-4">
-                                        <i class="pe-7s-users"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{total_users}}</span></div>
-                                            <div class="stat-heading">Clients</div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="stat-content">
+                                <div class="stat-number">{{completed_requests}}</div>
+                                <div class="stat-title">Total Request Finished</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal fade none-border" id="event-modal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title"><strong>Add New Event</strong></h4>
-                            </div>
-                            <div class="modal-body"></div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-success save-event waves-effect waves-light">Create event</button>
-                                <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /#event-modal -->
-                <!-- Modal - Calendar - Add Category -->
-                <div class="modal fade none-border" id="add-category">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title"><strong>Add a category </strong></h4>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                           
-                                            <input class="form-control form-white" placeholder="Enter name" type="text" name="category-name"/>
-                                        </div>
-                                        <div class="col-md-6">
-                                        
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-danger waves-effect waves-light save-category" data-dismiss="modal">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <!-- /#add-category -->
             </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card stat-card card-2">
+                    <div class="card-body">
+                        <div class="stat-widget-five d-flex align-items-center">
+                            <div class="stat-icon-container">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number">{{pending_requests}}</div>
+                                <div class="stat-title">Pending Requests</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card stat-card card-3">
+                    <div class="card-body">
+                        <div class="stat-widget-five d-flex align-items-center">
+                            <div class="stat-icon-container">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number">{{total_requests}}</div>
+                                <div class="stat-title">Total Requests</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card stat-card card-4">
+                    <div class="card-body">
+                        <div class="stat-widget-five d-flex align-items-center">
+                            <div class="stat-icon-container">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number">{{total_users}}</div>
+                                <div class="stat-title">Clients</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Animation for counter numbers
+    $(document).ready(function() {
+        $('.stat-number').each(function() {
+            var $this = $(this);
+            var target = parseInt($this.text());
+            var current = 0;
+            var increment = target / 50;
+            
+            var timer = setInterval(function() {
+                current += increment;
+                if (current >= target) {
+                    $this.text(target);
+                    clearInterval(timer);
+                } else {
+                    $this.text(Math.floor(current));
+                }
+            }, 20);
+        });
+    });
+</script>
 {% endblock %}

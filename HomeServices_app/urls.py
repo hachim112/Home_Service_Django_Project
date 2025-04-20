@@ -86,10 +86,32 @@ urlpatterns = [
     path('password-reset-complete/',PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),name='password_reset_complete'),
 
     
+ 
+    path('adminprofile/', views.adminprofile.as_view(), name='adminprofile'),
+    path('admin-settings/', views.admin_settings.as_view(), name='admin_settings'),
+    path('update-profile/', views.update_profile.as_view(), name='update_profile'),
+    path('update-address/', views.update_address.as_view(), name='update_address'),
+    path('change-password/', views.change_password.as_view(), name='change_password'),
+    path('update-profile-pic/', views.update_profile_pic.as_view(), name='update_profile_pic'),
+    path('get-states/', views.get_states, name='get_states'),
+    path('get-cities/', views.get_cities, name='get_cities'),
 
 
 
-    path('AvailableRequests/', views.AvailableRequests.as_view(), name='available_requests'),
 
-]
+
+
+    path('DeleteWorker/<int:id>', views.DeleteWorker.as_view(), name='DeleteWorker'),
+
+
+
+
+
+
+
+    
+
+
+
+    path('AvailableRequests/', views.AvailableRequests.as_view(), name='available_requests'), ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL)

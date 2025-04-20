@@ -1,225 +1,422 @@
 {% extends "adminpages/admin_header_footer.html" %}
 {% block content %}
 {% load static %}
-<div class="content">
-    {% load static %}
-            <!-- Animated -->
-            <div class="animated fadeIn">
-                <!-- Widgets  -->
-                <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-1">
-                                        <i class="pe-7s-cash"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{completed_requests}}</span></div>
-                                            <div class="stat-heading">Total Request Finished</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-2">
-                                        <i class="pe-7s-cart"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{pending_requests}}</span></div>
-                                            <div class="stat-heading">Pending</div>
-                                        </div>
-                                    </div>
-                                </div>
+<div class="container-fluid">
+    <!-- Page Title -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            <p class="text-muted">Welcome back, {{ request.user.username }}</p>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Completed Requests
                             </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ completed_requests }}</div>
                         </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-3">
-                                        <i class="pe-7s-browser"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{total_requests}}</span></div>
-                                            <div class="stat-heading">Total Requests</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-4">
-                                        <i class="pe-7s-users"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{total_users}}</span></div>
-                                            <div class="stat-heading">Clients</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-auto">
+                            <i class="fa fa-check-circle fa-2x text-success"></i>
                         </div>
                     </div>
                 </div>
-                <!-- /Widgets -->
-                <!--  Traffic  -->
-
-                <!--  /Traffic -->
-                <div class="clearfix"></div>
-                <!-- Orders -->
-                <!-- <div class="orders">
-                    <div class="row">
-                        <div class="col-xl-8">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="box-title">Requests </h4>
-                                </div>
-                                <div class="card-body--">
-                                    <div class="table-stats order-table ov-h">
-                                        <table class="table ">
-                                            <thead>
-                                                <tr>
-                                                    <th class="serial">#</th>
-                                                    <th class="avatar">Avatar</th>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                    <th>Product</th>
-                                                    <th>Quantity</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="serial">1.</td>
-                                                    <td class="avatar">
-                                                        <div class="round-img">
-                                                            <a href="#"><img class="rounded-circle" src="images/avatar/1.jpg" alt=""></a>
-                                                        </div>
-                                                    </td>
-                                                    <td> #5469 </td>
-                                                    <td>  <span class="name">Louis Stanley</span> </td>
-                                                    <td> <span class="product">iMax</span> </td>
-                                                    <td><span class="count">231</span></td>
-                                                    <td>
-                                                        <span class="badge badge-complete">Complete</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="serial">2.</td>
-                                                    <td class="avatar">
-                                                        <div class="round-img">
-                                                            <a href="#"><img class="rounded-circle" src="images/avatar/2.jpg" alt=""></a>
-                                                        </div>
-                                                    </td>
-                                                    <td> #5468 </td>
-                                                    <td>  <span class="name">Gregory Dixon</span> </td>
-                                                    <td> <span class="product">iPad</span> </td>
-                                                    <td><span class="count">250</span></td>
-                                                    <td>
-                                                        <span class="badge badge-complete">Complete</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="serial">3.</td>
-                                                    <td class="avatar">
-                                                        <div class="round-img">
-                                                            <a href="#"><img class="rounded-circle" src="images/avatar/3.jpg" alt=""></a>
-                                                        </div>
-                                                    </td>
-                                                    <td> #5467 </td>
-                                                    <td>  <span class="name">Catherine Dixon</span> </td>
-                                                    <td> <span class="product">SSD</span> </td>
-                                                    <td><span class="count">250</span></td>
-                                                    <td>
-                                                        <span class="badge badge-complete">Complete</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="serial">4.</td>
-                                                    <td class="avatar">
-                                                        <div class="round-img">
-                                                            <a href="#"><img class="rounded-circle" src="images/avatar/4.jpg" alt=""></a>
-                                                        </div>
-                                                    </td>
-                                                    <td> #5466 </td>
-                                                    <td>  <span class="name">Mary Silva</span> </td>
-                                                    <td> <span class="product">Magic Mouse</span> </td>
-                                                    <td><span class="count">250</span></td>
-                                                    <td>
-                                                        <span class="badge badge-pending">Pending</span>
-                                                    </td>
-                                                </tr>
-                                                <tr class=" pb-0">
-                                                    <td class="serial">5.</td>
-                                                    <td class="avatar pb-0">
-                                                        <div class="round-img">
-                                                            <a href="#"><img class="rounded-circle" src="images/avatar/6.jpg" alt=""></a>
-                                                        </div>
-                                                    </td>
-                                                    <td> #5465 </td>
-                                                    <td>  <span class="name">Johnny Stephens</span> </td>
-                                                    <td> <span class="product">Monitor</span> </td>
-                                                    <td><span class="count">250</span></td>
-                                                    <td>
-                                                        <span class="badge badge-complete">Complete</span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div> 
-                                </div>
-                            </div> 
-                        </div>  
-
-                 
-
-
-
-                        </div>
-                    </div>
-                </div> -->
-                <!-- /.orders -->
-                <!-- To Do and Live Chat -->
-
-                <!-- /To Do and Live Chat -->
-                <!-- Calender Chart Weather  -->
-
-                <!-- /Calender Chart Weather -->
-                <!-- Modal - Calendar - Add New Event -->
-                <div class="modal fade none-border" id="event-modal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title"><strong>Add New Event</strong></h4>
-                            </div>
-                            <div class="modal-body"></div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-success save-event waves-effect waves-light">Create event</button>
-                                <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pending Requests
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_requests }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fa fa-clock-o fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Total Requests
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_requests }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fa fa-list fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Users
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_users }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fa fa-users fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Second Row Stats -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-secondary h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                Total Workers
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_workers }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fa fa-wrench fa-2x text-secondary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts and Activity -->
+    <div class="row">
+        <!-- Service Request Trends -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Service Request Trends</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="requestsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Service Distribution -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Service Distribution</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="serviceDistributionChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                        {% for service in service_categories %}
+                        <span class="mr-2">
+
+                            <i class="fa fa-circle" style="color: {{ service.color|default:'#000' }};">
+
+                                
+                            </i> {{ service.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity and Top Workers -->
+    <div class="row">
+        <!-- Recent Activity -->
+        <!-- Recent Activity -->
+<div class="col-xl-8 col-lg-7">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
+        </div>
+        <div class="card-body">
+            <div class="activity-feed">
+                {% if recent_activities %}
+                    {% for activity in recent_activities %}
+                    <div class="feed-item">
+                        <div class="date text-muted">
+                            {% if activity.timestamp %}
+                                {{ activity.timestamp|date:"F j, Y" }}
+                            {% else %}
+                                Recent
+                            {% endif %}
+                        </div>
+                        <div class="text">
+                            <strong>{{ activity.user_name }}</strong> {{ activity.description }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-muted">No recent activities found.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+        
+        <!-- Top Workers -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Top Workers</h6>
+                </div>
+                <div class="card-body">
+                    <div class="worker-list">
+                        {% if top_workers %}
+                            {% for worker in top_workers %}
+                            <div class="worker-item d-flex align-items-center mb-3">
+                                <div class="worker-avatar bg-{{ worker.color }} text-white mr-3">
+                                    {% if worker.name %}{{ worker.name|slice:":1" }}{% else %}W{% endif %}
+                                </div>
+                                <div class="worker-info">
+                                    <h6 class="mb-0">{{ worker.name }} {{ worker.last_name }}</h6>
+                                    <div class="text-muted small">{{ worker.service_category }}</div>
+                                </div>
+                                <div class="worker-rating ml-auto">
+                                    <i class="fa fa-star text-warning"></i>
+                                    <span>{{ worker.rating }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <p class="text-muted">No rated workers found.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Card Border Left Styles */
+    .border-left-primary {
+        border-left: 4px solid #4e73df;
+    }
+    
+    .border-left-success {
+        border-left: 4px solid #1cc88a;
+    }
+    
+    .border-left-info {
+        border-left: 4px solid #36b9cc;
+    }
+    
+    .border-left-warning {
+        border-left: 4px solid #f6c23e;
+    }
+    
+    .border-left-secondary {
+        border-left: 4px solid #858796;
+    }
+    
+    /* Chart Styles */
+    .chart-area {
+        position: relative;
+        height: 300px;
+        margin: 0 auto;
+    }
+    
+    .chart-pie {
+        position: relative;
+        height: 250px;
+        margin: 0 auto;
+    }
+    
+    /* Activity Feed Styles */
+    .activity-feed {
+        padding: 15px;
+    }
+    
+    .feed-item {
+        position: relative;
+        padding-left: 30px;
+        margin-bottom: 20px;
+        border-left: 2px solid #e3e6f0;
+        padding-bottom: 15px;
+    }
+    
+    .feed-item:last-child {
+        margin-bottom: 0;
+        border-color: transparent;
+    }
+    
+    .feed-item:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -8px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #4e73df;
+    }
+    
+    .feed-item .date {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    /* Worker List Styles */
+    .worker-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    
+    .worker-rating {
+        font-weight: bold;
+    }
+    
+    /* Background colors for worker avatars */
+    .bg-primary { background-color: #4e73df !important; }
+    .bg-success { background-color: #1cc88a !important; }
+    .bg-info { background-color: #36b9cc !important; }
+    .bg-warning { background-color: #f6c23e !important; }
+    .bg-danger { background-color: #e74a3b !important; }
+    .bg-purple { background-color: #6f42c1 !important; }
+    .bg-pink { background-color: #e83e8c !important; }
+    .bg-orange { background-color: #fd7e14 !important; }
+</style>
+
+<script>
+// @ts-nocheck
+/* eslint-disable */
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // Check if Chart is defined
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js is not loaded');
+            return;
+        }
+        
+        // Prepare data for request trends chart
+        var trendLabels = [];
+        var trendData = [];
+        
+        {% for item in request_trends %}
+            trendLabels.push("{{ item.month }}");
+            trendData.push({{ item.count|default:0 }});
+        {% endfor %}
+        
+        // Create request trends chart
+        var ctx1 = document.getElementById('requestsChart');
+        if (ctx1) {
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: trendLabels,
+                    datasets: [{
+                        label: 'Service Requests',
+                        data: trendData,
+                        backgroundColor: 'rgba(78, 115, 223, 0.2)',
+                        borderColor: 'rgba(78, 115, 223, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                        pointBorderColor: '#fff',
+                        pointRadius: 4,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Prepare data for service distribution chart
+        var serviceLabels = [];
+        var serviceData = [];
+        var serviceColors = [];
+        
+        {% for service in service_categories %}
+        serviceLabels.push("{{ service.name }}");
+        serviceData.push({{ service.count|default:0 }});
+        serviceColors.push("{{ service.color }}");
+        {% endfor %}
+        
+        // Create service distribution chart
+        var ctx2 = document.getElementById('serviceDistributionChart');
+        if (ctx2) {
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: serviceLabels,
+                    datasets: [{
+                        data: serviceData,
+                        backgroundColor: serviceColors.length > 0 ? serviceColors : [
+                            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error initializing charts:', error);
+    }
+});
+</script>
 {% endblock %}
+{% block footer %}
+    {% include "adminpages/admin_footer.html" %}
+{% endblock %}  

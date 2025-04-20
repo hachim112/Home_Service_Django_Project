@@ -1,0 +1,843 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Admin Profile - fixoria</title>
+    <meta name="description" content="fixoria Admin Dashboard">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'admin_assets/assets/images/favicon.png' %}">
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4ECDC4;
+            --primary-light: #a7e4e0;
+            --secondary-color: #FF6B6B;
+            --dark-color: #292F36;
+            --light-color: #F7FFF7;
+            --gray-color: #E6EAEE;
+            --text-color: #333;
+            --sidebar-width: 250px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f9fc;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--primary-color);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+        
+        .sidebar-brand {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-brand h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-title {
+            padding: 10px 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 15px;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            position: relative;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover, 
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid white;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 25px;
+            text-align: center;
+        }
+        
+        .dropdown-toggle::after {
+            margin-left: auto;
+        }
+        
+        .sub-menu {
+            padding-left: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .sub-menu.show {
+            max-height: 500px;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+        
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-toggle {
+            margin-right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--dark-color);
+        }
+        
+        .search-form {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 8px 15px 8px 40px;
+            border: none;
+            background: var(--gray-color);
+            border-radius: 20px;
+            width: 250px;
+            font-size: 14px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        .user-area {
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification-icon {
+            position: relative;
+            margin-right: 20px;
+            font-size: 20px;
+            color: var(--dark-color);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .user-name {
+            font-weight: 500;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid var(--gray-color);
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background: white;
+            padding: 15px 20px;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Profile Styles */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-avatar {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 48px;
+            font-weight: bold;
+            margin-right: 30px;
+            overflow: hidden;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            padding: 5px 0;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .profile-avatar:hover .avatar-upload {
+            opacity: 1;
+        }
+        
+        .profile-info h3 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .profile-info p {
+            color: #777;
+            margin-bottom: 10px;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid var(--gray-color);
+            margin-bottom: 20px;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            color: #777;
+            font-weight: 500;
+            padding: 10px 20px;
+            margin-right: 10px;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .btn-save {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-save:hover {
+            background: #3dbdb5;
+            transform: translateY(-2px);
+        }
+        
+        .btn-cancel {
+            background: #f1f1f1;
+            color: #666;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: 500;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn-cancel:hover {
+            background: #e5e5e5;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                left: -250px;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: var(--sidebar-width);
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+        
+        /* Utility Classes */
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+        
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #3dbdb5;
+            border-color: #3dbdb5;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <h2>fixoria</h2>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="{% url 'admmin_home' %}" class="{% if request.path == '/admmin_home' %}active{% endif %}">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                
+                <div class="menu-title">Manage Data</div>
+                
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-users"></i>
+                        <span>Workers</span>
+                        <i class="fa fa-chevron-down ml-auto"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="{% url 'manageworker' %}">
+                                <i class="fa fa-circle-o"></i>
+                                <span>Manage Workers</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-user"></i>
+                        <span>Users</span>
+                        <i class="fa fa-chevron-down ml-auto"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="{% url 'manageusers' %}">
+                                <i class="fa fa-circle-o"></i>
+                                <span>Manage Users</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-wrench"></i>
+                        <span>Services</span>
+                        <i class="fa fa-chevron-down ml-auto"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="{% url 'AddServices' %}">
+                                <i class="fa fa-circle-o"></i>
+                                <span>Add Services</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'ManageServices' %}">
+                                <i class="fa fa-circle-o"></i>
+                                <span>Manage Services</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-map-marker"></i>
+                        <span>Address Details</span>
+                        <i class="fa fa-chevron-down ml-auto"></i>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="{% url 'ManageCountry' %}">
+                                <i class="fa fa-circle-o"></i>
+                                <span>Manage Country</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'ManageState' %}">
+                                <i class="fa fa-circle-o"></i>
+                                <span>Manage State</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'managecity' %}">
+                                <i class="fa fa-circle-o"></i>
+                                <span>Manage City</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <div class="menu-title">Business</div>
+                
+                <li>
+                    <a href="{% url 'ViewRequests' %}" class="{% if request.path == '/ViewRequests' %}active{% endif %}">
+                        <i class="fa fa-tasks"></i>
+                        <span>Requests</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="{% url 'viewresponse' %}" class="{% if request.path == '/viewresponse' %}active{% endif %}">
+                        <i class="fa fa-reply"></i>
+                        <span>Responses</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="{% url 'viewfeedbacks' %}" class="{% if request.path == '/viewfeedbacks' %}active{% endif %}">
+                        <i class="fa fa-star"></i>
+                        <span>Feedbacks</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="menu-toggle" id="menu-toggle">
+                    <i class="fa fa-bars"></i>
+                </div>
+                <div class="search-form">
+                    <i class="fa fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+            </div>
+            
+            <div class="user-area">
+                <div class="notification-icon">
+                    <i class="fa fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                
+                <div class="user-profile dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <div class="user-avatar">
+                            {{ request.user.username|first|upper }}
+                        </div>
+                        <div class="user-name">
+                            {{ request.user.username }}
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'adminprofile' %}">
+                            <i class="fa fa-user mr-2"></i> My Profile
+                        </a>
+                        <a class="dropdown-item" href="{% url 'admin_settings' %}">
+                            <i class="fa fa-cog mr-2"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">
+                            <i class="fa fa-sign-out mr-2"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>My Profile</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                {% if profile and profile.profile_pic %}
+                                    <img src="{{ profile.profile_pic.url }}" alt="{{ user.username }}">
+                                {% else %}
+                                    {{ user.username|first|upper }}
+                                {% endif %}
+                                <label for="avatar-upload" class="avatar-upload">
+                                    <i class="fa fa-camera"></i> Change
+                                </label>
+                                <input type="file" id="avatar-upload" style="display: none;" accept="image/*">
+                            </div>
+                            <div class="profile-info">
+                                <h3>{{ user.username }}</h3>
+                                <p>{{ user.email }}</p>
+                                <p><i class="fa fa-map-marker mr-2"></i>{{ profile.Address|default:"No address provided" }}</p>
+                            </div>
+                        </div>
+                        
+                        <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="personal-tab" data-toggle="tab" href="#personal" role="tab">
+                                    Personal Information
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="address-tab" data-toggle="tab" href="#address" role="tab">
+                                    Address
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab">
+                                    Settings
+                                </a>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="profileTabsContent">
+                            <!-- Personal Information Tab -->
+                            <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                                <form method="post" action="{% url 'update_profile' %}">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="username">Username</label>
+                                                <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="first_name">First Name</label>
+                                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last_name">Last Name</label>
+                                                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="phone">Phone Number</label>
+                                                <input type="text" class="form-control" id="phone" name="phone" value="{{ profile.contact_number|default:'' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-right">
+                                        <button type="button" class="btn btn-cancel">Cancel</button>
+                                        <button type="submit" class="btn btn-save">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Address Tab -->
+                            <div class="tab-pane fade" id="address" role="tabpanel">
+                                <form method="post" action="{% url 'update_address' %}">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="address">Address</label>
+                                                <textarea class="form-control" id="address" name="address" rows="3">{{ profile.Address|default:'' }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-right">
+                                        <button type="button" class="btn btn-cancel">Cancel</button>
+                                        <button type="submit" class="btn btn-save">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Settings Tab -->
+                            <div class="tab-pane fade" id="settings" role="tabpanel">
+                                <form method="post" action="{% url 'change_password' %}">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="current_password">Current Password</label>
+                                                <input type="password" class="form-control" id="current_password" name="current_password">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="new_password">New Password</label>
+                                                <input type="password" class="form-control" id="new_password" name="new_password">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="confirm_password">Confirm New Password</label>
+                                                <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-right">
+                                        <button type="button" class="btn btn-cancel">Cancel</button>
+                                        <button type="submit" class="btn btn-save">Change Password</button>
+                                    </div>
+                                </form>
+                                
+                                <hr class="my-4">
+                                
+                                <h5 class="mb-3">Account Settings</h5>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="email_notifications" checked>
+                                        <label class="custom-control-label" for="email_notifications">Email Notifications</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="sms_notifications">
+                                        <label class="custom-control-label" for="sms_notifications">SMS Notifications</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="two_factor_auth">
+                                        <label class="custom-control-label" for="two_factor_auth">Two-Factor Authentication</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group text-right">
+                                    <button type="button" class="btn btn-save">Save Settings</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>Copyright © 2023 fixoria. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Toggle sidebar
+            $('#menu-toggle').click(function() {
+                $('.sidebar').toggleClass('active');
+                $('.main-content').toggleClass('active');
+            });
+            
+            // Toggle submenu
+            $('.dropdown-toggle').click(function(e) {
+                e.preventDefault();
+                $(this).next('.sub-menu').toggleClass('show');
+            });
+            
+            // Auto-expand current submenu
+            $('.sidebar-menu a[href="' + window.location.pathname + '"]').addClass('active').parents('.sub-menu').addClass('show');
+            
+            // Profile picture upload
+            $('#avatar-upload').change(function() {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var img = $('<img>').attr('src', e.target.result);
+                        $('.profile-avatar').html(img);
+                        $('.profile-avatar').append('<label for="avatar-upload" class="avatar-upload"><i class="fa fa-camera"></i> Change</label>');
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                    
+                    var formData = new FormData();
+                    formData.append('profile_pic', this.files[0]);
+                    
+                    $.ajax({
+                        url: '{% url "update_profile_pic" %}',
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            console.log('Profile picture updated successfully');
+                        },
+                        error: function(error) {
+                            console.error('Error updating profile picture', error);
+                        }
+                    });
+                }
+            });
+        });
+        
+    </script>
+</body>
+</html>

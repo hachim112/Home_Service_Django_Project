@@ -13,7 +13,7 @@
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-12 col-lg-8 text-center">
-                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To Home2Home</h5>
+                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To fixtoria</h5>
                                 <h1 class="display-3 text-white animated slideInDown mb-4">Smart Way Easy Life...</h1>
                                 <p class="fs-5 fw-medium text-white mb-4 pb-2">Expert in Serivce. Repair. Maintenance.</p>
                                 <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
@@ -29,7 +29,7 @@
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-12 col-lg-8 text-center">
-                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To Home 2 Home</h5>
+                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To fixtoria</h5>
                                 <h1 class="display-3 text-white animated slideInDown mb-4">Best Home Services</h1>
                                 <p class="fs-5 fw-medium text-white mb-4 pb-2">Busy Home Owners can always find a maid company to do the all house cleaning work for them.</p>
                                 <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
@@ -49,7 +49,7 @@
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-12 col-lg-8 text-center">
-                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To Home 2 Home</h5>
+                                <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To fixtoria</h5>
                                 <h1 class="display-3 text-white animated slideInDown mb-4">Best Home Services</h1>
                                 <p class="fs-5 fw-medium text-white mb-4 pb-2">Busy Home Owners can always find a maid company to do the all house cleaning work for them.</p>
                                 <a href="" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Read More</a>
@@ -125,7 +125,7 @@
                         <div class="section-title text-start">
                             <h1 class="display-5 mb-4">About Us</h1>
                         </div>
-                        <p class="mb-4 pb-2">Home 2 Home was formed when our team decided to fill the vacuum for manpower in the service sector more than a year ago. Our team began by conducting surveys of potential service providers in and around Hubli, to create a handy database of ‘domestic patrol,’ as we like to refer to them.</p>
+                        <p class="mb-4 pb-2">fixtoria was formed when our team decided to fill the vacuum for manpower in the service sector more than a year ago. Our team began by conducting surveys of potential service providers in and around Hubli, to create a handy database of ‘domestic patrol,’ as we like to refer to them.</p>
                         <div class="row g-4 mb-4 pb-2">
                             <div class="col-sm-6 wow fadeIn" data-wow-delay="0.1s">
                                 <div class="d-flex align-items-center">
@@ -167,7 +167,7 @@
             <h1 class="display-5 mb-5">Our Services</h1>
         </div>
         <div class="row g-4">
-            {% for service in selected_services %}
+            {% for service in services %}
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.{{ forloop.counter0 }}s">
                 <div class="service-item">
                     <div class="overflow-hidden">
@@ -177,7 +177,7 @@
                     <div class="p-4 text-center border border-5 border-light border-top-0">
                         <h4 class="mb-3">{{ service.Name }}</h4>
                         <p>{{ service.Description|truncatewords_html:20 }}</p>
-                        <a class="fw-medium" href="{% url 'services' %}">Read More<i class="fa fa-arrow-right ms-2"></i></a>
+                        <a class="fw-medium" href="{% url 'bookservice' id=service.id %}">Book Now<i class="fa fa-arrow-right ms-2"></i></a>
                     </div>
                 </div>
             </div>
@@ -201,7 +201,7 @@
                         <div class="section-title text-start">
                             <h1 class="display-5 mb-4">Why Choose Us</h1>
                         </div>
-                        <p class="mb-4 pb-2">Home2Homeleverages algeria's vast population to provide essential domestic and office support services. With expertise and a dedicated team, we cover various needs, including housework, childcare, security, driving, and more, making us a valuable social service provider.</p>
+                        <p class="mb-4 pb-2">fixtoria leverages algeria's vast population to provide essential domestic and office support services. With expertise and a dedicated team, we cover various needs, including housework, childcare, security, driving, and more, making us a valuable social service provider.</p>
                         <div class="row g-4">
                             <div class="col-6">
                                 <div class="d-flex align-items-center">

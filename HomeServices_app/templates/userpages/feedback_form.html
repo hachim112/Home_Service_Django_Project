@@ -2,32 +2,135 @@
 {% block content %}
 {% load static %}
 
-<div class="container mt-5">
-    <h2>Provide Feedback</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-        <label for="employ">Select Employee:</label>
-            <select class="form-control" id="employ" name="employ" required>
-                <option value="" disabled selected>Select an Employee</option>
-                {% for worker in workers %}
-                    <option value="{{ worker.id }}">{{ worker.admin.first_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h2 class="mb-0 text-center">
+                        <i class="fas fa-star text-warning me-2"></i>Provide Feedback
+                    </h2>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="feedback-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mb-4">
+                            <label for="employ" class="form-label fw-bold">Select Employee:</label>
+                            <select class="form-select form-control-lg" id="employ" name="employ" required>
+                                <option value="" disabled selected>Select an Employee</option>
+                                {% for worker in workers %}
+                                    <option value="{{ worker.id }}">{{ worker.admin.first_name }} {{ worker.admin.last_name }} ({{ worker.designation }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-        <div class="form-group">
-            <label for="rating">Rating:</label>
-            <input type="number" class="form-control" id="rating" name="rating" min="0" max="5" required>
-        </div>
+                        <div class="form-group mb-4">
+                            <label for="rating" class="form-label fw-bold">Rating:</label>
+                            <div class="star-rating">
+                                <div class="stars">
+                                    <i class="far fa-star star-icon" data-rating="1"></i>
+                                    <i class="far fa-star star-icon" data-rating="2"></i>
+                                    <i class="far fa-star star-icon" data-rating="3"></i>
+                                    <i class="far fa-star star-icon" data-rating="4"></i>
+                                    <i class="far fa-star star-icon" data-rating="5"></i>
+                                </div>
+                                <input type="number" class="form-control" id="rating" name="rating" min="0" max="5" value="0" required hidden>
+                                <div class="rating-text mt-2">Click to rate</div>
+                            </div>
+                        </div>
 
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                        <div class="form-group mb-4">
+                            <label for="description" class="form-label fw-bold">Your Feedback:</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Please share your experience with our service..." required></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Submit Feedback</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'Viewappointment_history' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Appointments
+                </a>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit Feedback</button>
-    </form>
+    </div>
 </div>
 
-<!-- Include Bootstrap JS -->
+<style>
+    .feedback-form label {
+        color: #495057;
+    }
+    
+    .star-rating {
+        text-align: center;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    .stars {
+        font-size: 2rem;
+        cursor: pointer;
+    }
+    
+    .star-icon {
+        color: #e4e5e9;
+        padding: 0 5px;
+        transition: color 0.2s ease;
+    }
+    
+    .star-icon:hover,
+    .star-icon.selected {
+        color: #ffc107;
+    }
+    
+    .rating-text {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('.star-icon');
+        const ratingInput = document.getElementById('rating');
+        const ratingText = document.querySelector('.rating-text');
+        
+        const ratingDescriptions = [
+            'Click to rate',
+            'Poor',
+            'Fair',
+            'Good',
+            'Very Good',
+            'Excellent'
+        ];
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                ratingInput.value = rating;
+                
+                // Update stars
+                stars.forEach(s => {
+                    const sRating = parseInt(s.getAttribute('data-rating'));
+                    if (sRating <= rating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas', 'selected');
+                    } else {
+                        s.classList.remove('fas', 'selected');
+                        s.classList.add('far');
+                    }
+                });
+                
+                // Update text
+                ratingText.textContent = ratingDescriptions[rating];
+            });
+        });
+    });
+</script>
+
 {% endblock %}

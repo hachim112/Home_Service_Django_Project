@@ -1,81 +1,139 @@
 {% extends "userpages/user_header_footer.html" %}
 {% block content %}
 {% load static %}
-<div class="container mt-5">
-    <h2>Appointment History</h2>
-    
-    <!-- Display request data in cards -->
-    <h5 class="mt-4 mb-3">Pending Requests</h5>
-    {% if requests %}
-        <div class="row">
-            {% for request_data in requests %}
-            <div class="col-md-6 mb-4">
-                <div class="card h-100 border-warning">
-                    <div class="card-header bg-light">
-                        <h5 class="card-title mb-0">{{ request_data.service.Name }}</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text"><strong>Requested Date:</strong> {{ request_data.dateofrequest|date:"F d, Y" }}</p>
-                        <p class="card-text"><strong>Problem:</strong> {{ request_data.Problem_Description }}</p>
-                        <p class="card-text"><strong>Address:</strong> {{ request_data.House_No }}, {{ request_data.Address }}, {{ request_data.city.name }}</p>
-                        <p class="card-text"><strong>Status:</strong> <span class="badge bg-warning text-dark">Waiting for worker</span></p>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <a class="btn btn-danger btn-sm" href="{% url 'CancelRequest' request_data.id %}">Cancel Request</a>
-                    </div>
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4 d-flex align-items-center">
+                <i class="fas fa-calendar-check me-2 text-primary"></i>
+                Appointment History
+            </h2>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <ul class="nav nav-tabs card-header-tabs" id="appointmentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="true">
+                                <i class="fas fa-clock me-1"></i> Pending
+                                {% if requests %}
+                                <span class="badge bg-warning text-dark ms-1">{{ requests|length }}</span>
+                                {% endif %}
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="assigned-tab" data-bs-toggle="tab" data-bs-target="#assigned" type="button" role="tab" aria-controls="assigned" aria-selected="false">
+                                <i class="fas fa-user-check me-1"></i> Assigned
+                                {% if responses %}
+                                <span class="badge bg-primary ms-1">{{ responses|length }}</span>
+                                {% endif %}
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-info">You don't have any pending requests.</div>
-    {% endif %}
-
-    <!-- Display response data in cards -->
-    <h5 class="mt-4 mb-3">Assigned Requests</h5>
-    {% if responses %}
-        <div class="row">
-            {% for response in responses %}
-            <div class="col-md-6 mb-4">
-                <div class="card h-100 {% if response.status %}border-success{% else %}border-primary{% endif %}">
-                    <div class="card-header bg-light">
-                        <h5 class="card-title mb-0">{{ response.requests.service.Name }}</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text"><strong>Requested Date:</strong> {{ response.requests.dateofrequest|date:"F d, Y" }}</p>
-                        <p class="card-text"><strong>Assigned Date:</strong> {{ response.Date|date:"F d, Y" }}</p>
-                        <p class="card-text"><strong>Problem:</strong> {{ response.requests.Problem_Description }}</p>
-                        
-                        <!-- Worker Information Section -->
-                        <div class="worker-info mt-3 p-3 bg-light rounded">
-                            <h6 class="mb-2"><i class="fa fa-user-circle"></i> Worker Information</h6>
-                            <p class="mb-1"><strong>Name:</strong> {{ response.assigned_worker.admin.first_name }} {{ response.assigned_worker.admin.last_name }}</p>
-                            <p class="mb-1"><strong>Contact:</strong> {{ response.assigned_worker.contact_number }}</p>
-                            <p class="mb-0"><strong>Specialization:</strong> {{ response.assigned_worker.designation }}</p>
+                <div class="card-body">
+                    <div class="tab-content" id="appointmentTabsContent">
+                        <!-- Pending Requests Tab -->
+                        <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                            {% if requests %}
+                                <div class="row">
+                                    {% for request_data in requests %}
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100 border-warning position-relative">
+                                            <div class="ribbon ribbon-top-right"><span>Pending</span></div>
+                                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                                <h5 class="card-title mb-0">{{ request_data.service.Name }}</h5>
+                                                <span class="badge bg-warning text-dark">Waiting for worker</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <p class="card-text mb-1"><i class="far fa-calendar-alt text-muted me-2"></i><strong>Requested:</strong> {{ request_data.dateofrequest|date:"F d, Y" }}</p>
+                                                    <p class="card-text mb-1"><i class="fas fa-info-circle text-muted me-2"></i><strong>Problem:</strong> {{ request_data.Problem_Description }}</p>
+                                                    <p class="card-text mb-1"><i class="fas fa-map-marker-alt text-muted me-2"></i><strong>Address:</strong> {{ request_data.House_No }}, {{ request_data.Address }}, {{ request_data.city.name }}</p>
+                                                    <p class="card-text mb-1"><i class="fas fa-phone text-muted me-2"></i><strong>Contact:</strong> {{ request_data.contact }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-transparent">
+                                                <a class="btn btn-danger btn-sm" href="{% url 'CancelRequest' request_data.id %}">
+                                                    <i class="fas fa-times-circle me-1"></i> Cancel Request
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info d-flex align-items-center">
+                                    <i class="fas fa-info-circle me-3 fs-4"></i>
+                                    <div>You don't have any pending requests.</div>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <a href="{% url 'services' %}" class="btn btn-primary">
+                                        <i class="fas fa-plus-circle me-1"></i> Book a Service
+                                    </a>
+                                </div>
+                            {% endif %}
                         </div>
                         
-                        <p class="card-text mt-3"><strong>Status:</strong>
-                            {% if response.status == True %}
-                            <span class="badge bg-success">Completed</span>
+                        <!-- Assigned Requests Tab -->
+                        <div class="tab-pane fade" id="assigned" role="tabpanel" aria-labelledby="assigned-tab">
+                            {% if responses %}
+                                <div class="row">
+                                    {% for response in responses %}
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100 {% if response.status %}border-success{% else %}border-primary{% endif %} position-relative">
+                                            <div class="ribbon ribbon-top-right">
+                                                <span class="{% if response.status %}bg-success{% else %}bg-primary{% endif %}">
+                                                    {% if response.status %}Completed{% else %}In Progress{% endif %}
+                                                </span>
+                                            </div>
+                                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                                <h5 class="card-title mb-0">{{ response.requests.service.Name }}</h5>
+                                                <span class="badge {% if response.status %}bg-success{% else %}bg-primary{% endif %}">
+                                                    {% if response.status %}Completed{% else %}In Progress{% endif %}
+                                                </span>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <p class="card-text mb-1"><i class="far fa-calendar-alt text-muted me-2"></i><strong>Requested:</strong> {{ response.requests.dateofrequest|date:"F d, Y" }}</p>
+                                                    <p class="card-text mb-1"><i class="far fa-calendar-check text-muted me-2"></i><strong>Assigned:</strong> {{ response.Date|date:"F d, Y" }}</p>
+                                                    <p class="card-text mb-1"><i class="fas fa-info-circle text-muted me-2"></i><strong>Problem:</strong> {{ response.requests.Problem_Description }}</p>
+                                                </div>
+                                                
+                                                <!-- Worker Information Section -->
+                                                <div class="worker-info mt-3 p-3 bg-light rounded">
+                                                    <h6 class="mb-2"><i class="fa fa-user-circle text-primary"></i> Worker Information</h6>
+                                                    <p class="mb-1"><strong>Name:</strong> {{ response.assigned_worker.admin.first_name }} {{ response.assigned_worker.admin.last_name }}</p>
+                                                    <p class="mb-1"><strong>Contact:</strong> {{ response.assigned_worker.contact_number }}</p>
+                                                    <p class="mb-0"><strong>Specialization:</strong> {{ response.assigned_worker.designation }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-transparent">
+                                                {% if not response.status %}
+                                                    <a class="btn btn-outline-primary btn-sm" href="tel:{{ response.assigned_worker.contact_number }}">
+                                                        <i class="fa fa-phone"></i> Call Worker
+                                                    </a>
+                                                {% else %}
+                                                    <a class="btn btn-outline-success btn-sm" href="{% url 'feedback_form' %}">
+                                                        <i class="fa fa-star"></i> Leave Feedback
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             {% else %}
-                            <span class="badge bg-primary">In Progress</span>
+                                <div class="alert alert-info d-flex align-items-center">
+                                    <i class="fas fa-info-circle me-3 fs-4"></i>
+                                    <div>You don't have any assigned requests yet.</div>
+                                </div>
                             {% endif %}
-                        </p>
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        {% if not response.status %}
-                            <a class="btn btn-outline-secondary btn-sm" href="tel:{{ response.assigned_worker.contact_number }}">
-                                <i class="fa fa-phone"></i> Call Worker
-                            </a>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
-    {% else %}
-        <div class="alert alert-info">You don't have any assigned requests yet.</div>
-    {% endif %}
+    </div>
 </div>
 
 <!-- Add Font Awesome for icons -->
@@ -92,6 +150,7 @@
     .card {
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         transition: all 0.3s ease;
+        overflow: hidden;
     }
     .card:hover {
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
@@ -99,6 +158,54 @@
     }
     .card-header {
         border-bottom: 1px solid rgba(0,0,0,0.125);
+    }
+    
+    /* Ribbon style */
+    .ribbon {
+        width: 150px;
+        height: 150px;
+        overflow: hidden;
+        position: absolute;
+        z-index: 1;
+    }
+    .ribbon-top-right {
+        top: -10px;
+        right: -10px;
+    }
+    .ribbon-top-right::before,
+    .ribbon-top-right::after {
+        border-top-color: transparent;
+        border-right-color: transparent;
+    }
+    .ribbon-top-right::before {
+        top: 0;
+        left: 0;
+    }
+    .ribbon-top-right::after {
+        bottom: 0;
+        right: 0;
+    }
+    .ribbon-top-right span {
+        position: absolute;
+        top: 30px;
+        right: -25px;
+        transform: rotate(45deg);
+        width: 150px;
+        padding: 5px 0;
+        background-color: #ffc107;
+        color: #212529;
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .ribbon-top-right span.bg-success {
+        background-color: #28a745 !important;
+        color: white;
+    }
+    .ribbon-top-right span.bg-primary {
+        background-color: #007bff !important;
+        color: white;
     }
 </style>
 {% endblock %}
