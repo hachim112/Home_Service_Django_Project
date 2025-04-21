@@ -114,5 +114,48 @@ urlpatterns = [
 
 
 
-    path('AvailableRequests/', views.AvailableRequests.as_view(), name='available_requests'), ]
+    path('AvailableRequests/', views.AvailableRequests.as_view(), name='available_requests'),
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # Add these URL patterns to your urls.py file
+
+path('workerprofile/', views.workerprofile.as_view(), name='workerprofile'),
+path('edit-worker-profile/', views.edit_worker_profile.as_view(), name='edit_worker_profile'),
+path('update-worker-profile/', views.update_worker_profile.as_view(), name='update_worker_profile'),
+path('update-worker-profile-pic/', views.update_worker_profile_pic.as_view(), name='update_worker_profile_pic'),
+path('change-worker-password/', views.change_worker_password.as_view(), name='change_worker_password'),
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL)

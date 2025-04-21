@@ -128,6 +128,8 @@
             margin-bottom: 30px;
             backdrop-filter: blur(10px);
             animation: slideDown 0.5s ease;
+            position: relative;
+            z-index: 100;
         }
 
         .menu-toggle {
@@ -174,28 +176,23 @@
         /* User Profile Styles - Improved for Profile Picture */
         .user-profile {
             position: relative;
-        }
-
-        .user-profile .dropdown-toggle {
-            text-decoration: none;
-            color: var(--dark-color);
-        }
-
-        .user-profile .dropdown-toggle::after {
-            display: none; /* Remove default dropdown arrow */
+            z-index: 1050; /* Higher z-index to ensure dropdown appears on top */
         }
 
         .user-profile .user-info {
             display: flex;
             align-items: center;
-            padding: 5px;
+            padding: 8px 15px;
             border-radius: 30px;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(78, 205, 196, 0.1);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
         .user-profile .user-info:hover {
-            background: rgba(78, 205, 196, 0.1);
+            background: rgba(78, 205, 196, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         /* Profile Picture Container */
@@ -238,42 +235,85 @@
             margin-right: 5px;
         }
 
-        .dropdown-menu {
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
+        /* Improved dropdown menu styling */
+        .user-dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 10px);
+            width: 220px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            padding: 10px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1050; /* Higher z-index to ensure it appears above other elements */
             border: none;
-            margin-top: 10px;
-            min-width: 180px;
         }
 
-        .dropdown-item {
-            padding: 10px 15px;
-            font-size: 14px;
-            transition: all 0.2s ease;
+        .user-dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
 
-        .dropdown-item i {
+        .user-dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            transform: rotate(45deg);
+            border-radius: 4px;
+            box-shadow: -5px -5px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-dropdown-menu .dropdown-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown-menu .dropdown-item i {
+            margin-right: 12px;
+            font-size: 18px;
+            color: var(--primary-color);
             width: 20px;
             text-align: center;
-            margin-right: 5px;
-            color: var(--primary-color);
+            transition: all 0.3s ease;
         }
 
-        .dropdown-item:hover {
-            background: var(--primary-color);
-            color: white;
+        .user-dropdown-menu .dropdown-item:hover {
+            background: rgba(78, 205, 196, 0.1);
             transform: translateX(5px);
         }
 
-        .dropdown-item:hover i {
-            color: white;
+        .user-dropdown-menu .dropdown-item:hover i {
+            transform: scale(1.2);
         }
 
-        .dropdown-divider {
+        .user-dropdown-menu .dropdown-divider {
+            margin: 8px 0;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
-            margin: 5px 0;
+        }
+
+        .user-dropdown-menu .logout-item {
+            color: #e74c3c;
+        }
+
+        .user-dropdown-menu .logout-item i {
+            color: #e74c3c;
+        }
+
+        .user-dropdown-menu .logout-item:hover {
+            background: rgba(231, 76, 60, 0.1);
         }
 
         /* Card Styles */
@@ -325,22 +365,6 @@
             transition: background 0.2s ease;
         }
 
-        /* Buttons */
-        .btn-gradient {
-            background: var(--gradient-accent);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 8px 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-gradient:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.5);
-            color: white;
-        }
-
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -375,8 +399,15 @@
             .search-input:focus {
                 width: 150px;
             }
+            .header {
+                padding: 15px 20px;
+            }
             .user-profile .user-name {
                 display: none;
+            }
+            .user-dropdown-menu {
+                right: 0;
+                left: auto;
             }
         }
     </style>
@@ -408,27 +439,25 @@
                     <input type="text" class="search-input" placeholder="Search...">
                 </div>
             </div>
-            <div class="user-profile dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <div class="user-info">
-                        <div class="profile-pic-container">
-                            {% if request.user.is_authenticated and request.user.is_staff %}
-                                {% with worker=request.user.workers_set.first %}
-                                    {% if worker and worker.profile_pic %}
-                                        <img src="{{ worker.profile_pic.url }}" alt="{{ request.user.username }}" class="profile-pic">
-                                    {% else %}
-                                        <span class="profile-initial">{{ request.user.username|first|upper }}</span>
-                                    {% endif %}
-                                {% endwith %}
-                            {% else %}
-                                <span class="profile-initial">{{ request.user.username|first|upper }}</span>
-                            {% endif %}
-                        </div>
-                        <span class="user-name ml-2">{{ request.user.get_full_name|default:request.user.username }}</span>
-                        <i class="fa fa-angle-down ml-2"></i>
+            <div class="user-profile">
+                <div class="user-info" id="userProfileToggle">
+                    <div class="profile-pic-container">
+                        {% if request.user.is_authenticated and request.user.is_staff %}
+                            {% with worker=request.user.workers_set.first %}
+                                {% if worker and worker.profile_pic %}
+                                    <img src="{{ worker.profile_pic.url }}" alt="{{ request.user.username }}" class="profile-pic">
+                                {% else %}
+                                    <span class="profile-initial">{{ request.user.username|first|upper }}</span>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            <span class="profile-initial">{{ request.user.username|first|upper }}</span>
+                        {% endif %}
                     </div>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
+                    <span class="user-name ml-2">{{ request.user.get_full_name|default:request.user.username }}</span>
+                    <i class="fa fa-angle-down ml-2"></i>
+                </div>
+                <div class="user-dropdown-menu" id="userDropdownMenu">
                     <a class="dropdown-item" href="{% url 'workerprofile' %}">
                         <i class="fa fa-user"></i> My Profile
                     </a>
@@ -436,7 +465,7 @@
                         <i class="fa fa-cog"></i> Settings
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'logout' %}">
+                    <a class="dropdown-item logout-item" href="{% url 'logout' %}?next={% url 'index' %}">
                         <i class="fa fa-sign-out"></i> Logout
                     </a>
                 </div>
@@ -483,6 +512,25 @@
             $('.profile-pic').on('error', function() {
                 const username = $(this).attr('alt') || 'U';
                 $(this).parent().html('<span class="profile-initial">' + username.charAt(0).toUpperCase() + '</span>');
+            });
+            
+            // Custom dropdown toggle
+            $('#userProfileToggle').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $('#userDropdownMenu').toggleClass('show');
+            });
+            
+            // Close dropdown when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.user-profile').length) {
+                    $('#userDropdownMenu').removeClass('show');
+                }
+            });
+            
+            // Prevent dropdown from closing when clicking inside it
+            $('#userDropdownMenu').on('click', function(e) {
+                e.stopPropagation();
             });
         });
     </script>

@@ -5,18 +5,22 @@
     .profile-card {
         border-radius: 15px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        background: white;
     }
     .profile-sidebar {
         background: var(--primary-color);
         color: white;
         padding: 30px;
         text-align: center;
+        border-radius: 15px 0 0 15px;
     }
     .profile-img {
         width: 150px;
         height: 150px;
         border-radius: 50%;
         margin-bottom: 20px;
+        object-fit: cover;
+        border: 4px solid rgba(255, 255, 255, 0.3);
     }
     .profile-details {
         padding: 30px;
@@ -25,6 +29,7 @@
         font-weight: 600;
         margin-bottom: 20px;
         position: relative;
+        color: var(--primary-color);
     }
     .section-title:after {
         content: '';
@@ -35,31 +40,145 @@
         height: 2px;
         background: var(--primary-color);
     }
+    .info-item {
+        margin-bottom: 15px;
+    }
+    .info-label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 5px;
+    }
+    .info-value {
+        color: #333;
+    }
+    .btn-edit-profile {
+        background: var(--gradient-accent);
+        border: none;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 30px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+    .btn-edit-profile:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+    .alert {
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .alert-success {
+        background-color: rgba(40, 167, 69, 0.1);
+        border-color: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+    }
 </style>
-<div class="container-fluid">
+
+<div class="container-fluid py-4">
     <h1 class="h3 mb-4">My Profile</h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
     <div class="card profile-card">
         <div class="row no-gutters">
             <div class="col-md-4 profile-sidebar">
-                <img src="{{ data.profile_pic.url }}" alt="Profile" class="profile-img">
+                {% if data.profile_pic %}
+                    <img src="{{ data.profile_pic.url }}?t={{ timestamp }}" alt="Profile" class="profile-img">
+                {% else %}
+                    <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-img">
+                {% endif %}
                 <h5>{{ data.admin.first_name }} {{ data.admin.last_name }}</h5>
                 <p>{{ data.designation }}</p>
+                <a href="{% url 'edit_worker_profile' %}" class="btn btn-edit-profile">
+                    <i class="fa fa-edit mr-2"></i> Edit Profile
+                </a>
             </div>
             <div class="col-md-8 profile-details">
                 <h6 class="section-title">Personal Information</h6>
                 <div class="row">
-                    <div class="col-md-6 mb-3"><strong>Email:</strong> {{ data.admin.email }}</div>
-                    <div class="col-md-6 mb-3"><strong>Phone:</strong> {{ data.contact_number }}</div>
-                    <div class="col-md-6 mb-3"><strong>Created On:</strong> {{ data.admin.date_joined }}</div>
-                    <div class="col-md-6 mb-3"><strong>Gender:</strong> {{ data.gender }}</div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">{{ data.admin.email }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value">{{ data.contact_number }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">Created On</div>
+                            <div class="info-value">{{ data.admin.date_joined|date:"F d, Y" }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">Gender</div>
+                            <div class="info-value">{{ data.gender }}</div>
+                        </div>
+                    </div>
                 </div>
+                
                 <h6 class="section-title mt-4">Additional Information</h6>
                 <div class="row">
-                    <div class="col-md-6 mb-3"><strong>Address:</strong> {{ data.Address }}</div>
-                    <div class="col-md-6 mb-3"><strong>Designation:</strong> {{ data.designation }}</div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">Address</div>
+                            <div class="info-value">{{ data.Address|default:"Not provided" }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">Designation</div>
+                            <div class="info-value">{{ data.designation }}</div>
+                        </div>
+                    </div>
+                    {% if data.dob %}
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">Date of Birth</div>
+                            <div class="info-value">{{ data.dob|date:"F d, Y" }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="info-label">Account Status</div>
+                            <div class="info-value">
+                                {% if data.acc_activation %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Pending Approval</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    });
+</script>
 {% endblock %}

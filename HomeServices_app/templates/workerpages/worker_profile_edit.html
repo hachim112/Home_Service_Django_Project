@@ -1,0 +1,396 @@
+{% extends "workerpages/worker_header_footer.html" %}
+{% load static %}
+{% block content %}
+<style>
+    .profile-card {
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        background: white;
+    }
+    .profile-sidebar {
+        background: var(--primary-color);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        border-radius: 15px 0 0 15px;
+    }
+    .profile-img-container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 20px;
+    }
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+    }
+    .profile-img-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.5);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .profile-img-overlay:hover {
+        background: rgba(0, 0, 0, 0.7);
+    }
+    .profile-img-overlay i {
+        color: white;
+        font-size: 18px;
+    }
+    .profile-details {
+        padding: 30px;
+    }
+    .section-title {
+        font-weight: 600;
+        margin-bottom: 20px;
+        position: relative;
+        color: var(--primary-color);
+    }
+    .section-title:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 50px;
+        height: 2px;
+        background: var(--primary-color);
+    }
+    .form-group label {
+        font-weight: 500;
+        color: #555;
+    }
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(78, 205, 196, 0.25);
+    }
+    .btn-save {
+        background: var(--gradient-accent);
+        border: none;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 30px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+    }
+    .btn-cancel {
+        background: #f1f1f1;
+        border: none;
+        color: #555;
+        padding: 10px 25px;
+        border-radius: 30px;
+        font-weight: 500;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
+    .btn-cancel:hover {
+        background: #e5e5e5;
+    }
+    .read-only-field {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+    }
+    .nav-tabs {
+        border-bottom: 2px solid #eee;
+    }
+    .nav-tabs .nav-link {
+        border: none;
+        color: #555;
+        font-weight: 500;
+        padding: 10px 20px;
+    }
+    .nav-tabs .nav-link.active {
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--primary-color);
+        background: transparent;
+    }
+    .alert {
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .alert-success {
+        background-color: rgba(40, 167, 69, 0.1);
+        border-color: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+    }
+    .alert-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-color: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+    }
+    /* Loading spinner for profile pic upload */
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        display: none;
+    }
+    .spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 3px solid #fff;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">My Profile</h1>
+        <a href="{% url 'workerprofile' %}" class="btn btn-outline-primary">
+            <i class="fa fa-arrow-left mr-2"></i> Back to Profile
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card profile-card">
+        <div class="row no-gutters">
+            <div class="col-md-4 profile-sidebar">
+                <div class="profile-img-container">
+                    {% if data.profile_pic %}
+                        <img src="{{ data.profile_pic.url }}?t={{ timestamp }}" alt="Profile" class="profile-img" id="profile-preview">
+                    {% else %}
+                        <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-img" id="profile-preview">
+                    {% endif %}
+                    <div class="loading-overlay" id="loading-overlay">
+                        <div class="spinner"></div>
+                    </div>
+                    <label for="profile_pic" class="profile-img-overlay">
+                        <i class="fa fa-camera"></i>
+                    </label>
+                    <input type="file" id="profile_pic" name="profile_pic" style="display: none;" accept="image/*">
+                </div>
+                <h5>{{ data.admin.first_name }} {{ data.admin.last_name }}</h5>
+                <p>{{ data.designation }}</p>
+            </div>
+            <div class="col-md-8 profile-details">
+                <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="personal-tab" data-toggle="tab" href="#personal" role="tab">
+                            Personal Information
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="password-tab" data-toggle="tab" href="#password" role="tab">
+                            Change Password
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="tab-content mt-4" id="profileTabsContent">
+                    <!-- Personal Information Tab -->
+                    <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                        <form method="post" action="{% url 'update_worker_profile' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ data.admin.first_name }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ data.admin.last_name }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" value="{{ data.admin.email }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="contact_number">Phone Number</label>
+                                        <input type="text" class="form-control" id="contact_number" name="contact_number" value="{{ data.contact_number }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="gender">Gender</label>
+                                        <input type="text" class="form-control read-only-field" id="gender" value="{{ data.gender }}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="designation">Designation</label>
+                                        <input type="text" class="form-control read-only-field" id="designation" value="{{ data.designation }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="address">Address</label>
+                                        <textarea class="form-control" id="address" name="address" rows="3">{{ data.Address }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group text-right mt-4">
+                                <a href="{% url 'workerprofile' %}" class="btn btn-cancel">Cancel</a>
+                                <button type="submit" class="btn btn-save">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Change Password Tab -->
+                    <div class="tab-pane fade" id="password" role="tabpanel">
+                        <form method="post" action="{% url 'change_worker_password' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="current_password">Current Password</label>
+                                        <input type="password" class="form-control" id="current_password" name="current_password" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="new_password">New Password</label>
+                                        <input type="password" class="form-control" id="new_password" name="new_password" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="confirm_password">Confirm New Password</label>
+                                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group text-right mt-4">
+                                <a href="{% url 'workerprofile' %}" class="btn btn-cancel">Cancel</a>
+                                <button type="submit" class="btn btn-save">Change Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Handle profile picture change
+        $('#profile_pic').change(function() {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#profile-preview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+                
+                // Show loading spinner
+                $('#loading-overlay').show();
+                
+                // Create form data and submit via AJAX
+                var formData = new FormData();
+                formData.append('profile_pic', this.files[0]);
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                
+                $.ajax({
+                    url: '{% url "update_worker_profile_pic" %}',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#loading-overlay').hide();
+                        // Show success message
+                        var alertHtml = '<div class="alert alert-success">Profile picture updated successfully!</div>';
+                        if ($('.alert').length) {
+                            $('.alert').remove();
+                        }
+                        $('.d-flex.justify-content-between').after(alertHtml);
+                        
+                        // Auto-dismiss the alert after 3 seconds
+                        setTimeout(function() {
+                            $('.alert').fadeOut('slow', function() {
+                                $(this).remove();
+                            });
+                        }, 3000);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#loading-overlay').hide();
+                        // Show error message
+                        var alertHtml = '<div class="alert alert-danger">Failed to update profile picture. Please try again.</div>';
+                        if ($('.alert').length) {
+                            $('.alert').remove();
+                        }
+                        $('.d-flex.justify-content-between').after(alertHtml);
+                    }
+                });
+            }
+        });
+        
+        // Form validation for password change
+        $('form[action="{% url "change_worker_password" %}"]').on('submit', function(e) {
+            var newPassword = $('#new_password').val();
+            var confirmPassword = $('#confirm_password').val();
+            
+            if (newPassword !== confirmPassword) {
+                e.preventDefault();
+                alert('New passwords do not match!');
+                return false;
+            }
+            
+            if (newPassword.length < 8) {
+                e.preventDefault();
+                alert('Password must be at least 8 characters long!');
+                return false;
+            }
+            
+            return true;
+        });
+    });
+</script>
+{% endblock %}

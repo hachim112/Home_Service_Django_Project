@@ -102,7 +102,7 @@
                         <li><a class="dropdown-item" href="{% url 'userprofile' %}">Profile</a></li>
                         <li><a class="dropdown-item" href="{% url 'Viewappointment_history' %}">Appointments</a></li>
                         <li><hr class="dropdown-divider"> </li>
-                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'index' %}">Logout</a></li>
                     </ul>
                 </div>
             {% else %}

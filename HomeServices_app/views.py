@@ -19,6 +19,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from .models import Country, State, City  # Adjust based on your actual models
+import time
 
 
 class Commenlib:
@@ -1139,6 +1140,20 @@ def get_cities(request):
 
 
 class DeleteWorker(LoginRequiredMixin, View):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
     def get(self, request, id):
         try:
@@ -1157,3 +1172,133 @@ class DeleteWorker(LoginRequiredMixin, View):
             messages.error(request, f"An error occurred: {str(e)}")
         
         return HttpResponseRedirect('/manageworker')
+    
+
+
+
+
+
+
+
+
+class workerprofile(LoginRequiredMixin, View):
+    login_url = '/login/'
+    def get(self, request):
+        user = request.user.id
+        data = workers.objects.get(admin=user)
+        context = {
+            'data': data,
+        }
+        return render(request, 'workerpages/worker_profile.html', context)
+
+class edit_worker_profile(LoginRequiredMixin, View):
+    login_url = '/login/'
+    def get(self, request):
+        user = request.user.id
+        data = workers.objects.get(admin=user)
+        context = {
+            'data': data,
+            'timestamp': int(time.time()),  # Add timestamp to prevent image caching
+        }
+        return render(request, 'workerpages/worker_profile_edit.html', context)
+
+class update_worker_profile(LoginRequiredMixin, View):
+    login_url = '/login/'
+    def post(self, request):
+        user = request.user
+        worker = workers.objects.get(admin=user)
+        
+        # Get form data
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        contact_number = request.POST.get('contact_number')
+        address = request.POST.get('address')
+        
+        # Update user model
+        user.first_name = first_name
+        user.last_name = last_name
+        
+        # Only update email if it's changed and not already in use
+        if email != user.email:
+            # Check if email is already in use by another user
+            if User.objects.filter(email=email).exclude(id=user.id).exists():
+                messages.error(request, 'Email is already in use by another account.')
+                return redirect('edit_worker_profile')
+            user.email = email
+            user.username = email  # Assuming username is the same as email
+        
+        user.save()
+        
+        # Update worker model
+        worker.contact_number = contact_number
+        worker.Address = address
+        worker.save()
+        
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('workerprofile')
+
+class update_worker_profile_pic(LoginRequiredMixin, View):
+    login_url = '/login/'
+    def post(self, request):
+        try:
+            if 'profile_pic' in request.FILES:
+                profile_pic = request.FILES['profile_pic']
+                user = request.user
+                worker = workers.objects.get(admin=user)
+                
+                # Save the profile picture
+                worker.profile_pic = profile_pic
+                worker.save()
+                
+                # Return JSON response for AJAX requests
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True})
+                
+                messages.success(request, 'Profile picture updated successfully!')
+                return redirect('edit_worker_profile')
+            else:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': 'No file uploaded'}, status=400)
+                
+                messages.error(request, 'No file uploaded.')
+                return redirect('edit_worker_profile')
+        except Exception as e:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            
+            messages.error(request, f'An error occurred: {str(e)}')
+            return redirect('edit_worker_profile')
+
+class change_worker_password(LoginRequiredMixin, View):
+    login_url = '/login/'
+    def post(self, request):
+        user = request.user
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        
+        # Check if current password is correct
+        if not user.check_password(current_password):
+            messages.error(request, 'Current password is incorrect.')
+            return redirect('edit_worker_profile')
+        
+        # Check if new passwords match
+        if new_password != confirm_password:
+            messages.error(request, 'New passwords do not match.')
+            return redirect('edit_worker_profile')
+        
+        # Check password strength (optional)
+        if len(new_password) < 8:
+            messages.error(request, 'Password must be at least 8 characters long.')
+            return redirect('edit_worker_profile')
+        
+        # Set new password
+        user.set_password(new_password)
+        user.save()
+        
+        # Update session to prevent logout
+        update_session_auth_hash(request, user)
+        
+        messages.success(request, 'Password changed successfully!')
+        return redirect('workerprofile')
