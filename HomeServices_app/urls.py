@@ -172,3 +172,4 @@ path('deleteuser/<int:id>/', views.DeleteUser.as_view(), name='delete_user'),
 
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
