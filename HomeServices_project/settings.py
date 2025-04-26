@@ -25,7 +25,7 @@ SECRET_KEY = '-p@o12h+fw!7=k6#l8o@6raux@y!g1u024bej^dd0%w!2$b@pn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -78,7 +78,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'homeservice',    # The database you just created
-        'USER': 'postgres',   # Your PostgreSQL user
+        'USER': 'user',   # Your PostgreSQL user
         'PASSWORD': '1234', # Your PostgreSQL password
         'HOST': 'localhost',
         'PORT': '5432', 
@@ -126,13 +126,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-import os
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
