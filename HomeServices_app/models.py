@@ -82,3 +82,22 @@ class Profile(models.Model):
 
 
 
+
+
+
+
+
+
+
+
+
+## models.py
+class Response(models.Model):
+    requests = models.ForeignKey(ServiceRequests, on_delete=models.CASCADE)
+    assigned_worker = models.ForeignKey(workers, on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+    Date = models.DateTimeField(auto_now_add=True)
+    worker_specifically_chosen = models.BooleanField(default=False)  # Add this field
+    
+    def __str__(self):
+        return f"{self.requests.service.Name} - {self.assigned_worker.admin.username}"

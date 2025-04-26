@@ -1,108 +1,144 @@
+<!DOCTYPE html>
 <html lang="en">
-
-<!-- login35:56-->
 <head>
-	<!-- Basic Page Needs
-	================================================== -->
-	<title>Home-2-Home-Login</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home Services Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-	<!-- CSS
-	================================================== -->
-	<link rel="stylesheet" href="'/assets/plugins/css/plugins.css' ">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Custom style -->
-    <link href=  '/assets/css/style.css'   rel="stylesheet">
-	<link type="text/css" rel="stylesheet" id="jssDefault" href=  '/assets/css/colors/green-style.css'  >
-	  <style>
-        body {
-            background-color: #f7f7f7;
-            background-image: url('https://example.com/path/to/your/image.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
+    body {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      background-image: url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1470&q=80');
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.37);
+      width: 100%;
+      max-width: 400px;
+      color: #fff;
+    }
 
-        h1 {
-            color: #4285f4;
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 600;
+      color: #ffffff;
+    }
 
-        label {
-            color: #555555;
-            font-weight: bold;
-        }
+    .form-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
 
-        .form-control {
-            border-color: #cccccc;
-        }
+    .form-group input {
+      width: 100%;
+      padding: 12px 40px 12px 15px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 16px;
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    .form-group i {
+      position: absolute;
+      right: 15px;
+      top: 12px;
+      color: #ffffffaa;
+    }
 
-        .form-group label,
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            transition: all 0.3s ease-in-out;
-        }
+    .form-group input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.3);
+    }
 
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #4285f4;
-            box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, 0.25);
-        }
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #ff4e50;
+      background: linear-gradient(to right, #f9d423, #ff4e50);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
 
-        .btn-primary {
-            background-color: #4285f4;
-            border-color: #4285f4;
-        }
+    .btn-login:hover {
+      background: linear-gradient(to right, #ff4e50, #f9d423);
+    }
 
-        .btn-primary:hover {
-            background-color: #357ae8;
-            border-color: #357ae8;
-        }
-    </style>
-	</head>
-	<body class="simple-bg-screen" style="background-image:url(  /assets/img/banner-10.jpg');">
-		<div class="Loader"></div>
-		<div class="wrapper">
+    .extras {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
 
-			<!-- Title Header Start -->
-			<section class="container mt-5">
-				<div class=" ">
-					<div class="">
+    .extras a {
+      color: #f0f0f0;
+      text-decoration: none;
+      transition: 0.2s;
+    }
 
-						<form method="POST" action="{% url 'login' %}">
-							{% csrf_token %}
-							<h3 style="color:red">{{error_msg}}</h3>
-                            <center><h2 class="img-responsive">Login</h2></center>
-							<input type="text" class="form-control form-group" placeholder="Useraname" name="uname" id="uname" required>
-							<input type="password" class="form-control form-group" placeholder="Password" name="psw" id="psw" required>
-							<button class="btn btn-success " type="submit">Login</button><br>
-							<div class="container mt-3">
-								<br>
-							<span><a href="{% url 'password-reset' %}"> Forget Password</a></span><br><br>
-							<span>Dont Have accout ? <a href="{% url 'user_registration' %}">Regiter As user</a><br> Or<br><a href="{% url 'Worker_Register' %}">Register as Worker</a> </span>
-							</div>
-						</form>
-					</div>
-				</div>
-			</section>
+    .extras a:hover {
+      color: #ffcc70;
+    }
 
+    .error-msg {
+      color: #ffcccc;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      {% if error_msg %}
+        <p class="error-msg">{{ error_msg }}</p>
+      {% endif %}
+      <h2>Welcome Back!</h2>
 
-        </div>
-    </body>
+      <div class="form-group">
+        <input type="text" name="uname" id="uname" placeholder="Username" required>
+        <i class="fas fa-user"></i>
+      </div>
+
+      <div class="form-group">
+        <input type="password" name="psw" id="psw" placeholder="Password" required>
+        <i class="fas fa-lock"></i>
+      </div>
+
+      <button type="submit" class="btn-login">Login</button>
+
+      <div class="extras">
+        <p><a href="{% url 'password-reset' %}">Forgot Password?</a></p>
+        <p>Don't have an account?<br>
+        <a href="{% url 'user_registration' %}">Register as User</a> or 
+        <a href="{% url 'Worker_Register' %}">Register as Worker</a></p>
+      </div>
+    </form>
+  </div>
+</body>
 </html>
