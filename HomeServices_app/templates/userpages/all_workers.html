@@ -1,0 +1,109 @@
+{% extends "userpages/user_header_footer.html" %}
+{% block content %}
+{% load static %}
+<!-- Add this right after the page header in all_workers.html -->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Filter & Sort Workers</h5>
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="service" class="form-label">Service Category</label>
+                            <select class="form-select" id="service" name="service">
+                                <option value="">All Categories</option>
+                                {% for category in workers_by_category.keys %}
+                                    <option value="{{ category.id }}" {% if request.GET.service == category.id|stringformat:"i" %}selected{% endif %}>{{ category.Name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sort" class="form-label">Sort By</label>
+                            <select class="form-select" id="sort" name="sort">
+                                <option value="rating" {% if request.GET.sort == 'rating' %}selected{% endif %}>Highest Rating</option>
+                                <option value="experience" {% if request.GET.sort == 'experience' %}selected{% endif %}>Most Experienced</option>
+                                <option value="completed" {% if request.GET.sort == 'completed' %}selected{% endif %}>Most Services Completed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Header Start -->
+<div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <h1 class="display-3 text-white animated slideInRight">Our Professional Team</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb animated slideInRight mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Our Team</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Team Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+            <h1 class="display-5 mb-4">Our Expert Service Providers</h1>
+            <p class="text-primary">Meet our team of professional service providers ready to help you with all your needs</p>
+        </div>
+        
+        {% for category, workers_list in workers_by_category.items %}
+        <div class="mb-5">
+            <h2 class="text-center mb-4">{{ category.Name }}</h2>
+            <div class="row g-4">
+                {% for worker in workers_list %}
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.{{ forloop.counter }}s">
+                    <div class="team-item position-relative">
+                        <div class="position-relative overflow-hidden">
+                            {% if worker.profile_pic %}
+                            <img class="img-fluid" src="{{ worker.profile_pic.url }}" alt="{{ worker.admin.first_name }}">
+                            {% else %}
+                            <img class="img-fluid" src="{% static 'user_assets/img/default_user_icon.jpg' %}" alt="{{ worker.admin.first_name }}">
+                            {% endif %}
+                        </div>
+                        <div class="team-text bg-light text-center p-4">
+                            <h5>{{ worker.admin.first_name }} {{ worker.admin.last_name }}</h5>
+                            <p class="text-primary">{{ worker.designation }}</p>
+                            <div class="d-flex justify-content-center mb-2">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= worker.avg_rating %}
+                                        <small class="fa fa-star text-primary me-1"></small>
+                                    {% elif forloop.counter <= worker.avg_rating|add:0.5 and worker.avg_rating|floatformat:1|slice:"-1:" == "5" %}
+                                        <small class="fa fa-star-half-alt text-primary me-1"></small>
+                                    {% else %}
+                                        <small class="fa fa-star text-muted me-1"></small>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ms-1">({{ worker.rating_count }})</span>
+                            </div>
+                            <p class="mb-2"><i class="fa fa-check-circle text-success me-1"></i> {{ worker.completed_services }} Services Completed</p>
+                            <div class="d-flex justify-content-center">
+                                <a class="btn btn-primary py-2 px-4" href="{% url 'worker_profile' id=worker.id %}">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-5">
+            <h3>No workers available at the moment</h3>
+            <p>Please check back later or contact us for more information.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<!-- Team End -->
+
+{% endblock %}

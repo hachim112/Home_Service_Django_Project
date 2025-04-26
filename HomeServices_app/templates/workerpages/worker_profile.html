@@ -2,171 +2,338 @@
 {% load static %}
 {% block content %}
 <style>
+    .profile-container {
+        padding: 30px;
+        animation: fadeIn 0.5s ease;
+    }
+    
     .profile-card {
         border-radius: 15px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         background: white;
+        overflow: hidden;
     }
-    .profile-sidebar {
-        background: var(--primary-color);
+    
+    .profile-header {
+        background: var(--gradient-accent);
         color: white;
-        padding: 30px;
-        text-align: center;
-        border-radius: 15px 0 0 15px;
+        padding: 40px 30px;
+        position: relative;
     }
-    .profile-img {
+    
+    .profile-header-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(255,255,255,.075)' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+    
+    .profile-avatar-container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 20px;
+    }
+    
+    .profile-avatar {
         width: 150px;
         height: 150px;
         border-radius: 50%;
-        margin-bottom: 20px;
         object-fit: cover;
-        border: 4px solid rgba(255, 255, 255, 0.3);
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-    .profile-details {
+    
+    .profile-name {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+    
+    .profile-designation {
+        font-size: 16px;
+        opacity: 0.8;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    
+    .profile-stats {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    
+    .profile-stat-item {
+        text-align: center;
+        padding: 0 20px;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .profile-stat-item:last-child {
+        border-right: none;
+    }
+    
+    .profile-stat-number {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .profile-stat-label {
+        font-size: 14px;
+        opacity: 0.8;
+    }
+    
+    .profile-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    
+    .profile-action-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 30px;
+        font-weight: 500;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .profile-action-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .profile-body {
         padding: 30px;
     }
-    .section-title {
+    
+    .profile-section {
+        margin-bottom: 30px;
+    }
+    
+    .profile-section:last-child {
+        margin-bottom: 0;
+    }
+    
+    .profile-section-title {
+        font-size: 18px;
         font-weight: 600;
         margin-bottom: 20px;
+        color: #333;
         position: relative;
-        color: var(--primary-color);
+        padding-left: 15px;
     }
-    .section-title:after {
+    
+    .profile-section-title::before {
         content: '';
         position: absolute;
         left: 0;
-        bottom: -5px;
-        width: 50px;
-        height: 2px;
-        background: var(--primary-color);
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 18px;
+        background: var(--gradient-accent);
+        border-radius: 2px;
     }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
     .info-item {
-        margin-bottom: 15px;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
     }
+    
     .info-label {
         font-weight: 600;
         color: #555;
         margin-bottom: 5px;
+        font-size: 14px;
     }
+    
     .info-value {
         color: #333;
     }
-    .btn-edit-profile {
-        background: var(--gradient-accent);
-        border: none;
+    
+    .badge-active {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
         color: white;
-        padding: 10px 25px;
-        border-radius: 30px;
+        padding: 5px 10px;
+        border-radius: 20px;
         font-weight: 500;
-        transition: all 0.3s ease;
-        margin-top: 20px;
+        font-size: 12px;
     }
-    .btn-edit-profile:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+    
+    .badge-pending {
+        background: linear-gradient(135deg, #f1c40f, #f39c12);
         color: white;
-        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 12px;
     }
-    .alert {
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 20px;
-    }
-    .alert-success {
-        background-color: rgba(40, 167, 69, 0.1);
-        border-color: rgba(40, 167, 69, 0.2);
-        color: #28a745;
+    
+    @media (max-width: 768px) {
+        .profile-container {
+            padding: 15px;
+        }
+        
+        .profile-header {
+            padding: 30px 20px;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .profile-name {
+            font-size: 24px;
+        }
+        
+        .profile-body {
+            padding: 20px;
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 
-<div class="container-fluid py-4">
-    <h1 class="h3 mb-4">My Profile</h1>
-    
+<div class="profile-container">
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
+            <div class="alert alert-{{ message.tags }} mb-4">
                 {{ message }}
             </div>
         {% endfor %}
     {% endif %}
     
     <div class="card profile-card">
-        <div class="row no-gutters">
-            <div class="col-md-4 profile-sidebar">
+        <div class="profile-header">
+            <div class="profile-header-bg"></div>
+            <div class="profile-avatar-container">
                 {% if data.profile_pic %}
-                    <img src="{{ data.profile_pic.url }}?t={{ timestamp }}" alt="Profile" class="profile-img">
+                    <img src="{{ data.profile_pic.url }}?t={{ timestamp }}" alt="Profile" class="profile-avatar">
                 {% else %}
-                    <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-img">
+                    <div class="profile-avatar d-flex align-items-center justify-content-center bg-primary">
+                        <i class="fas fa-user fa-3x text-white"></i>
+                    </div>
                 {% endif %}
-                <h5>{{ data.admin.first_name }} {{ data.admin.last_name }}</h5>
-                <p>{{ data.designation }}</p>
-                <a href="{% url 'edit_worker_profile' %}" class="btn btn-edit-profile">
-                    <i class="fa fa-edit mr-2"></i> Edit Profile
+            </div>
+            <div class="profile-name">{{ data.admin.first_name }} {{ data.admin.last_name }}</div>
+            <div class="profile-designation">{{ data.designation }}</div>
+            
+            <div class="profile-stats">
+                <div class="profile-stat-item">
+                    <div class="profile-stat-number">{{ completed_requests }}</div>
+                    <div class="profile-stat-label">Completed</div>
+                </div>
+                <div class="profile-stat-item">
+                    <div class="profile-stat-number">{{ rating|default:"0.0" }}</div>
+                    <div class="profile-stat-label">Rating</div>
+                </div>
+                <div class="profile-stat-item">
+                    <div class="profile-stat-number">{{ total_clients }}</div>
+                    <div class="profile-stat-label">Clients</div>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <a href="{% url 'edit_worker_profile' %}" class="profile-action-btn">
+                    <i class="fas fa-edit mr-2"></i> Edit Profile
                 </a>
             </div>
-            <div class="col-md-8 profile-details">
-                <h6 class="section-title">Personal Information</h6>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="info-item">
-                            <div class="info-label">Email</div>
-                            <div class="info-value">{{ data.admin.email }}</div>
+        </div>
+        
+        <div class="profile-body">
+            <div class="profile-section">
+                <h3 class="profile-section-title">Personal Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">{{ data.admin.email }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value">{{ data.contact_number }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Gender</div>
+                        <div class="info-value">{{ data.gender }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Joined On</div>
+                        <div class="info-value">{{ data.admin.date_joined|date:"F d, Y" }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3 class="profile-section-title">Work Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Designation</div>
+                        <div class="info-value">{{ data.designation }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Account Status</div>
+                        <div class="info-value">
+                            {% if data.acc_activation %}
+                                <span class="badge-active">
+                                    <i class="fas fa-check-circle mr-1"></i> Active
+                                </span>
+                            {% else %}
+                                <span class="badge-pending">
+                                    <i class="fas fa-clock mr-1"></i> Pending Approval
+                                </span>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="info-item">
-                            <div class="info-label">Phone</div>
-                            <div class="info-value">{{ data.contact_number }}</div>
+                    <div class="info-item">
+                        <div class="info-label">Availability</div>
+                        <div class="info-value">
+                            {% if data.avalability_status %}
+                                <span class="badge-active">
+                                    <i class="fas fa-check-circle mr-1"></i> Available
+                                </span>
+                            {% else %}
+                                <span class="badge-pending">
+                                    <i class="fas fa-pause-circle mr-1"></i> Not Available
+                                </span>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="info-item">
-                            <div class="info-label">Created On</div>
-                            <div class="info-value">{{ data.admin.date_joined|date:"F d, Y" }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-item">
-                            <div class="info-label">Gender</div>
-                            <div class="info-value">{{ data.gender }}</div>
+                    <div class="info-item">
+                        <div class="info-label">Selection Statistics</div>
+                        <div class="info-value">
+                            <div><i class="fas fa-user-check text-success mr-1"></i> Specifically Chosen: {{ specific_count }}</div>
+                            <div><i class="fas fa-bolt text-primary mr-1"></i> AutoFast Assigned: {{ autofast_count }}</div>
                         </div>
                     </div>
                 </div>
-                
-                <h6 class="section-title mt-4">Additional Information</h6>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="info-item">
-                            <div class="info-label">Address</div>
-                            <div class="info-value">{{ data.Address|default:"Not provided" }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-item">
-                            <div class="info-label">Designation</div>
-                            <div class="info-value">{{ data.designation }}</div>
-                        </div>
-                    </div>
-                    {% if data.dob %}
-                    <div class="col-md-6">
-                        <div class="info-item">
-                            <div class="info-label">Date of Birth</div>
-                            <div class="info-value">{{ data.dob|date:"F d, Y" }}</div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    <div class="col-md-6">
-                        <div class="info-item">
-                            <div class="info-label">Account Status</div>
-                            <div class="info-value">
-                                {% if data.acc_activation %}
-                                    <span class="badge badge-success">Active</span>
-                                {% else %}
-                                    <span class="badge badge-warning">Pending Approval</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3 class="profile-section-title">Address Information</h3>
+                <div class="info-item">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">{{ data.Address|default:"Not provided" }}</div>
                 </div>
             </div>
         </div>

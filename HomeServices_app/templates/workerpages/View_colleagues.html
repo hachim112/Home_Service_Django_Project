@@ -1,106 +1,316 @@
 {% extends "workerpages/worker_header_footer.html" %}
 {% load static %}
 {% block content %}
-        <div class="breadcrumbs">
-            <div class="breadcrumbs-inner">
-                <div class="row m-0">
-                    <div class="col-sm-4">
-                        <div class="page-header float-left">
-                            <div class="page-title">
-                                <h1>Manage Workers</h1>
+<style>
+    .colleague-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .colleague-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .colleague-header {
+        position: relative;
+        height: 100px;
+        background: var(--gradient-accent);
+    }
+    
+    .colleague-avatar {
+        position: absolute;
+        bottom: -40px;
+        left: 20px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 4px solid white;
+        background-color: #f8f9fa;
+        overflow: hidden;
+    }
+    
+    .colleague-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .colleague-body {
+        padding: 50px 20px 20px;
+    }
+    
+    .colleague-name {
+        font-weight: 600;
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .colleague-designation {
+        color: var(--primary-color);
+        font-weight: 500;
+        margin-bottom: 15px;
+    }
+    
+    .colleague-info {
+        margin-bottom: 15px;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        color: #555;
+    }
+    
+    .info-item i {
+        width: 20px;
+        margin-right: 10px;
+        color: var(--primary-color);
+    }
+    
+    .colleague-footer {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+    }
+    
+    .badge-status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .badge-active {
+        background-color: rgba(46, 204, 113, 0.2);
+        color: #2ecc71;
+    }
+    
+    .badge-inactive {
+        background-color: rgba(231, 76, 60, 0.2);
+        color: #e74c3c;
+    }
+    
+    .badge-pending {
+        background-color: rgba(243, 156, 18, 0.2);
+        color: #f39c12;
+    }
+    
+    .search-box {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    
+    .search-box input {
+        padding-left: 40px;
+        border-radius: 30px;
+    }
+    
+    .search-box i {
+        position: absolute;
+        left: 15px;
+        top: 12px;
+        color: #aaa;
+    }
+    
+    .filter-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .filter-item {
+        padding: 8px 15px;
+        border-radius: 20px;
+        background: #f8f9fa;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-item:hover, .filter-item.active {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+    }
+    
+    .empty-state i {
+        font-size: 60px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #555;
+    }
+    
+    .empty-state p {
+        color: #777;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Notifications -->
+    {% if messages %}
+    <div class="row mb-4">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">My Colleagues</h1>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" class="form-control" id="searchColleagues" placeholder="Search colleagues...">
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="filter-box">
+                <div class="filter-item active" data-filter="all">All</div>
+                <div class="filter-item" data-filter="active">Active</div>
+                <div class="filter-item" data-filter="pending">Pending Verification</div>
+                <div class="filter-item" data-filter="same-service">Same Service</div>
+            </div>
+        </div>
+    </div>
+    
+    {% if workers_records %}
+        <div class="row" id="colleaguesContainer">
+            {% for worker in workers_records %}
+            <div class="col-lg-4 col-md-6 colleague-item" 
+                 data-name="{{ worker.admin.first_name|lower }} {{ worker.admin.last_name|lower }}"
+                 data-service="{{ worker.designation|lower }}"
+                 data-status="{% if worker.acc_activation %}active{% else %}pending{% endif %}">
+                <div class="card colleague-card">
+                    <div class="colleague-header"></div>
+                    <div class="colleague-avatar">
+                        {% if worker.profile_pic %}
+                            <img src="{{ worker.profile_pic.url }}" alt="{{ worker.admin.first_name }}">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center h-100 bg-light text-primary">
+                                <i class="fas fa-user fa-2x"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="colleague-body">
+                        <div class="colleague-name">{{ worker.admin.first_name }} {{ worker.admin.last_name }}</div>
+                        <div class="colleague-designation">{{ worker.designation }}</div>
+                        
+                        <div class="colleague-info">
+                            <div class="info-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ worker.admin.email }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-phone"></i>
+                                <span>{{ worker.contact_number }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ worker.city }}</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="page-header float-right">
-                            <div class="page-title">
-                                <ol class="breadcrumb text-right">
-                                    <li><a href="#">Admin</a></li>
-                                    <li><a href="#">Dashboard</a></li>
-                                    <li class="active">Workers Data</li>
-                                </ol>
-                            </div>
+                        
+                        <div>
+                            {% if worker.acc_activation %}
+                                <span class="badge-status badge-active">
+                                    <i class="fas fa-check-circle mr-1"></i> Active
+                                </span>
+                            {% else %}
+                                <span class="badge-status badge-pending">
+                                    <i class="fas fa-clock mr-1"></i> Pending Verification
+                                </span>
+                            {% endif %}
+                            
+                            {% if worker.avalability_status %}
+                                <span class="badge-status badge-active ml-2">
+                                    <i class="fas fa-user-check mr-1"></i> Available
+                                </span>
+                            {% else %}
+                                <span class="badge-status badge-inactive ml-2">
+                                    <i class="fas fa-user-times mr-1"></i> Unavailable
+                                </span>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-
-        <div class="content">
-            <div class="animated fadeIn">
-                <div class="row">
-
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <strong class="card-title">Data Table</strong>
-                            </div>
-                            <div class="card-body">
-
-
-                                <table id="bootstrap-data-table" class="table table-responsive-md table-striped table-bordered" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>profile_pic </th>
-                                            <th>Name </th>
-                                            <th>designation </th>
-                                            <th>Email</th>
-                                            <th>Gender</th>
-                                            <th>Contact No</th>
-                                            <th>city</th>
-                                            <th>avalability</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for records in workers_records %}
-                                        <tr>
-<!--                                            <td>pics</td>-->
-                                            <td style="width: fit-content;">
-                                                <div class="round-img" style="border-radius: 25%;">
-                                                    <img class="rounded-circle" src="{{records.profile_pic.url}}" alt="" style="max-width: 25%;">
-                                                </div>
-                                            </td>
-                                            <td>{{records.admin.first_name}} {{records.admin.lastt_name}} </td>
-                                            <td>{{records.designation}}</td>
-                                            <td>{{records.admin.email}}</td>
-                                            <td>{{records.gender}}</td>
-                                            <td>{{records.contact_number}}</td>
-                                            <td>{{records.city}}</td>
-                                            <td>{{records.avalability_status}}</td>
-                                            <td>
-                                                {% if records.acc_activation == 0 %}
-                                                <a href="" class=" btn-secondary btn-sm" id="activbtn">verify</a>
-                                                {% else %}
-                                                <a href="" class=" btn-primary btn-sm">verified</a>
-                                                {% endif %}
-                                                <a href="" class=" btn-success btn-sm">Active</a>
-
-                                            </td>
-
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body empty-state">
+                <i class="fas fa-users"></i>
+                <h4>No Colleagues Found</h4>
+                <p>There are no other workers in the system at this time.</p>
             </div>
         </div>
+    {% endif %}
+</div>
 
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript">
+<script>
+    // Auto-dismiss alerts after 5 seconds
     $(document).ready(function() {
-        $('#bootstrap-data-table').DataTable({
-            // Add options here
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
+        
+        // Search functionality
+        $("#searchColleagues").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $(".colleague-item").filter(function() {
+                $(this).toggle($(this).data("name").toLowerCase().indexOf(value) > -1);
+            });
+        });
+        
+        // Filter functionality
+        $(".filter-item").on("click", function() {
+            $(".filter-item").removeClass("active");
+            $(this).addClass("active");
+            
+            var filter = $(this).data("filter");
+            
+            if (filter === "all") {
+                $(".colleague-item").show();
+            } else if (filter === "active") {
+                $(".colleague-item").hide();
+                $(".colleague-item[data-status='active']").show();
+            } else if (filter === "pending") {
+                $(".colleague-item").hide();
+                $(".colleague-item[data-status='pending']").show();
+            } else if (filter === "same-service") {
+                // Get current user's service (you'll need to add this data attribute)
+                var currentUserService = "{{ request.user.workers_set.first.designation|lower }}";
+                $(".colleague-item").hide();
+                $(".colleague-item[data-service='" + currentUserService + "']").show();
+            }
         });
     });
 </script>
-
 {% endblock %}

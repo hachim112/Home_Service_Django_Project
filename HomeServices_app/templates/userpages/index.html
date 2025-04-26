@@ -1,4 +1,3 @@
-
 {% extends "userpages/user_header_footer.html" %}
 {% block content %}
 {% load static %}
@@ -125,7 +124,7 @@
                         <div class="section-title text-start">
                             <h1 class="display-5 mb-4">About Us</h1>
                         </div>
-                        <p class="mb-4 pb-2">fixtoria was formed when our team decided to fill the vacuum for manpower in the service sector more than a year ago. Our team began by conducting surveys of potential service providers in and around Hubli, to create a handy database of ‘domestic patrol,’ as we like to refer to them.</p>
+                        <p class="mb-4 pb-2">fixtoria was formed when our team decided to fill the vacuum for manpower in the service sector more than a year ago. Our team began by conducting surveys of potential service providers in and around Hubli, to create a handy database of 'domestic patrol,' as we like to refer to them.</p>
                         <div class="row g-4 mb-4 pb-2">
                             <div class="col-sm-6 wow fadeIn" data-wow-delay="0.1s">
                                 <div class="d-flex align-items-center">
@@ -160,35 +159,33 @@
 
 
     <!-- Service Start -->
-<!-- Service Start -->
-<div class="container-xxl py-5">
-    <div class="container">
-        <div class="section-title text-center">
-            <h1 class="display-5 mb-5">Our Services</h1>
-        </div>
-        <div class="row g-4">
-            {% for service in services %}
-            <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.{{ forloop.counter0 }}s">
-                <div class="service-item">
-                    <div class="overflow-hidden">
-                        <img class="img-fluid" src="{{ service.img.url }}" alt="{{ service.Name }}" style="width: 100%; height: 100%;">
-                        <!-- Adjust the style as needed, setting max-width to 100% ensures proper fit -->
-                    </div>
-                    <div class="p-4 text-center border border-5 border-light border-top-0">
-                        <h4 class="mb-3">{{ service.Name }}</h4>
-                        <p>{{ service.Description|truncatewords_html:20 }}</p>
-                        <a class="fw-medium" href="{% url 'bookservice' id=service.id %}">Book Now<i class="fa fa-arrow-right ms-2"></i></a>
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="section-title text-center">
+                <h1 class="display-5 mb-5">Our Services</h1>
+            </div>
+            <div class="row g-4">
+                {% for service in services %}
+                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.{{ forloop.counter0 }}s">
+                    <div class="service-item">
+                        <div class="overflow-hidden">
+                            <img class="img-fluid" src="{{ service.img.url }}" alt="{{ service.Name }}" style="width: 100%; height: 100%;">
+                            <!-- Adjust the style as needed, setting max-width to 100% ensures proper fit -->
+                        </div>
+                        <div class="p-4 text-center border border-5 border-light border-top-0">
+                            <h4 class="mb-3">{{ service.Name }}</h4>
+                            <p>{{ service.Description|truncatewords_html:20 }}</p>
+                            <div class="d-flex justify-content-between mt-3">
+                                <a class="fw-medium" href="{% url 'bookservice' id=service.id %}">Book Now<i class="fa fa-arrow-right ms-2"></i></a>
+                                <a class="fw-medium text-primary" href="{% url 'all_workers' %}">View Workers<i class="fa fa-users ms-2"></i></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </div>
-</div>
-
-
-<!-- Service End -->
-
     <!-- Service End -->
 
 
@@ -264,7 +261,6 @@
   
 
     <!-- Testimonial Start -->
-  
     <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container">
             <div class="section-title text-center">
@@ -280,13 +276,24 @@
                     <!-- Display a default user icon -->
                     <img class="img-fluid bg-light p-2 mx-auto mb-3" src="{% static 'user_assets/img/default_user_icon.jpg' %}" style="width: 90px; height: 90px;">
                     {% endif %}
-                    <div class="testimonial-text text-center p-4">
-                        <p>{{ feedback.Description }}</p>
-                        <!-- <h5 class="mb-1">{{ feedback.user.username }}</h5> -->
-                        <h5 class="mb-1">{{ feedback.User.username }}</h5>
-                        <span class="fst-italic">{{ feedback.Employ.Name }}</span>
-                        <!-- <span class="fst-italic">{{ feedback.Employ.Name }}</span> -->
-                    </div>
+
+
+                    <!-- In index.html, find the feedback section and update the worker name to be clickable -->
+<div class="testimonial-text text-center p-4">
+    <p>{{ feedback.Description }}</p>
+    <h5 class="mb-1">{{ feedback.User.username }}</h5>
+    <span class="fst-italic">Service by: <a href="{% url 'worker_profile' id=feedback.Employ.id %}" class="text-primary">{{ feedback.Employ.admin.first_name }} {{ feedback.Employ.admin.last_name }}</a></span>
+    <!-- Display star rating -->
+    <div class="d-flex justify-content-center mt-2">
+        {% for i in "12345" %}
+            {% if forloop.counter <= feedback.Rating %}
+                <small class="fa fa-star text-primary me-1"></small>
+            {% else %}
+                <small class="fa fa-star text-muted me-1"></small>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
                 </div>
                 {% endfor %}
             </div>

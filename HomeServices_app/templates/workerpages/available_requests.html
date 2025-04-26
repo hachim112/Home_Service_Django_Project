@@ -1,61 +1,275 @@
 {% extends "workerpages/worker_header_footer.html" %}
 {% load static %}
 {% block content %}
+<style>
+    .request-card {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    
+    .request-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .request-header {
+        padding: 15px 20px;
+        background: var(--gradient-accent);
+        color: white;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .request-body {
+        padding: 20px;
+    }
+    
+    .request-footer {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .badge-specific {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 12px;
+    }
+    
+    .badge-autofast {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 12px;
+    }
+    
+    .customer-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .customer-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--gradient-accent);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-right: 15px;
+    }
+    
+    .customer-details {
+        flex: 1;
+    }
+    
+    .customer-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .customer-location {
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .problem-description {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    .service-type {
+        display: inline-block;
+        background: rgba(78, 205, 196, 0.1);
+        color: var(--primary-color);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .request-date {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .btn-accept {
+        background: var(--gradient-accent);
+        border: none;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-accept:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+    }
+    
+    .empty-state i {
+        font-size: 60px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #555;
+    }
+    
+    .empty-state p {
+        color: #777;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+</style>
+
 <div class="container-fluid">
-    <h1 class="h3 mb-4">Available Service Requests</h1>
-    <div class="card">
-        <div class="card-header">Service Requests</div>
-        <div class="card-body">
-            <div class="alert alert-info">
-                These are service requests that match your skills and are waiting for a worker to accept.
-                The first worker to accept a request will be assigned to it.
+    <!-- Notifications -->
+    {% if messages %}
+    <div class="row mb-4">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            {% if available_requests %}
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered" id="dataTable">
-                    <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>User</th>
-                            <th>Problem Description</th>
-                            <th>Location</th>
-                            <th>Date Requested</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for request in available_requests %}
-                        <tr>
-                            <td>{{ request.service.Name }}</td>
-                            <td>{{ request.user.admin.first_name }}</td>
-                            <td>{{ request.Problem_Description }}</td>
-                            <td>{{ request.Address }}, {{ request.city.name }}</td>
-                            <td>{{ request.dateofrequest|date:"F d, Y" }}</td>
-                            <td>
-                                {% if request.response_set.first.worker_specifically_chosen %}
-                                <span class="badge bg-success">You were specifically chosen!</span>
-                                {% else %}
-                                <span class="badge bg-primary">AutoFast Request</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a href="{% url 'acceptrequest' action='accept' id=request.id %}" class="btn btn-success btn-sm">Accept</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="alert alert-warning">No available service requests match your skills at this time.</div>
-            {% endif %}
+            {% endfor %}
         </div>
     </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Available Service Requests</h1>
+        <div class="d-flex">
+            <div class="dropdown mr-2">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-filter mr-1"></i> Filter
+                </button>
+                <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                    <a class="dropdown-item" href="?filter=all">All Requests</a>
+                    <a class="dropdown-item" href="?filter=specific">Specifically Chosen</a>
+                    <a class="dropdown-item" href="?filter=autofast">AutoFast Requests</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-sort mr-1"></i> Sort
+                </button>
+                <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                    <a class="dropdown-item" href="?sort=newest">Newest First</a>
+                    <a class="dropdown-item" href="?sort=oldest">Oldest First</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle mr-2"></i> These are service requests that match your skills and are waiting for a worker to accept.
+        The first worker to accept a request will be assigned to it.
+    </div>
+    
+    {% if available_requests %}
+        <div class="row">
+            {% for request in available_requests %}
+            <div class="col-lg-6">
+                <div class="card request-card">
+                    <div class="request-header">
+                        <div>{{ request.service.Name }}</div>
+                        {% if request.response_set.first.worker_specifically_chosen %}
+                            <span class="badge-specific">
+                                <i class="fas fa-user-check mr-1"></i> Specifically Chosen
+                            </span>
+                        {% else %}
+                            <span class="badge-autofast">
+                                <i class="fas fa-bolt mr-1"></i> AutoFast Request
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="request-body">
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="customer-details">
+                                <div class="customer-name">{{ request.user.admin.first_name }} {{ request.user.admin.last_name }}</div>
+                                <div class="customer-location">
+                                    <i class="fas fa-map-marker-alt mr-1"></i> {{ request.Address }}, {{ request.city.name }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="service-type">
+                            <i class="fas fa-tools mr-1"></i> {{ request.service.Name }}
+                        </div>
+                        
+                        <div class="problem-description">
+                            <strong>Problem Description:</strong>
+                            <p class="mb-0 mt-2">{{ request.Problem_Description }}</p>
+                        </div>
+                        
+                        <div class="request-date">
+                            <i class="far fa-calendar-alt mr-1"></i> Requested on {{ request.dateofrequest|date:"F d, Y" }}
+                        </div>
+                    </div>
+                    <div class="request-footer">
+                        <div>
+                            <i class="fas fa-phone-alt mr-1"></i> {{ request.contact }}
+                        </div>
+                        <a href="{% url 'acceptrequest' action='accept' id=request.id %}" class="btn btn-accept">
+                            <i class="fas fa-check mr-1"></i> Accept Request
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body empty-state">
+                <i class="fas fa-clipboard-list"></i>
+                <h4>No Available Requests</h4>
+                <p>There are no service requests matching your skills at this time. Check back later for new requests.</p>
+            </div>
+        </div>
+    {% endif %}
 </div>
+
 <script>
+    // Auto-dismiss alerts after 5 seconds
     $(document).ready(function() {
-        $('#dataTable').DataTable();
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
     });
 </script>
 {% endblock %}

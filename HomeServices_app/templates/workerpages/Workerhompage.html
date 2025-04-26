@@ -1,135 +1,331 @@
 {% extends "workerpages/worker_header_footer.html" %}
-{% block content %}
 {% load static %}
+{% block content %}
 <style>
-    .dashboard-container {
-        padding: 30px;
-    }
-    
-    .stat-card {
-        border: none;
-        border-radius: 10px;
+    .dashboard-card {
+        border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        transition: all 0.3s;
-        margin-bottom: 25px;
-        background: white;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     }
     
-    .stat-card:hover {
+    .dashboard-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
     
-    .stat-icon-container {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 15px;
-        font-size: 24px;
+    .card-header {
+        padding: 20px;
+        color: white;
+        font-weight: 600;
     }
     
-    .stat-content {
-        flex: 1;
+    .card-body {
+        padding: 20px;
     }
     
-    .stat-number {
-        font-size: 28px;
+    .stat-value {
+        font-size: 36px;
         font-weight: 700;
-        color: #2c3e50;
-        line-height: 1;
         margin-bottom: 5px;
     }
     
-    .stat-title {
+    .stat-label {
+        color: #666;
         font-size: 14px;
-        color: #7f8c8d;
-        font-weight: 500;
     }
     
-    .card-1 .stat-icon-container { background-color: rgba(52, 152, 219, 0.1); color: #3498db; }
-    .card-2 .stat-icon-container { background-color: rgba(46, 204, 113, 0.1); color: #2ecc71; }
-    .card-3 .stat-icon-container { background-color: rgba(241, 196, 15, 0.1); color: #f1c40f; }
-    .card-4 .stat-icon-container { background-color: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4ecdc4, #2cbfc7);
+    }
     
-    @media (max-width: 768px) {
-        .dashboard-container {
-            padding: 15px;
-        }
-        
-        .stat-card {
-            margin-bottom: 15px;
-        }
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+    }
+    
+    .bg-gradient-warning {
+        background: linear-gradient(135deg, #f1c40f, #f39c12);
+    }
+    
+    .bg-gradient-info {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+    
+    .activity-item {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 15px;
+    }
+    
+    .activity-content {
+        flex: 1;
+    }
+    
+    .activity-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .activity-time {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #e74c3c;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .quick-action {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: 10px;
+        background: #f8f9fa;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .quick-action:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+    
+    .quick-action-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 15px;
+    }
+    
+    .quick-action-content {
+        flex: 1;
+    }
+    
+    .quick-action-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .quick-action-description {
+        font-size: 12px;
+        color: #666;
     }
 </style>
 
-<div class="dashboard-container">
-    <div class="animated fadeIn">
-        <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <div class="card stat-card card-1">
-                    <div class="card-body">
-                        <div class="stat-widget-five d-flex align-items-center">
-                            <div class="stat-icon-container">
+<div class="container-fluid">
+    <!-- Notifications -->
+    {% if messages %}
+    <div class="row">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="h3 mb-4">Worker Dashboard</h1>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card dashboard-card">
+                <div class="card-header bg-gradient-primary">
+                    <i class="fas fa-clipboard-check mr-2"></i> Completed Tasks
+                </div>
+                <div class="card-body">
+                    <div class="stat-value">{{ completed_requests }}</div>
+                    <div class="stat-label">Total completed service requests</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card dashboard-card">
+                <div class="card-header bg-gradient-warning">
+                    <i class="fas fa-clock mr-2"></i> Pending Tasks
+                </div>
+                <div class="card-body">
+                    <div class="stat-value">{{ pending_requests }}</div>
+                    <div class="stat-label">Tasks waiting to be completed</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card dashboard-card">
+                <div class="card-header bg-gradient-success">
+                    <i class="fas fa-tasks mr-2"></i> Total Requests
+                </div>
+                <div class="card-body">
+                    <div class="stat-value">{{ total_requests }}</div>
+                    <div class="stat-label">All-time assigned requests</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card dashboard-card">
+                <div class="card-header bg-gradient-info">
+                    <i class="fas fa-users mr-2"></i> Clients Served
+                </div>
+                <div class="card-body">
+                    <div class="stat-value">{{ total_clients }}</div>
+                    <div class="stat-label">Unique clients you've helped</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <!-- Quick Actions -->
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-gradient-primary">
+                    <i class="fas fa-bolt mr-2"></i> Quick Actions
+                </div>
+                <div class="card-body p-0">
+                    <a href="{% url 'available_requests' %}" class="text-decoration-none">
+                        <div class="quick-action">
+                            <div class="quick-action-icon bg-gradient-primary">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="quick-action-content">
+                                <div class="quick-action-title">Available Requests</div>
+                                <div class="quick-action-description">Find new service requests to accept</div>
+                            </div>
+                            {% if available_count > 0 %}
+                            <span class="badge badge-primary">{{ available_count }}</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                    
+                    <a href="{% url 'WorkerpendingTask' %}" class="text-decoration-none">
+                        <div class="quick-action">
+                            <div class="quick-action-icon bg-gradient-warning">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div class="quick-action-content">
+                                <div class="quick-action-title">Pending Tasks</div>
+                                <div class="quick-action-description">View and manage your assigned tasks</div>
+                            </div>
+                            {% if pending_requests > 0 %}
+                            <span class="badge badge-warning">{{ pending_requests }}</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                    
+                    <a href="{% url 'completed_requests' %}" class="text-decoration-none">
+                        <div class="quick-action">
+                            <div class="quick-action-icon bg-gradient-success">
                                 <i class="fas fa-check-circle"></i>
                             </div>
-                            <div class="stat-content">
-                                <div class="stat-number">{{completed_requests}}</div>
-                                <div class="stat-title">Total Request Finished</div>
+                            <div class="quick-action-content">
+                                <div class="quick-action-title">Completed Tasks</div>
+                                <div class="quick-action-description">Review your completed service requests</div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+                    
+                    <a href="{% url 'viewworkerfeedbacks' %}" class="text-decoration-none">
+                        <div class="quick-action">
+                            <div class="quick-action-icon bg-gradient-info">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="quick-action-content">
+                                <div class="quick-action-title">My Feedback</div>
+                                <div class="quick-action-description">See what clients are saying about you</div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="card stat-card card-2">
-                    <div class="card-body">
-                        <div class="stat-widget-five d-flex align-items-center">
-                            <div class="stat-icon-container">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-number">{{pending_requests}}</div>
-                                <div class="stat-title">Pending Requests</div>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="col-md-8">
+            <div class="card dashboard-card">
+                <div class="card-header bg-gradient-primary">
+                    <i class="fas fa-history mr-2"></i> Recent Activity
                 </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="card stat-card card-3">
-                    <div class="card-body">
-                        <div class="stat-widget-five d-flex align-items-center">
-                            <div class="stat-icon-container">
-                                <i class="fas fa-tasks"></i>
+                <div class="card-body p-0">
+                    {% if recent_activities %}
+                        {% for activity in recent_activities %}
+                        <div class="activity-item">
+                            {% if activity.type == 'completed' %}
+                            <div class="activity-icon bg-gradient-success">
+                                <i class="fas fa-check"></i>
                             </div>
-                            <div class="stat-content">
-                                <div class="stat-number">{{total_requests}}</div>
-                                <div class="stat-title">Total Requests</div>
+                            {% elif activity.type == 'assigned' %}
+                            <div class="activity-icon bg-gradient-warning">
+                                <i class="fas fa-clipboard-list"></i>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="card stat-card card-4">
-                    <div class="card-body">
-                        <div class="stat-widget-five d-flex align-items-center">
-                            <div class="stat-icon-container">
-                                <i class="fas fa-users"></i>
+                            {% elif activity.type == 'feedback' %}
+                            <div class="activity-icon bg-gradient-info">
+                                <i class="fas fa-star"></i>
                             </div>
-                            <div class="stat-content">
-                                <div class="stat-number">{{total_users}}</div>
-                                <div class="stat-title">Clients</div>
+                            {% else %}
+                            <div class="activity-icon bg-gradient-primary">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="activity-content">
+                                <div class="activity-title">{{ activity.title }}</div>
+                                <div class="activity-description">{{ activity.description }}</div>
+                                <div class="activity-time">{{ activity.time }}</div>
                             </div>
                         </div>
-                    </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="p-4 text-center">
+                            <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                            <p>No recent activity to display.</p>
+                            <p class="text-muted">Your recent actions will appear here.</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -137,24 +333,11 @@
 </div>
 
 <script>
-    // Animation for counter numbers
+    // Auto-dismiss alerts after 5 seconds
     $(document).ready(function() {
-        $('.stat-number').each(function() {
-            var $this = $(this);
-            var target = parseInt($this.text());
-            var current = 0;
-            var increment = target / 50;
-            
-            var timer = setInterval(function() {
-                current += increment;
-                if (current >= target) {
-                    $this.text(target);
-                    clearInterval(timer);
-                } else {
-                    $this.text(Math.floor(current));
-                }
-            }, 20);
-        });
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
     });
 </script>
 {% endblock %}

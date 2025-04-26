@@ -1,39 +1,332 @@
 {% extends "workerpages/worker_header_footer.html" %}
 {% load static %}
 {% block content %}
+<style>
+    .feedback-card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .feedback-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feedback-header {
+        background: var(--gradient-accent);
+        color: white;
+        padding: 20px;
+        position: relative;
+    }
+    
+    .feedback-rating {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 5px 15px;
+        font-weight: 600;
+    }
+    
+    .feedback-body {
+        padding: 20px;
+    }
+    
+    .feedback-user {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .feedback-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--gradient-accent);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-right: 15px;
+    }
+    
+    .feedback-user-details {
+        flex: 1;
+    }
+    
+    .feedback-username {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .feedback-date {
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .feedback-text {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 4px solid var(--primary-color);
+        font-style: italic;
+        color: #555;
+    }
+    
+    .feedback-stars {
+        margin-bottom: 15px;
+    }
+    
+    .feedback-stars i {
+        color: #f1c40f;
+        font-size: 18px;
+        margin-right: 2px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+    }
+    
+    .empty-state i {
+        font-size: 60px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #555;
+    }
+    
+    .empty-state p {
+        color: #777;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .feedback-summary {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .summary-rating {
+        font-size: 48px;
+        font-weight: 700;
+        color: #333;
+        line-height: 1;
+    }
+    
+    .summary-stars {
+        margin: 10px 0;
+    }
+    
+    .summary-stars i {
+        color: #f1c40f;
+        font-size: 24px;
+        margin-right: 5px;
+    }
+    
+    .summary-count {
+        color: #666;
+        margin-bottom: 20px;
+    }
+    
+    .rating-progress {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .rating-label {
+        width: 60px;
+        font-weight: 600;
+        color: #555;
+    }
+    
+    .rating-bar {
+        flex: 1;
+        height: 8px;
+        background: #eee;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 0 15px;
+    }
+    
+    .rating-bar-fill {
+        height: 100%;
+        background: var(--gradient-accent);
+        border-radius: 4px;
+    }
+    
+    .rating-percent {
+        width: 40px;
+        font-size: 14px;
+        color: #666;
+        text-align: right;
+    }
+</style>
+
 <div class="container-fluid">
-    <h1 class="h3 mb-4">My Feedbacks</h1>
-    <div class="card">
-        <div class="card-header">Feedbacks</div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered" id="dataTable">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Rating</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for record in feedback_records %}
-                        <tr>
-                            <td>{{ record.User.username }}</td>
-                            <td>{{ record.Rating }}</td>
-                            <td>{{ record.Description }}</td>
-                            <td>{{ record.Date|date:"F d, Y" }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <!-- Notifications -->
+    {% if messages %}
+    <div class="row mb-4">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">My Feedbacks</h1>
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-sort mr-1"></i> Sort
+            </button>
+            <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                <a class="dropdown-item" href="?sort=newest">Newest First</a>
+                <a class="dropdown-item" href="?sort=oldest">Oldest First</a>
+                <a class="dropdown-item" href="?sort=highest">Highest Rating</a>
+                <a class="dropdown-item" href="?sort=lowest">Lowest Rating</a>
             </div>
         </div>
     </div>
+    
+    {% if feedback_records %}
+        <!-- Feedback Summary -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="feedback-summary">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="summary-rating">{{ average_rating|floatformat:1 }}</div>
+                            <div class="summary-stars">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= average_rating_stars %}
+                                        <i class="fas fa-star"></i>
+                                    {% elif forloop.counter <= average_rating_stars_half %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="summary-count">Based on {{ feedback_records|length }} reviews</div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="rating-progress">
+                                <div class="rating-label">5 Stars</div>
+                                <div class="rating-bar">
+                                    <div class="rating-bar-fill" style="width: {{ rating_percentages.5 }}%"></div>
+                                </div>
+                                <div class="rating-percent">{{ rating_percentages.5 }}%</div>
+                            </div>
+                            <div class="rating-progress">
+                                <div class="rating-label">4 Stars</div>
+                                <div class="rating-bar">
+                                    <div class="rating-bar-fill" style="width: {{ rating_percentages.4 }}%"></div>
+                                </div>
+                                <div class="rating-percent">{{ rating_percentages.4 }}%</div>
+                            </div>
+                            <div class="rating-progress">
+                                <div class="rating-label">3 Stars</div>
+                                <div class="rating-bar">
+                                    <div class="rating-bar-fill" style="width: {{ rating_percentages.3 }}%"></div>
+                                </div>
+                                <div class="rating-percent">{{ rating_percentages.3 }}%</div>
+                            </div>
+                            <div class="rating-progress">
+                                <div class="rating-label">2 Stars</div>
+                                <div class="rating-bar">
+                                    <div class="rating-bar-fill" style="width: {{ rating_percentages.2 }}%"></div>
+                                </div>
+                                <div class="rating-percent">{{ rating_percentages.2 }}%</div>
+                            </div>
+                            <div class="rating-progress">
+                                <div class="rating-label">1 Star</div>
+                                <div class="rating-bar">
+                                    <div class="rating-bar-fill" style="width: {{ rating_percentages.1 }}%"></div>
+                                </div>
+                                <div class="rating-percent">{{ rating_percentages.1 }}%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feedback Cards -->
+        <div class="row">
+            {% for record in feedback_records %}
+            <div class="col-lg-6">
+                <div class="card feedback-card">
+                    <div class="feedback-header">
+                        <h5>Feedback from Customer</h5>
+                        <div class="feedback-rating">
+                            {{ record.Rating }}/5
+                        </div>
+                    </div>
+                    <div class="feedback-body">
+                        <div class="feedback-user">
+                            <div class="feedback-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="feedback-user-details">
+                                <div class="feedback-username">{{ record.User.first_name }} {{ record.User.last_name }}</div>
+                                <div class="feedback-date">{{ record.Date|date:"F d, Y" }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback-stars">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= record.Rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="feedback-text">
+                            {{ record.Description }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body empty-state">
+                <i class="fas fa-star"></i>
+                <h4>No Feedbacks Yet</h4>
+                <p>You haven't received any feedbacks yet. Complete more service requests to get rated by customers.</p>
+            </div>
+        </div>
+    {% endif %}
 </div>
+
 <script>
+    // Auto-dismiss alerts after 5 seconds
     $(document).ready(function() {
-        $('#dataTable').DataTable();
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
     });
 </script>
 {% endblock %}

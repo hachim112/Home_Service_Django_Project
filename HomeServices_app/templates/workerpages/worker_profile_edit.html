@@ -2,31 +2,51 @@
 {% load static %}
 {% block content %}
 <style>
+    .profile-edit-container {
+        padding: 30px;
+        animation: fadeIn 0.5s ease;
+    }
+    
     .profile-card {
         border-radius: 15px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         background: white;
+        overflow: hidden;
     }
+    
     .profile-sidebar {
-        background: var(--primary-color);
+        background: var(--gradient-accent);
         color: white;
-        padding: 30px;
-        text-align: center;
-        border-radius: 15px 0 0 15px;
+        padding: 40px 30px;
+        position: relative;
     }
+    
+    .profile-sidebar-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(255,255,255,.075)' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+    
     .profile-img-container {
         position: relative;
         width: 150px;
         height: 150px;
         margin: 0 auto 20px;
     }
+    
     .profile-img {
         width: 150px;
         height: 150px;
         border-radius: 50%;
         object-fit: cover;
-        border: 4px solid rgba(255, 255, 255, 0.3);
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
+    
     .profile-img-overlay {
         position: absolute;
         bottom: 0;
@@ -41,105 +61,17 @@
         cursor: pointer;
         transition: all 0.3s ease;
     }
+    
     .profile-img-overlay:hover {
         background: rgba(0, 0, 0, 0.7);
+        transform: scale(1.1);
     }
+    
     .profile-img-overlay i {
         color: white;
         font-size: 18px;
     }
-    .profile-details {
-        padding: 30px;
-    }
-    .section-title {
-        font-weight: 600;
-        margin-bottom: 20px;
-        position: relative;
-        color: var(--primary-color);
-    }
-    .section-title:after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: -5px;
-        width: 50px;
-        height: 2px;
-        background: var(--primary-color);
-    }
-    .form-group label {
-        font-weight: 500;
-        color: #555;
-    }
-    .form-control {
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        padding: 10px 15px;
-        transition: all 0.3s ease;
-    }
-    .form-control:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.2rem rgba(78, 205, 196, 0.25);
-    }
-    .btn-save {
-        background: var(--gradient-accent);
-        border: none;
-        color: white;
-        padding: 10px 25px;
-        border-radius: 30px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-    .btn-save:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
-    }
-    .btn-cancel {
-        background: #f1f1f1;
-        border: none;
-        color: #555;
-        padding: 10px 25px;
-        border-radius: 30px;
-        font-weight: 500;
-        margin-right: 10px;
-        transition: all 0.3s ease;
-    }
-    .btn-cancel:hover {
-        background: #e5e5e5;
-    }
-    .read-only-field {
-        background-color: #f8f9fa;
-        cursor: not-allowed;
-    }
-    .nav-tabs {
-        border-bottom: 2px solid #eee;
-    }
-    .nav-tabs .nav-link {
-        border: none;
-        color: #555;
-        font-weight: 500;
-        padding: 10px 20px;
-    }
-    .nav-tabs .nav-link.active {
-        color: var(--primary-color);
-        border-bottom: 2px solid var(--primary-color);
-        background: transparent;
-    }
-    .alert {
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 20px;
-    }
-    .alert-success {
-        background-color: rgba(40, 167, 69, 0.1);
-        border-color: rgba(40, 167, 69, 0.2);
-        color: #28a745;
-    }
-    .alert-danger {
-        background-color: rgba(220, 53, 69, 0.1);
-        border-color: rgba(220, 53, 69, 0.2);
-        color: #dc3545;
-    }
-    /* Loading spinner for profile pic upload */
+    
     .loading-overlay {
         position: absolute;
         top: 0;
@@ -154,6 +86,7 @@
         z-index: 10;
         display: none;
     }
+    
     .spinner {
         border: 3px solid rgba(255, 255, 255, 0.3);
         border-radius: 50%;
@@ -162,17 +95,138 @@
         height: 30px;
         animation: spin 1s linear infinite;
     }
+    
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+    
+    .profile-details {
+        padding: 30px;
+    }
+    
+    .nav-tabs {
+        border-bottom: 2px solid #eee;
+        margin-bottom: 25px;
+    }
+    
+    .nav-tabs .nav-link {
+        border: none;
+        color: #555;
+        font-weight: 500;
+        padding: 10px 20px;
+        position: relative;
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: var(--primary-color);
+        background: transparent;
+    }
+    
+    .nav-tabs .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--gradient-accent);
+    }
+    
+    .form-group label {
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 8px;
+    }
+    
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(78, 205, 196, 0.25);
+        background-color: #fff;
+    }
+    
+    .read-only-field {
+        background-color: #f1f1f1;
+        cursor: not-allowed;
+    }
+    
+    .btn-save {
+        background: var(--gradient-accent);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+    }
+    
+    .btn-cancel {
+        background: #f1f1f1;
+        border: none;
+        color: #555;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-weight: 500;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-cancel:hover {
+        background: #e5e5e5;
+        transform: translateY(-3px);
+    }
+    
+    .alert {
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .alert-success {
+        background-color: rgba(46, 204, 113, 0.1);
+        border-color: rgba(46, 204, 113, 0.2);
+        color: #2ecc71;
+    }
+    
+    .alert-danger {
+        background-color: rgba(231, 76, 60, 0.1);
+        border-color: rgba(231, 76, 60, 0.2);
+        color: #e74c3c;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-edit-container {
+            padding: 15px;
+        }
+        
+        .profile-sidebar {
+            padding: 30px 20px;
+        }
+        
+        .profile-details {
+            padding: 20px;
+        }
+    }
 </style>
 
-<div class="container-fluid py-4">
+<div class="profile-edit-container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">My Profile</h1>
+        <h1 class="h3">Edit Profile</h1>
         <a href="{% url 'workerprofile' %}" class="btn btn-outline-primary">
-            <i class="fa fa-arrow-left mr-2"></i> Back to Profile
+            <i class="fas fa-arrow-left mr-2"></i> Back to Profile
         </a>
     </div>
 
@@ -187,38 +241,41 @@
     <div class="card profile-card">
         <div class="row no-gutters">
             <div class="col-md-4 profile-sidebar">
+                <div class="profile-sidebar-bg"></div>
                 <div class="profile-img-container">
                     {% if data.profile_pic %}
                         <img src="{{ data.profile_pic.url }}?t={{ timestamp }}" alt="Profile" class="profile-img" id="profile-preview">
                     {% else %}
-                        <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-img" id="profile-preview">
+                        <div class="profile-img d-flex align-items-center justify-content-center bg-primary" id="profile-preview-container">
+                            <i class="fas fa-user fa-3x text-white"></i>
+                        </div>
                     {% endif %}
                     <div class="loading-overlay" id="loading-overlay">
                         <div class="spinner"></div>
                     </div>
                     <label for="profile_pic" class="profile-img-overlay">
-                        <i class="fa fa-camera"></i>
+                        <i class="fas fa-camera"></i>
                     </label>
                     <input type="file" id="profile_pic" name="profile_pic" style="display: none;" accept="image/*">
                 </div>
-                <h5>{{ data.admin.first_name }} {{ data.admin.last_name }}</h5>
-                <p>{{ data.designation }}</p>
+                <h5 class="text-center">{{ data.admin.first_name }} {{ data.admin.last_name }}</h5>
+                <p class="text-center mb-0">{{ data.designation }}</p>
             </div>
             <div class="col-md-8 profile-details">
                 <ul class="nav nav-tabs" id="profileTabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="personal-tab" data-toggle="tab" href="#personal" role="tab">
-                            Personal Information
+                            <i class="fas fa-user mr-2"></i> Personal Information
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="password-tab" data-toggle="tab" href="#password" role="tab">
-                            Change Password
+                            <i class="fas fa-lock mr-2"></i> Change Password
                         </a>
                     </li>
                 </ul>
                 
-                <div class="tab-content mt-4" id="profileTabsContent">
+                <div class="tab-content" id="profileTabsContent">
                     <!-- Personal Information Tab -->
                     <div class="tab-pane fade show active" id="personal" role="tabpanel">
                         <form method="post" action="{% url 'update_worker_profile' %}">
@@ -325,7 +382,11 @@
             if (this.files && this.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
-                    $('#profile-preview').attr('src', e.target.result);
+                    if ($('#profile-preview').length) {
+                        $('#profile-preview').attr('src', e.target.result);
+                    } else {
+                        $('#profile-preview-container').html('<img src="' + e.target.result + '" alt="Profile" class="profile-img" id="profile-preview">');
+                    }
                 }
                 reader.readAsDataURL(this.files[0]);
                 

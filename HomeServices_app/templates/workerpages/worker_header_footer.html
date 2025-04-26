@@ -424,6 +424,7 @@
                 <li><a href="{% url 'available_requests' %}" class="{% if request.path == '/AvailableRequests/' %}active{% endif %}"><i class="fa fa-tasks"></i> Available Requests</a></li>
                 <li><a href="{% url 'WorkerpendingTask' %}" class="{% if request.path == '/WorkerpendingTask/' %}active{% endif %}"><i class="fa fa-clock-o"></i> Assigned Tasks</a></li>
                 <li><a href="{% url 'viewworkerfeedbacks' %}" class="{% if request.path == '/viewworkerfeedbacks/' %}active{% endif %}"><i class="fa fa-star"></i> Feedbacks</a></li>
+                <li><a href="{% url 'completed_requests' %}" class="{% if request.path == '/completed/' %}active{% endif %}"><i class="fa fa-check-circle"></i> Completed Tasks</a></li
                 <li><a href="{% url 'workerprofile' %}" class="{% if request.path == '/workerprofile/' %}active{% endif %}"><i class="fa fa-user"></i> Profile</a></li>
             </ul>
         </div>

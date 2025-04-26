@@ -1,160 +1,362 @@
 {% extends "workerpages/worker_header_footer.html" %}
 {% load static %}
 {% block content %}
-        <div class="breadcrumbs">
-            <div class="breadcrumbs-inner">
-                <div class="row m-0">
-                    <div class="col-sm-4">
-                        <div class="page-header float-left">
-                            <div class="page-title">
-                                <h1>View Assigned Works</h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="page-header float-right">
-                            <div class="page-title">
-                                <ol class="breadcrumb text-right">
-                                    <li><a href="{% url 'admmin_home' %}">Admin</a></li>
-                                    <li><a href="{% url 'admmin_home' %}">Dashboard</a></li>
-                                    <li class="active">Task Data</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="content">
-            <div class="animated fadeIn">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <strong class="card-title">Response List</strong>
-                            </div>
-                            <div class="card-body">
-                                <table id="bootstrap-data-table" class="table table-responsive-md table-striped table-bordered" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Request</th>
-                                            <th>User</th>
-                                            <th>User Contact</th>
-                                            <th>Assigned Worker Name</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for records in Response_records %}
-                                        <tr>
-                                            <td>{{records.requests.service.Name}}</td>
-                                            <td>{{records.requests.user.admin.first_name}}</td>
-                                            <td>
-                                                <strong>{{records.requests.contact}}</strong>
-                                                <br>
-                                                <small>{{records.requests.Address}}, {{records.requests.city.name}}</small>
-                                            </td>
-                                            <td>{{records.assigned_worker.admin.first_name}}</td>
-                                            <td>{{records.Date}}</td>
-                                            {% if records.status != True %}
-                                            <td class="text-warning">Pending</td>
-                                            {% else %}
-                                            <td class="text-success">Completed</td>
-                                            {% endif %}
-                                            <td>
-                                                {% if records.status == True %}
-                                                <a href="{% url 'acceptrequest'  action='reject' id=records.id %}" class="btn btn-success btn-sm">Completed</a>
-                                                {% else %}
-                                                <a href="{% url 'markcompleted'  action='completed' id=records.id %}" class="btn btn-warning btn-sm">Mark Completed</a>
-                                                <a href="{% url 'reject'  action='reject' id=records.id %}" class="btn btn-danger btn-sm">Reject</a>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                        <!-- Additional details row -->
-                                        <tr class="details-row">
-                                            <td colspan="7">
-                                                <div class="card mb-0">
-                                                    <div class="card-header bg-info text-white">
-                                                        <strong>Service Request Details</strong>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <h5>Customer Information</h5>
-                                                                <p><strong>Name:</strong> {{records.requests.user.admin.first_name}} {{records.requests.user.admin.last_name}}</p>
-                                                                <p><strong>Phone:</strong> {{records.requests.contact}}</p>
-                                                                <p><strong>Address:</strong> {{records.requests.House_No}}, {{records.requests.Address}}, {{records.requests.city.name}}, {{records.requests.pin}}</p>
-                                                                <p><strong>Landmark:</strong> {{records.requests.landmark}}</p>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <h5>Problem Details</h5>
-                                                                <p><strong>Service Type:</strong> {{records.requests.service.Name}}</p>
-                                                                <p><strong>Description:</strong> {{records.requests.Problem_Description}}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        // Initialize DataTable
-        var table = $('#bootstrap-data-table').DataTable({
-            "ordering": true,
-            "info": true,
-            "paging": true
-        });
-        
-        // Hide all detail rows initially
-        $('.details-row').hide();
-        
-        // Add click event to show/hide details
-        $('#bootstrap-data-table tbody').on('click', 'tr:not(.details-row)', function() {
-            var row = $(this);
-            var detailsRow = row.next('.details-row');
-            
-            if (detailsRow.is(':visible')) {
-                detailsRow.hide();
-                row.removeClass('shown');
-            } else {
-                $('.details-row').hide();
-                detailsRow.show();
-                row.addClass('shown');
-            }
-        });
-    });
-</script>
-
 <style>
-    .details-row .card {
-        margin-top: 10px;
+    .task-card {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    
+    .task-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .task-header {
+        padding: 15px 20px;
+        background: var(--gradient-accent);
+        color: white;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .task-body {
+        padding: 20px;
+    }
+    
+    .task-footer {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .badge-pending {
+        background: linear-gradient(135deg, #f1c40f, #f39c12);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 12px;
+    }
+    
+    .badge-specific {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 12px;
+    }
+    
+    .badge-autofast {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 12px;
+    }
+    
+    .customer-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .customer-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--gradient-accent);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-right: 15px;
+    }
+    
+    .customer-details {
+        flex: 1;
+    }
+    
+    .customer-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .customer-location {
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .problem-description {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    .service-type {
+        display: inline-block;
+        background: rgba(78, 205, 196, 0.1);
+        color: var(--primary-color);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .task-date {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .btn-complete {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        border: none;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-complete:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+    }
+    
+    .btn-reject {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        border: none;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-reject:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+    }
+    
+    .empty-state i {
+        font-size: 60px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #555;
+    }
+    
+    .empty-state p {
+        color: #777;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .task-details-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 15px;
+    }
+    
+    .task-details-section h5 {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .detail-item {
         margin-bottom: 10px;
     }
-    tr.shown {
-        background-color: #f8f9fa !important;
+    
+    .detail-label {
+        font-weight: 600;
+        color: #555;
     }
-    #bootstrap-data-table tbody tr:not(.details-row) {
-        cursor: pointer;
-    }
-    #bootstrap-data-table tbody tr:not(.details-row):hover {
-        background-color: #f1f1f1;
+    
+    .detail-value {
+        color: #333;
     }
 </style>
 
+<div class="container-fluid">
+    <!-- Notifications -->
+    {% if messages %}
+    <div class="row mb-4">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Assigned Tasks</h1>
+        <div class="d-flex">
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-sort mr-1"></i> Sort
+                </button>
+                <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                    <a class="dropdown-item" href="?sort=newest">Newest First</a>
+                    <a class="dropdown-item" href="?sort=oldest">Oldest First</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if Response_records %}
+        <div class="row">
+            {% for records in Response_records %}
+            <div class="col-lg-6">
+                <div class="card task-card">
+                    <div class="task-header">
+                        <div>{{ records.requests.service.Name }}</div>
+                        {% if records.status != True %}
+                            <span class="badge-pending">
+                                <i class="fas fa-clock mr-1"></i> Pending
+                            </span>
+                        {% else %}
+                            <span class="badge-specific">
+                                <i class="fas fa-check-circle mr-1"></i> Completed
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="task-body">
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="customer-details">
+                                <div class="customer-name">{{ records.requests.user.admin.first_name }} {{ records.requests.user.admin.last_name }}</div>
+                                <div class="customer-location">
+                                    <i class="fas fa-map-marker-alt mr-1"></i> {{ records.requests.Address }}, {{ records.requests.city.name }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="service-type">
+                            <i class="fas fa-tools mr-1"></i> {{ records.requests.service.Name }}
+                        </div>
+                        
+                        <div class="problem-description">
+                            <strong>Problem Description:</strong>
+                            <p class="mb-0 mt-2">{{ records.requests.Problem_Description }}</p>
+                        </div>
+                        
+                        <div class="task-date">
+                            <i class="far fa-calendar-alt mr-1"></i> Assigned on {{ records.Date|date:"F d, Y" }}
+                        </div>
+                        
+                        <div class="task-details-section">
+                            <h5>Customer Information</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Name:</div>
+                                        <div class="detail-value">{{ records.requests.user.admin.first_name }} {{ records.requests.user.admin.last_name }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Phone:</div>
+                                        <div class="detail-value">{{ records.requests.contact }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Address:</div>
+                                        <div class="detail-value">{{ records.requests.House_No }}, {{ records.requests.Address }}, {{ records.requests.city.name }}, {{ records.requests.pin }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Landmark:</div>
+                                        <div class="detail-value">{{ records.requests.landmark|default:"Not provided" }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4">Selection Method</h5>
+                            <div class="detail-item">
+                                <div class="detail-value">
+                                    {% if records.worker_specifically_chosen %}
+                                        <span class="badge badge-success">
+                                            <i class="fas fa-user-check mr-1"></i> You were specifically chosen by the customer
+                                        </span>
+                                    {% else %}
+                                        <span class="badge badge-primary">
+                                            <i class="fas fa-bolt mr-1"></i> AutoFast Request
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task-footer">
+                        {% if records.status != True %}
+                            <a href="{% url 'reject' action='reject' id=records.id %}" class="btn btn-reject">
+                                <i class="fas fa-times mr-1"></i> Reject
+                            </a>
+                            <a href="{% url 'markcompleted' action='completed' id=records.id %}" class="btn btn-complete">
+                                <i class="fas fa-check mr-1"></i> Mark Completed
+                            </a>
+                        {% else %}
+                            <span class="text-success">
+                                <i class="fas fa-check-circle mr-1"></i> Task Completed
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body empty-state">
+                <i class="fas fa-clipboard-check"></i>
+                <h4>No Assigned Tasks</h4>
+                <p>You don't have any assigned tasks at the moment. Check the Available Requests section to accept new tasks.</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    // Auto-dismiss alerts after 5 seconds
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
+    });
+</script>
 {% endblock %}

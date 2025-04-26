@@ -214,7 +214,7 @@ class Worker_Register(View):
 class home(View):  # Remove LoginRequiredMixin
     def get(self, request):
         services = ServiceCatogarys.objects.all()
-        feedbacks = Feedback.objects.select_related('User').all()
+        feedbacks = Feedback.objects.select_related('User', 'Employ', 'Employ__admin').all()
         all_services = list(ServiceCatogarys.objects.all())  # Convert QuerySet to a list
         selected_services = random.sample(all_services, min(len(all_services), 6))  # Select up to 6 random services
         print('services:', services)
@@ -332,7 +332,24 @@ class bookservice(LoginRequiredMixin, View):
             
             messages.success(request, f"Your service request has been assigned to {selected_worker.admin.first_name} {selected_worker.admin.last_name}.")
         else:
-            messages.success(request, "Your service request has been submitted. A worker will be assigned soon.")
+            # For autofast requests, send to all eligible workers
+            service_request.status = False  # Mark as unassigned
+            service_request.save()
+            
+            # Get all eligible workers for this service
+            eligible_workers = workers.objects.filter(
+                designation=service_id.Name,
+                acc_activation=True,
+                avalability_status=True
+            )
+            
+            # Create a notification for each eligible worker
+            for worker in eligible_workers:
+                # You could implement a notification system here
+                # For now, we'll just ensure the request appears in their available requests
+                pass
+            
+            messages.success(request, f"Your service request has been sent to {eligible_workers.count()} available workers. The first to accept will be assigned.")
 
         # Redirect to appointment history page
         return HttpResponseRedirect('/Viewappointment_history')
@@ -765,33 +782,21 @@ class ViewColleagues(LoginRequiredMixin, View):
         context = {'workers_records': workers_records}
         return render(request, 'workerpages/View_colleagues.html', context)
 
-# class WorkerViewRequests(LoginRequiredMixin, View):
-    login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
-#     def get(self,request):
-#         worker=request.user.id
-#         print("worker_id",worker)
-        
-#         request_records=ServiceRequests.objects.all()
-#         Response_record=Response.objects.all()
-#         wo=workers.objects.filter(admin=worker)
-#         asss = Response.objects.filter(assigned_worker__admin__id=worker)
-#         print(asss)
-#         # =Response_record.filter
-#         context={
-#             'request_records':request_records,
-#             'Response_record':Response_record,
-#         }
-#         return render(request, 'workerpages/View_request.html', context)
-
 class WorkerViewRequests(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
     def get(self, request):
         worker_id = request.user.id
-        print("worker_id", worker_id)
-        assigned_responses = Response.objects.filter(assigned_worker__admin__id=worker_id)
-        service_ids = [response.requests.service.id for response in assigned_responses]
-        request_records = ServiceRequests.objects.filter(service__id__in=service_ids)
-
+        worker = workers.objects.get(admin=worker_id)
+        
+        # Get responses assigned to this worker
+        assigned_responses = Response.objects.filter(
+            assigned_worker=worker
+        )
+        
+        # Get the corresponding service requests
+        request_ids = assigned_responses.values_list('requests', flat=True)
+        request_records = ServiceRequests.objects.filter(id__in=request_ids)
+        
         context = {
             'request_records': request_records,
             'assigned_responses': assigned_responses,
@@ -801,12 +806,57 @@ class WorkerViewRequests(LoginRequiredMixin, View):
 
 class viewworkerfeedbacks(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
-    def get(self,request):
-        feedback_records=Feedback.objects.all()
-        context= {
-            'feedback_records':feedback_records,
+    def get(self, request):
+        # Get the current worker
+        worker_id = request.user.id
+        worker = workers.objects.get(admin=worker_id)
+        
+        # Get feedback only for this worker
+        feedback_records = Feedback.objects.filter(Employ=worker).order_by('-Date')
+        
+        # Get sort parameter
+        sort_order = request.GET.get('sort', 'newest')
+        
+        # Apply sorting
+        if sort_order == 'oldest':
+            feedback_records = feedback_records.order_by('Date')
+        elif sort_order == 'highest':
+            feedback_records = feedback_records.order_by('-Rating')
+        elif sort_order == 'lowest':
+            feedback_records = feedback_records.order_by('Rating')
+        
+        # Calculate average rating and rating distribution
+        total_ratings = feedback_records.count()
+        if total_ratings > 0:
+            average_rating = feedback_records.aggregate(Avg('Rating'))['Rating__avg']
+            average_rating_stars = int(average_rating)  # Full stars
+            # Determine if we should show a half star (if decimal part is 0.3 or more)
+            average_rating_stars_half = average_rating_stars + 1 if average_rating - average_rating_stars >= 0.3 else average_rating_stars
+            
+            # Calculate rating percentages
+            rating_counts = {i: feedback_records.filter(Rating=i).count() for i in range(1, 6)}
+            rating_percentages = {i: (count / total_ratings * 100) if total_ratings > 0 else 0 
+                                for i, count in rating_counts.items()}
+        else:
+            average_rating = 0
+            average_rating_stars = 0
+            average_rating_stars_half = 0
+            rating_percentages = {i: 0 for i in range(1, 6)}
+        
+        # Process each feedback record to ensure proper star display
+        for record in feedback_records:
+            # Ensure Rating is an integer
+            record.Rating = int(record.Rating)
+        
+        context = {
+            'feedback_records': feedback_records,
+            'average_rating': average_rating if total_ratings > 0 else 0,
+            'average_rating_stars': average_rating_stars,
+            'average_rating_stars_half': average_rating_stars_half,
+            'rating_percentages': rating_percentages,
         }
-        return render(request,'workerpages/View_feedbacks.html',context)
+        
+        return render(request, 'workerpages/View_feedbacks.html', context)
 
 
 class viewrequests(LoginRequiredMixin, View):
@@ -862,15 +912,6 @@ class acceptrequest(LoginRequiredMixin, View):
                     messages.error(request, "This request has already been accepted by another worker.")
                 return HttpResponseRedirect('/AvailableRequests')
             
-
-
-
-
-
-
-
-
-        
 class viewresponse(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
     def get(self,request):
@@ -930,12 +971,6 @@ class Viewappointment_history(LoginRequiredMixin, View):
 
         return render(request, 'userpages/appointment_history.html', context)
     
-
-
-
-
-
-
 class CancelRequest(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
     def get(self,request,id):
@@ -949,7 +984,7 @@ class CancelRequest(LoginRequiredMixin, View):
             # admin=User.object.get(admin=uid)
             user=users.objects.get(admin=uid)
             user_id=user.id
-            r_id=ServiceRequests.objects.get(Q(id=id) & Q(user=user_id))
+            r_id=ServiceRequests.objects.filter(Q(id=id) & Q(user=user_id))
             r_id.delete()
             return HttpResponseRedirect('/index')
 
@@ -992,15 +1027,51 @@ class userprofile(LoginRequiredMixin, View):
     
 class workerprofile(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
-    def get(self,request):
-
-        user=request.user.id
-
-        data=workers.objects.get(admin=user)
-        context={
-            'data':data,
+    def get(self, request):
+        user = request.user.id
+        data = workers.objects.get(admin=user)
+        
+        # Calculate worker statistics
+        # 1. Completed requests
+        completed_requests = Response.objects.filter(
+            assigned_worker=data,
+            status=True
+        ).count()
+        
+        # 2. Calculate average rating
+        worker_ratings = Feedback.objects.filter(Employ=data)
+        if worker_ratings.exists():
+            avg_rating = worker_ratings.aggregate(Avg('Rating'))['Rating__avg']
+            rating = round(avg_rating, 1)
+        else:
+            rating = 0.0
+        
+        # 3. Count unique clients
+        client_ids = Response.objects.filter(
+            assigned_worker=data
+        ).values_list('requests__user', flat=True).distinct()
+        total_clients = len(client_ids)
+        
+        # 4. Count specifically chosen vs autofast assignments
+        specific_count = Response.objects.filter(
+            assigned_worker=data,
+            worker_specifically_chosen=True
+        ).count()
+        
+        autofast_count = Response.objects.filter(
+            assigned_worker=data,
+            worker_specifically_chosen=False
+        ).count()
+        
+        context = {
+            'data': data,
+            'completed_requests': completed_requests,
+            'rating': rating,
+            'total_clients': total_clients,
+            'specific_count': specific_count,
+            'autofast_count': autofast_count,
         }
-        return render(request,'workerpages/worker_profile.html',context)
+        return render(request, 'workerpages/worker_profile.html', context)
 
 class markcompleted(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
@@ -1039,6 +1110,10 @@ class AvailableRequests(LoginRequiredMixin, View):
         worker = workers.objects.get(admin=worker_id)
         worker_designation = worker.designation
         
+        # Get filter and sort parameters
+        filter_type = request.GET.get('filter', 'all')
+        sort_order = request.GET.get('sort', 'newest')
+        
         # Get all unassigned service requests that match the worker's designation
         available_requests = ServiceRequests.objects.filter(
             service__Name=worker_designation,
@@ -1052,6 +1127,27 @@ class AvailableRequests(LoginRequiredMixin, View):
             response__assigned_worker=worker,  # Assigned to this worker
             response__worker_specifically_chosen=True  # Specifically chosen
         )
+
+        # Apply filters
+        if filter_type == 'specific':
+            available_requests = specifically_assigned
+            specifically_assigned = []
+        elif filter_type == 'autofast':
+            # Only show autofast requests (not specifically assigned)
+            available_requests = ServiceRequests.objects.filter(
+                service__Name=worker_designation,
+                status=False  # Not yet assigned to any worker
+            )
+            # Make sure we're not showing any specifically assigned requests
+            specifically_assigned = []
+        
+        # Apply sorting
+        if sort_order == 'oldest':
+            available_requests = available_requests.order_by('dateofrequest')
+            specifically_assigned = specifically_assigned.order_by('dateofrequest')
+        else:
+            available_requests = available_requests.order_by('-dateofrequest')
+            specifically_assigned = specifically_assigned.order_by('-dateofrequest')
         
         # Combine both querysets
         all_available = list(available_requests) + list(specifically_assigned)
@@ -1073,187 +1169,6 @@ def delete_feedback(request, feedback_id):
         messages.error(request, "You don't have permission to delete feedback!")
     
     return redirect('viewfeedbacks')  # Redirect to the feedback list page
-
-class admmin_home(LoginRequiredMixin, View):
-    login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
-    def get(self,request):
-        from django.db.models import Count, Avg
-        from datetime import timedelta
-        import calendar
-
-
-      
-    
-        # Basic stats (already in your code)
-        total_requests = ServiceRequests.objects.count()
-        completed_requests = Response.objects.filter(status=True).count()
-        pending_requests = Response.objects.filter(status=False).count()
-        total_users = users.objects.count()
-        total_workers = workers.objects.count()
-        
-        # Service Request Trends - Last 6 months
-        request_trends = [
-            {'month': 'Jan', 'count': 0},
-        
-        ]
-        current_date = datetime.now()
-        
-        # Get data for the last 6 months
-        for i in range(5, -1, -1):
-            # Calculate the month
-            month_date = current_date - timedelta(days=30 * i)
-            month_name = month_date.strftime('%b')  # Short month name
-            month_number = month_date.month
-            year = month_date.year
-            
-            # Count requests for this month - using dateofrequest instead of created_at
-            month_count = ServiceRequests.objects.filter(
-                dateofrequest__year=year,
-                dateofrequest__month=month_number
-            ).count()
-            
-            request_trends.append({
-                'month': month_name,
-                'count': month_count
-            })
-        
-        # Service Distribution by Category
-        service_categories = []
-        services = ServiceCatogarys.objects.all()
-        
-        # Define colors for the chart
-        colors = [
-            'rgba(78, 205, 196, 0.8)',
-            'rgba(40, 167, 69, 0.8)',
-            'rgba(23, 162, 184, 0.8)',
-            'rgba(255, 193, 7, 0.8)',
-            'rgba(108, 117, 125, 0.8)',
-            'rgba(220, 53, 69, 0.8)',
-            'rgba(111, 66, 193, 0.8)',
-            'rgba(232, 62, 140, 0.8)'
-        ]
-        
-        # Count requests for each service category
-        for i, service in enumerate(services):
-            color_index = i % len(colors)
-            request_count = ServiceRequests.objects.filter(service=service).count()
-            
-            service_categories.append({
-                'name': service.Name,
-                'count': request_count,
-                'color': colors[color_index]
-            })
-        
-        # Top Workers - Based on ratings from feedback
-        top_workers_data = []
-        worker_colors = ['primary', 'success', 'info', 'warning', 'danger', 'purple', 'pink', 'orange']
-        
-        # Get workers with feedback and calculate average rating
-        worker_ratings = {}
-        for feedback in Feedback.objects.all():
-            worker_id = feedback.Employ.id
-            if worker_id not in worker_ratings:
-                worker_ratings[worker_id] = {'total': 0, 'count': 0}
-            
-            worker_ratings[worker_id]['total'] += feedback.Rating
-            worker_ratings[worker_id]['count'] += 1
-        
-        # Calculate average ratings and create worker data
-        for worker_id, rating_data in worker_ratings.items():
-            if rating_data['count'] > 0:
-                worker = workers.objects.get(id=worker_id)
-                avg_rating = rating_data['total'] / rating_data['count']
-                
-                color_index = len(top_workers_data) % len(worker_colors)
-                top_workers_data.append({
-                    'name': worker.admin.first_name or worker.admin.username,
-                    'last_name': worker.admin.last_name or '',
-                    'service_category': worker.designation,
-                    'rating': round(avg_rating, 1),
-                    'color': worker_colors[color_index]
-                })
-        
-        # Sort workers by rating (highest first) and limit to top 5
-        top_workers_data = sorted(top_workers_data, key=lambda x: x['rating'], reverse=True)[:5]
-        
-        # Recent Activity
-        recent_activities = []
-        
-        # Recent completed requests
-        recent_completed = Response.objects.filter(status=True).order_by('-id')[:3]
-        for resp in recent_completed:
-            recent_activities.append({
-                'user_name': resp.assigned_worker.admin.get_full_name() or resp.assigned_worker.admin.username,
-                'description': f"completed a {resp.requests.service.Name} service request",
-                'timestamp': resp.requests.dateofrequest  # Using dateofrequest instead of created_at
-            })
-        
-        # Recent accepted requests
-        recent_accepted = Response.objects.filter(status=False).order_by('-id')[:3]
-        for resp in recent_accepted:
-            recent_activities.append({
-                'user_name': resp.assigned_worker.admin.get_full_name() or resp.assigned_worker.admin.username,
-                'description': f"accepted a {resp.requests.service.Name} service request",
-                'timestamp': resp.requests.dateofrequest  # Using dateofrequest instead of created_at
-            })
-        
-        # Recent new workers
-        recent_workers = workers.objects.order_by('-id')[:2]
-        for worker in recent_workers:
-            recent_activities.append({
-                'user_name': worker.admin.get_full_name() or worker.admin.username,
-                'description': "joined as a new worker",
-                'timestamp': worker.admin.date_joined
-            })
-        
-        # Recent new users
-        recent_users = users.objects.order_by('-id')[:2]
-        for user in recent_users:
-            recent_activities.append({
-                'user_name': user.admin.get_full_name() or user.admin.username,
-                'description': "registered as a new user",
-                'timestamp': user.admin.date_joined
-            })
-        
-        # Sort activities by timestamp (newest first) and limit to 5
-        recent_activities = sorted(recent_activities, key=lambda x: x['timestamp'], reverse=True)[:5]
-        
-        context = {
-            'total_requests': total_requests,
-            'completed_requests': completed_requests,
-            'pending_requests': pending_requests,
-            'total_users': total_users,
-            'total_workers': total_workers,
-            'request_trends': request_trends,
-            'service_categories': service_categories,
-            'top_workers': top_workers_data,
-            'recent_activities': recent_activities
-        }
-        
-        return render(request, 'adminpages/adminhompage.html', context)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Admin Profile Views
 
 # Admin Profile Views
 class adminprofile(LoginRequiredMixin, View):
@@ -1362,23 +1277,7 @@ def get_cities(request):
     cities = City.objects.filter(state_id=state_id).values('id', 'name')
     return JsonResponse(list(cities), safe=False)
 
-
-
 class DeleteWorker(LoginRequiredMixin, View):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
     def get(self, request, id):
         try:
@@ -1397,24 +1296,6 @@ class DeleteWorker(LoginRequiredMixin, View):
             messages.error(request, f"An error occurred: {str(e)}")
         
         return HttpResponseRedirect('/manageworker')
-    
-
-
-
-
-
-
-
-
-class workerprofile(LoginRequiredMixin, View):
-    login_url = '/login/'
-    def get(self, request):
-        user = request.user.id
-        data = workers.objects.get(admin=user)
-        context = {
-            'data': data,
-        }
-        return render(request, 'workerpages/worker_profile.html', context)
 
 class edit_worker_profile(LoginRequiredMixin, View):
     login_url = '/login/'
@@ -1527,3 +1408,181 @@ class change_worker_password(LoginRequiredMixin, View):
         
         messages.success(request, 'Password changed successfully!')
         return redirect('workerprofile')
+
+def completed_requests(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('login')
+    
+    # Get the current worker
+    worker_id = request.user.id
+    worker = workers.objects.get(admin=worker_id)
+    
+    # Get completed responses for this worker
+    completed_requests = Response.objects.filter(
+        assigned_worker=worker,
+        status=True
+    ).order_by('-Date')
+    
+    # Calculate statistics
+    total_completed = completed_requests.count()
+    
+    # Get filter and sort parameters
+    filter_type = request.GET.get('filter', 'all')
+    sort_order = request.GET.get('sort', 'newest')
+    
+    # Apply filters
+    if filter_type == 'specific':
+        completed_requests = completed_requests.filter(worker_specifically_chosen=True)
+    elif filter_type == 'autofast':
+        completed_requests = completed_requests.filter(worker_specifically_chosen=False)
+    
+    # Apply sorting
+    if sort_order == 'oldest':
+        completed_requests = completed_requests.order_by('Date')
+    
+    context = {
+        'completed_requests': completed_requests,
+        'total_completed': total_completed,
+    }
+    
+    return render(request, 'workerpages/completed_requests.html', context)
+
+# Add these new view classes to your views.py file
+
+class AllWorkers(View):
+    def get(self, request):
+        # Get filter parameters
+        service_filter = request.GET.get('service', '')
+        sort_by = request.GET.get('sort', 'rating')
+        
+        # Get all verified/active workers
+        all_workers = workers.objects.filter(acc_activation=True)
+        
+        # Apply service filter if specified
+        if service_filter:
+            service_category = get_object_or_404(ServiceCatogarys, id=service_filter)
+            all_workers = all_workers.filter(designation=service_category.Name)
+        
+        # Group workers by service category
+        service_categories = ServiceCatogarys.objects.all()
+        workers_by_category = {}
+        
+        for category in service_categories:
+            category_workers = all_workers.filter(designation=category.Name)
+            if category_workers.exists():
+                workers_by_category[category] = category_workers
+        
+        # Calculate ratings and other metrics for each worker
+        for category, worker_list in workers_by_category.items():
+            for worker in worker_list:
+                # Get feedback for this worker
+                worker_feedback = Feedback.objects.filter(Employ=worker)
+                
+                # Calculate average rating
+                if worker_feedback.exists():
+                    avg_rating = worker_feedback.aggregate(Avg('Rating'))['Rating__avg']
+                    worker.avg_rating = round(avg_rating, 1)
+                    worker.rating_count = worker_feedback.count()
+                else:
+                    worker.avg_rating = 0
+                    worker.rating_count = 0
+                
+                # Count completed services
+                worker.completed_services = Response.objects.filter(
+                    assigned_worker=worker,
+                    status=True
+                ).count()
+                
+                # Get experience (or default to 0)
+                worker.experience_years = worker.experience if hasattr(worker, 'experience') and worker.experience else 0
+        
+        # Apply sorting within each category
+        for category, worker_list in workers_by_category.items():
+            if sort_by == 'rating':
+                workers_by_category[category] = sorted(worker_list, key=lambda w: w.avg_rating, reverse=True)
+            elif sort_by == 'experience':
+                workers_by_category[category] = sorted(worker_list, key=lambda w: w.experience_years, reverse=True)
+            elif sort_by == 'completed':
+                workers_by_category[category] = sorted(worker_list, key=lambda w: w.completed_services, reverse=True)
+        
+        context = {
+            'workers_by_category': workers_by_category,
+            'selected_service': service_filter,
+            'sort_by': sort_by,
+        }
+        
+        return render(request, 'userpages/all_workers.html', context)
+class WorkerPublicProfile(View):
+    def get(self, request, id):
+        # Get the worker by ID
+        worker = get_object_or_404(workers, id=id)
+        
+        # Get worker's feedback
+        feedback_list = Feedback.objects.filter(Employ=worker).order_by('-Date')
+        
+        # Calculate statistics
+        completed_services = Response.objects.filter(
+            assigned_worker=worker,
+            status=True
+        ).count()
+        
+        # Calculate average rating
+        if feedback_list.exists():
+            avg_rating = feedback_list.aggregate(Avg('Rating'))['Rating__avg']
+            avg_rating = round(avg_rating, 1)
+            rating_count = feedback_list.count()
+        else:
+            avg_rating = 0
+            rating_count = 0
+        
+        # Calculate rating distribution
+        rating_distribution = {}
+        for i in range(1, 6):
+            count = feedback_list.filter(Rating=i).count()
+            if rating_count > 0:
+                percentage = (count / rating_count) * 100
+            else:
+                percentage = 0
+            rating_distribution[i] = {
+                'count': count,
+                'percentage': percentage
+            }
+        
+        context = {
+            'worker': worker,
+            'feedback_list': feedback_list,
+            'completed_services': completed_services,
+            'avg_rating': avg_rating,
+            'rating_count': rating_count,
+            'rating_distribution': rating_distribution,
+        }
+        
+        return render(request, 'userpages/worker_profile.html', context)
+    
+
+
+
+
+
+
+
+
+
+
+class DeleteUser(LoginRequiredMixin, View):
+    login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
+    def get(self, request, id):
+        try:
+            user_profile = users.objects.get(id=id)
+            user_account = user_profile.admin
+            user_profile.delete()
+            user_account.delete()
+            messages.success(request, "User deleted successfully!")
+        except users.DoesNotExist:
+            messages.error(request, "User not found!")
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+        
+        return HttpResponseRedirect('/manageusers')
+
+

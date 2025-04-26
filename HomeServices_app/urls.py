@@ -107,6 +107,7 @@ urlpatterns = [
 
 
 
+    path('completed/', views.completed_requests, name='completed_requests'),
 
 
 
@@ -136,9 +137,21 @@ path('edit-worker-profile/', views.edit_worker_profile.as_view(), name='edit_wor
 path('update-worker-profile/', views.update_worker_profile.as_view(), name='update_worker_profile'),
 path('update-worker-profile-pic/', views.update_worker_profile_pic.as_view(), name='update_worker_profile_pic'),
 path('change-worker-password/', views.change_worker_password.as_view(), name='change_worker_password'),
+
+
+
+
+
+
+
+
+path('all-workers/', views.AllWorkers.as_view(), name='all_workers'),
+path('worker-profile/<int:id>/', views.WorkerPublicProfile.as_view(), name='worker_profile'),
+
+path('deleteuser/<int:id>/', views.DeleteUser.as_view(), name='delete_user'),
+
+
 ]
-
-
 
 
 
