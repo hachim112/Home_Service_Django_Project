@@ -75,7 +75,8 @@ WSGI_APPLICATION = 'HomeServices_project.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'default': dj_database_url.config(
+        default='postgresql://user:7daBrvzYfc07wzlkxWWQBxA57yA2FUjC@dpg-d06lrqbuibrs73enmjv0-a.oregon-postgres.render.com/homeservice_jakp', # Your PostgreSQL connection string{
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'homeservice',    # The database you just created
         'USER': 'user',   # Your PostgreSQL user
