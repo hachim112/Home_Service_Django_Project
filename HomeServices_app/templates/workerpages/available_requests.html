@@ -200,12 +200,12 @@
     
     {% if available_requests %}
         <div class="row">
-            {% for request in available_requests %}
+            {% for service_request in available_requests %}
             <div class="col-lg-6">
                 <div class="card request-card">
                     <div class="request-header">
-                        <div>{{ request.service.Name }}</div>
-                        {% if request.response_set.first.worker_specifically_chosen %}
+                        <div>{{ service_request.service.Name }}</div>
+                        {% if service_request.is_specifically_chosen %}
                             <span class="badge-specific">
                                 <i class="fas fa-user-check mr-1"></i> Specifically Chosen
                             </span>
@@ -221,31 +221,31 @@
                                 <i class="fas fa-user"></i>
                             </div>
                             <div class="customer-details">
-                                <div class="customer-name">{{ request.user.admin.first_name }} {{ request.user.admin.last_name }}</div>
+                                <div class="customer-name">{{ service_request.user.admin.first_name }} {{ service_request.user.admin.last_name }}</div>
                                 <div class="customer-location">
-                                    <i class="fas fa-map-marker-alt mr-1"></i> {{ request.Address }}, {{ request.city.name }}
+                                    <i class="fas fa-map-marker-alt mr-1"></i> {{ service_request.Address }}, {{ service_request.city.name }}
                                 </div>
                             </div>
                         </div>
                         
                         <div class="service-type">
-                            <i class="fas fa-tools mr-1"></i> {{ request.service.Name }}
+                            <i class="fas fa-tools mr-1"></i> {{ service_request.service.Name }}
                         </div>
                         
                         <div class="problem-description">
                             <strong>Problem Description:</strong>
-                            <p class="mb-0 mt-2">{{ request.Problem_Description }}</p>
+                            <p class="mb-0 mt-2">{{ service_request.Problem_Description }}</p>
                         </div>
                         
                         <div class="request-date">
-                            <i class="far fa-calendar-alt mr-1"></i> Requested on {{ request.dateofrequest|date:"F d, Y" }}
+                            <i class="far fa-calendar-alt mr-1"></i> Requested on {{ service_request.dateofrequest|date:"F d, Y" }}
                         </div>
                     </div>
                     <div class="request-footer">
                         <div>
-                            <i class="fas fa-phone-alt mr-1"></i> {{ request.contact }}
+                            <i class="fas fa-phone-alt mr-1"></i> {{ service_request.contact }}
                         </div>
-                        <a href="{% url 'acceptrequest' action='accept' id=request.id %}" class="btn btn-accept">
+                        <a href="{% url 'acceptrequest' action='accept' id=service_request.id %}" class="btn btn-accept">
                             <i class="fas fa-check mr-1"></i> Accept Request
                         </a>
                     </div>
@@ -270,6 +270,22 @@
         setTimeout(function() {
             $('.alert').alert('close');
         }, 5000);
+
+        // Handle accept button click
+        $('.btn-accept').on('click', function(e) {
+            // Disable the button to prevent multiple clicks
+            $(this).prop('disabled', true);
+            $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Accepting...');
+            
+            // Get the card element
+            var card = $(this).closest('.request-card');
+            
+            // Add a fade-out animation
+            card.css('transition', 'all 0.5s ease');
+            card.css('opacity', '0.5');
+            
+            // Let the default link action proceed
+        });
     });
 </script>
 {% endblock %}

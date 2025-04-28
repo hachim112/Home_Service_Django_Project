@@ -25,7 +25,7 @@ SECRET_KEY = '-p@o12h+fw!7=k6#l8o@6raux@y!g1u024bej^dd0%w!2$b@pn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -73,22 +73,20 @@ WSGI_APPLICATION = 'HomeServices_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-import dj_database_url
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'homeservice_jakp',   # IMPORTANT: should match database name exactly
-        'USER': 'user',
-        'PASSWORD': '7daBrvzYfc07wzlkxWWQBxA57yA2FUjC',  # Use the correct password
-        'HOST': 'dpg-d06lrqbuibrs73enmjv0-a.oregon-postgres.render.com',
-        'PORT': '5432',
-        'OPTIONS': {
-            'client_encoding': 'UTF8',
-        },
+        'NAME': 'homeservice',    # The database you just created
+        'USER': 'postgres',   # Your PostgreSQL user
+        'PASSWORD': '1234', # Your PostgreSQL password
+        'HOST': 'localhost',
+        'PORT': '5432', 
+                    'OPTIONS': {
+            'client_encoding': 'UTF8',         },
+         # Default PostgreSQL port
     }
 }
-
 
 
 
@@ -128,10 +126,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+import os
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Media files (User uploaded content)
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

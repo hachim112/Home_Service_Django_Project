@@ -358,5 +358,43 @@
             $('.alert').alert('close');
         }, 5000);
     });
+
+    // Handle mark complete button click
+    $('.btn-complete').on('click', function(e) {
+        // Disable the button to prevent multiple clicks
+        $(this).prop('disabled', true);
+        $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Completing...');
+        
+        // Get the card element
+        var card = $(this).closest('.task-card');
+        
+        // Add a fade-out animation
+        card.css('transition', 'all 0.5s ease');
+        card.css('opacity', '0.5');
+        
+        // Let the default link action proceed
+    });
+
+    // Handle reject button click
+    $('.btn-reject').on('click', function(e) {
+        // Confirm before rejecting
+        if (!confirm('Are you sure you want to reject this task? This action cannot be undone.')) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Disable the button to prevent multiple clicks
+        $(this).prop('disabled', true);
+        $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Rejecting...');
+        
+        // Get the card element
+        var card = $(this).closest('.task-card');
+        
+        // Add a fade-out animation
+        card.css('transition', 'all 0.5s ease');
+        card.css('opacity', '0.5');
+        
+        // Let the default link action proceed
+    });
 </script>
 {% endblock %}

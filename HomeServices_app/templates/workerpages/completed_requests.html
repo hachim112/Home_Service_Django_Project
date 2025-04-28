@@ -202,6 +202,50 @@
     .details-card .card-header {
         border-radius: 0;
     }
+
+    .customer-avatar-lg {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+    }
+    
+    .customer-info {
+        margin-top: 20px;
+    }
+    
+    .info-item {
+        display: flex;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    
+    .info-label {
+        width: 100px;
+        font-weight: 600;
+        color: #555;
+    }
+    
+    .info-value {
+        flex: 1;
+        color: #333;
+    }
+    
+    .customer-details-link {
+        color: #2ecc71;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    
+    .customer-details-link:hover {
+        text-decoration: underline;
+    }
 </style>
 
 <div class="container-fluid">
@@ -265,7 +309,7 @@
                             {% for request in completed_requests %}
                             <tr class="clickable-row" data-id="{{ request.id }}">
                                 <td>{{ request.requests.service.Name }}</td>
-                                <td>{{ request.requests.user.admin.first_name }} {{ request.requests.user.admin.last_name }}</td>
+                                <td><a href="#" class="customer-details-link">{{ request.requests.user.admin.first_name }} {{ request.requests.user.admin.last_name }}</a></td>
                                 <td>{{ request.requests.contact }}</td>
                                 <td>{{ request.Date|date:"F d, Y" }}</td>
                                 <td>
@@ -296,6 +340,7 @@
                                                 <div class="col-md-6">
                                                     <h5>Customer Information</h5>
                                                     <p><strong>Name:</strong> {{ request.requests.user.admin.first_name }} {{ request.requests.user.admin.last_name }}</p>
+                                                    <p><strong>Email:</strong> {{ request.requests.user.admin.email }}</p>
                                                     <p><strong>Phone:</strong> {{ request.requests.contact }}</p>
                                                     <p><strong>Address:</strong> {{ request.requests.House_No }}, {{ request.requests.Address }}, {{ request.requests.city.name }}, {{ request.requests.pin }}</p>
                                                     <p><strong>Landmark:</strong> {{ request.requests.landmark|default:"Not provided" }}</p>
@@ -334,6 +379,52 @@
             </div>
         </div>
     {% endif %}
+
+    <!-- Customer Details Modal -->
+    <div class="modal fade" id="customerDetailsModal" tabindex="-1" role="dialog" aria-labelledby="customerDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customerDetailsModalLabel">Customer Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="customer-profile">
+                        <div class="text-center mb-4">
+                            <div class="customer-avatar-lg mx-auto">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h4 class="mt-3 customer-name">John Doe</h4>
+                        </div>
+                        
+                        <div class="customer-info">
+                            <div class="info-item">
+                                <div class="info-label"><i class="fas fa-envelope mr-2"></i>Email:</div>
+                                <div class="info-value customer-email">customer@example.com</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label"><i class="fas fa-phone mr-2"></i>Phone:</div>
+                                <div class="info-value customer-phone">+1234567890</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label"><i class="fas fa-map-marker-alt mr-2"></i>Address:</div>
+                                <div class="info-value customer-address">123 Main St, City, State, 12345</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label"><i class="fas fa-map-pin mr-2"></i>Landmark:</div>
+                                <div class="info-value customer-landmark">Near Shopping Mall</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -360,6 +451,44 @@
         // Make entire row clickable
         $('.clickable-row').on('click', function() {
             $(this).find('.view-details-btn').click();
+        });
+        
+        // Customer details modal
+        $('.customer-details-link').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Get the row and details row
+            var row = $(this).closest('tr');
+            var detailsRow = row.next('.details-row');
+            
+            // If details row is hidden, show it first to access the data
+            var wasHidden = detailsRow.is(':hidden');
+            if (wasHidden) {
+                detailsRow.show();
+            }
+            
+            // Get customer details from the details row
+            var name = detailsRow.find('p:contains("Name:")').text().replace('Name:', '').trim();
+            var email = detailsRow.find('p:contains("Email:")').text().replace('Email:', '').trim();
+            var phone = detailsRow.find('p:contains("Phone:")').text().replace('Phone:', '').trim();
+            var address = detailsRow.find('p:contains("Address:")').text().replace('Address:', '').trim();
+            var landmark = detailsRow.find('p:contains("Landmark:")').text().replace('Landmark:', '').trim();
+            
+            // Hide the details row again if it was hidden before
+            if (wasHidden) {
+                detailsRow.hide();
+            }
+            
+            // Populate modal with customer details
+            $('#customerDetailsModal .customer-name').text(name);
+            $('#customerDetailsModal .customer-email').text(email);
+            $('#customerDetailsModal .customer-phone').text(phone);
+            $('#customerDetailsModal .customer-address').text(address);
+            $('#customerDetailsModal .customer-landmark').text(landmark);
+            
+            // Show modal
+            $('#customerDetailsModal').modal('show');
         });
     });
 </script>
