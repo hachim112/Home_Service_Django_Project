@@ -60,11 +60,6 @@ class ServiceRequests(models.Model):
     status=models.BooleanField(default=False)
     dateofrequest=models.DateTimeField(auto_now_add=True)
 
-class Response(models.Model):
-    requests=models.ForeignKey(ServiceRequests,on_delete=models.CASCADE)
-    assigned_worker=models.ForeignKey(workers,on_delete=models.CASCADE)
-    Date=models.DateField(auto_now=True)
-    status=models.BooleanField(default=False)
 
 
 class Feedback(models.Model):
@@ -84,14 +79,6 @@ class Profile(models.Model):
 
 
 
-
-
-
-
-
-
-
-## models.py
 class Response(models.Model):
     requests = models.ForeignKey(ServiceRequests, on_delete=models.CASCADE)
     assigned_worker = models.ForeignKey(workers, on_delete=models.CASCADE)

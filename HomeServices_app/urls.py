@@ -107,7 +107,7 @@ urlpatterns = [
 
 
 
-    path('completed/', views.completed_requests, name='completed_requests'),
+    path('completed_requests/', views.completed_requests, name='completed_requests'),
 
 
 
@@ -119,7 +119,7 @@ urlpatterns = [
     
     
     
-    
+
     
     
     

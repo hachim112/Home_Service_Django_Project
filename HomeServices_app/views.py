@@ -536,18 +536,75 @@ class workers_home(LoginRequiredMixin, View):
         ).values_list('requests__user', flat=True).distinct()
         total_clients = len(client_ids)
         
+        # 5. Count available requests that match worker's designation
+        available_count = ServiceRequests.objects.filter(
+            service__Name=worker.designation,
+            status=False
+        ).exclude(
+            id__in=Response.objects.filter(worker_specifically_chosen=True).values_list('requests_id', flat=True)
+        ).count()
+        
+        # Get recent activities
+        recent_activities = []
+        
+        # Recent completed tasks
+        recent_completed = Response.objects.filter(
+            assigned_worker=worker,
+            status=True
+        ).order_by('-Date')[:3]
+        
+        for response in recent_completed:
+            recent_activities.append({
+                'type': 'completed',
+                'title': f"Completed: {response.requests.service.Name}",
+                'description': f"You completed a service request for {response.requests.user.admin.first_name} {response.requests.user.admin.last_name}",
+                'time': response.Date.strftime("%b %d, %Y at %I:%M %p")
+            })
+        
+        # Recent assigned tasks
+        recent_assigned = Response.objects.filter(
+            assigned_worker=worker,
+            status=False
+        ).order_by('-id')[:3]
+        
+        for response in recent_assigned:
+            recent_activities.append({
+                'type': 'assigned',
+                'title': f"Assigned: {response.requests.service.Name}",
+                'description': f"You were assigned a new service request from {response.requests.user.admin.first_name} {response.requests.user.admin.last_name}",
+                'time': response.requests.dateofrequest.strftime("%b %d, %Y at %I:%M %p")
+            })
+        
+        # Recent feedback
+        recent_feedback = Feedback.objects.filter(
+            Employ=worker
+        ).order_by('-Date')[:3]
+        
+        for feedback in recent_feedback:
+            stars = "★" * int(feedback.Rating) + "☆" * (5 - int(feedback.Rating))
+            recent_activities.append({
+                'type': 'feedback',
+                'title': f"New Feedback: {stars}",
+                'description': f"{feedback.Description[:50]}{'...' if len(feedback.Description) > 50 else ''}",
+                'time': feedback.Date.strftime("%b %d, %Y at %I:%M %p")
+            })
+        
+        # Sort all activities by time (newest first)
+        recent_activities = sorted(
+            recent_activities, 
+            key=lambda x: datetime.strptime(x['time'], "%b %d, %Y at %I:%M %p"), 
+            reverse=True
+        )[:5]  # Limit to 5 most recent activities
+        
         context = {
             'completed_requests': completed_requests,
             'pending_requests': pending_requests,
             'total_requests': total_requests,
             'total_clients': total_clients,
+            'available_count': available_count,
+            'recent_activities': recent_activities,
         }
         return render(request, 'workerpages/Workerhompage.html', context)
-    
-class contact(View):  # Remove LoginRequiredMixin
-    def get(self,request):
-        return render(request, 'userpages/contact.html')
-
 
 
 
@@ -941,7 +998,11 @@ class workerviewresponse(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
     def get(self, request):
         worker_id = request.user.id
-        assigned_responses = Response.objects.filter(assigned_worker__admin__id=worker_id)
+        # Only get responses that are not completed (status=False)
+        assigned_responses = Response.objects.filter(
+            assigned_worker__admin__id=worker_id,
+            status=False  # This ensures we only get pending tasks
+        )
         
         # Get user contact information for each response
         for response in assigned_responses:
@@ -1658,3 +1719,15 @@ class DeleteUser(LoginRequiredMixin, View):
             messages.error(request, f"An error occurred: {str(e)}")
         
         return HttpResponseRedirect('/manageusers')
+
+
+
+
+
+
+
+
+
+class contact(View):
+    def get(self, request):
+        return render(request, 'userpages/contact.html')
