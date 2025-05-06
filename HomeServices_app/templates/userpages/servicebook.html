@@ -1,270 +1,1418 @@
 {% extends "userpages/user_header_footer.html" %}
 {% block content %}
 {% load static %}
-<div class="container-xxl py-2" style="max-width:1650px">
-    <div class="container-fluid service-page-header py-5 mb-5">
-        <div class="container py-5">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Book a Service</h1>
-            <nav aria-label="breadcrumb animated slideInDown">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-white" href="{% url 'index' %}">Home</a></li>
-                    <li class="breadcrumb-item"><a class="text-white" href="{% url 'services' %}">Services</a></li>
-                    <li class="breadcrumb-item text-white active" aria-current="page">{{ services.Name }}</li>
-                </ol>
-            </nav>
+
+<!-- Enhanced Hero Section with Gradient Overlay -->
+<div class="service-hero-section">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-4 text-white fw-bold mb-3 animated fadeInDown">Book a {{ services.Name }} Service</h1>
+                <nav aria-label="breadcrumb" class="animated fadeIn">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'index' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'services' %}">Services</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">{{ services.Name }}</li>
+                    </ol>
+                </nav>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="container-fluid bg-light overflow-hidden my-5 px-lg-0" style="max-width:1650px">
-    <div class="container quote px-lg-0">
-        <div class="row g-0 mx-lg-0">
-            <div class="col-lg-6 ps-lg-0" style="min-height: 400px;">
-                <div class="position-relative h-100">
-                    <img class="position-absolute img-fluid w-100 h-100" src="{{ services.img.url }}" style="object-fit: cover;" alt="{{ services.Name }}">
-                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(53, 53, 53, .7);">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-12 col-lg-10 text-center">
-                                    <h2 class="text-white mb-4">{{ services.Name }}</h2>
+<div class="container booking-container my-5">
+    <div class="row g-0 shadow-lg rounded-4 overflow-hidden">
+        <!-- Service Info Section -->
+        <div class="col-lg-5 service-info-section">
+            <div class="h-100 position-relative">
+                <div class="service-image" style="background-image: url('{{ services.img.url }}')"></div>
+                <div class="service-overlay d-flex align-items-center">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-lg-10 text-center">
+                                <div class="service-icon-wrapper mb-4">
+                                    <i class="fas fa-tools service-icon"></i>
+                                </div>
+                                <h2 class="text-white fw-bold mb-4">{{ services.Name }}</h2>
+                                <div class="service-description">
                                     <p class="text-white mb-0">{{ services.Description }}</p>
+                                </div>
+                                <div class="service-features mt-4">
+                                    <div class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Professional Service</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Verified Experts</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Satisfaction Guaranteed</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 quote-text py-5 wow fadeIn" data-wow-delay="0.5s">
-                <div class="p-lg-5 pe-lg-0">
-                    <div class="section-title text-start">
-                        <h1 class="display-5 mb-4">Book an Appointment</h1>
+        </div>
+        
+        <!-- Booking Form Section -->
+        <div class="col-lg-7 booking-form-section">
+            <div class="p-4 p-lg-5">
+                <div class="section-title mb-4">
+                    <h2 class="fw-bold">Book Your Appointment</h2>
+                    <p class="text-muted">Fill in the details below to schedule your service</p>
+                </div>
+                
+                <form method="post" class="booking-form">
+                    {% csrf_token %}
+                    
+                    <!-- Form Progress Indicator -->
+                    <div class="form-progress mb-4">
+                        <div class="progress-step active" id="step-details">
+                            <div class="step-icon">1</div>
+                            <div class="step-label">Details</div>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="progress-step" id="step-schedule">
+                            <div class="step-icon">2</div>
+                            <div class="step-label">Schedule</div>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="progress-step" id="step-worker">
+                            <div class="step-icon">3</div>
+                            <div class="step-label">Worker</div>
+                        </div>
                     </div>
-                    <form method="post" class="booking-form">
-                        {% csrf_token %}
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label"><b>Problem Description:</b></label>
-                                <textarea class="form-control border-0" name="Problem_Description" placeholder="Please describe your problem in detail" rows="4" required></textarea>
-                            </div>
-                            
-                            <div class="col-12 col-sm-6">
-                                <label class="form-label"><b>House/Flat No:</b></label>
-                                <input type="text" class="form-control border-0" name="House_No" placeholder="Your House/Flat Number" style="height: 55px;" required>
-                            </div>
-                            
-                            <div class="col-12 col-sm-6">
-                                <label class="form-label"><b>Address:</b></label>
-                                <input type="text" class="form-control border-0" name="Address" placeholder="Street Address" style="height: 55px;" required>
-                            </div>
-                            
-                            <div class="col-12 col-sm-6">
-                                <label class="form-label"><b>Contact Number:</b></label>
-                                <input type="text" class="form-control border-0" name="contact" placeholder="Your Mobile Number" style="height: 55px;" required>
-                            </div>
-                            
-                            <div class="col-12 col-sm-6">
-                                <label class="form-label"><b>Service Category:</b></label>
-                                <input type="text" class="form-control border-0 bg-light" name="service_name" style="height: 55px;" value="{{ services.Name }}" readonly>
-                                <input type="hidden" name="service" value="{{ services.id }}">
-                            </div>
-                            
-                            <div class="col-12 col-sm-6">
-                                <label class="form-label"><b>City:</b></label>
-                                <select class="form-select border-0" style="height: 55px;" name="city" required>
-                                    <option value="" disabled selected>Select a City</option>
-                                    {% for c in city %}
-                                    <option value="{{ c.id }}">{{ c.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            
-                            <div class="col-12 col-sm-6">
-                                <label class="form-label"><b>Pincode:</b></label>
-                                <input type="text" class="form-control border-0" name="Pincode" placeholder="Your Pincode" style="height: 55px;" required>
-                            </div>
-                            
-                            <div class="col-12">
-                                <label class="form-label"><b>Landmark:</b></label>
-                                <textarea class="form-control border-0" name="landmark" placeholder="Enter a nearby landmark for easy location" rows="2"></textarea>
-                            </div>
-                            
-                            <!-- Worker Selection Section -->
-                            <div class="col-12 mt-4">
-                                <div class="card border-0 shadow-sm">
-                                    <div class="card-header bg-light">
-                                        <h5 class="mb-0">Select a Worker</h5>
+                    
+                    <!-- Form Sections -->
+                    <div class="form-sections">
+                        <!-- Step 1: Service Details -->
+                        <div class="form-section active" id="section-details">
+                            <div class="form-card">
+                                <h5 class="form-section-title">
+                                    <i class="fas fa-info-circle me-2"></i>Service Details
+                                </h5>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Problem Description</label>
+                                    <textarea class="form-control" name="Problem_Description" placeholder="Please describe your problem in detail" rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">House/Flat No</label>
+                                        <input type="text" class="form-control" name="House_No" placeholder="Your House/Flat Number" required>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="worker_selection" id="autofast" value="autofast" checked>
-                                                <label class="form-check-label" for="autofast">
-                                                    <span class="badge bg-primary me-2">AutoFast</span>
-                                                    Send request to all available workers (first to accept gets the job)
-                                                </label>
-                                            </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Contact Number</label>
+                                        <input type="text" class="form-control" name="contact" placeholder="Your Mobile Number" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Address</label>
+                                        <input type="text" class="form-control" name="Address" placeholder="Street Address" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-6">
+                                        <label class="form-label">City</label>
+                                        <select class="form-select" name="city" required>
+                                            <option value="" disabled selected>Select a City</option>
+                                            {% for c in city %}
+                                            <option value="{{ c.id }}">{{ c.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Pincode</label>
+                                        <input type="text" class="form-control" name="Pincode" placeholder="Your Pincode" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <label class="form-label">Landmark (Optional)</label>
+                                    <input type="text" class="form-control" name="landmark" placeholder="Enter a nearby landmark for easy location">
+                                </div>
+                                
+                                <input type="hidden" name="service_name" value="{{ services.Name }}">
+                                <input type="hidden" name="service" value="{{ services.id }}">
+                                
+                                <div class="mt-4 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary next-step" data-next="section-schedule">
+                                        Continue <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Schedule -->
+                        <div class="form-section" id="section-schedule">
+                            <div class="form-card">
+                                <h5 class="form-section-title">
+                                    <i class="fas fa-calendar-alt me-2"></i>Schedule Your Service
+                                </h5>
+                                
+                                <div class="alert alert-info mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Select your preferred date and time to see available workers
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Preferred Date</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                            <input type="date" class="form-control" name="preferred_date" id="preferred_date" required>
                                         </div>
-                                        
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="worker_selection" id="specific_worker" value="specific">
-                                                <label class="form-check-label" for="specific_worker">
-                                                    Choose a specific worker
-                                                </label>
-                                            </div>
-                                        </div>
-                                        
-                                        <div id="workers_list" class="mt-3" style="display: none;">
-                                            {% if available_workers %}
-                                                <div class="row">
-                                                    {% for worker in available_workers %}
-                                                    <div class="col-md-6 mb-3">
-                                                        <div class="card worker-card h-100">
-                                                            <div class="card-body">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" name="selected_worker" id="worker_{{ worker.id }}" value="{{ worker.id }}">
-                                                                    <label class="form-check-label w-100" for="worker_{{ worker.id }}">
-                                                                        <div class="d-flex align-items-center mb-2">
-                                                                            {% if worker.profile_pic %}
-                                                                            <img src="{{ worker.profile_pic.url }}" alt="{{ worker.admin.first_name }}" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
-                                                                            {% else %}
-                                                                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                                                                                <i class="fas fa-user"></i>
-                                                                            </div>
-                                                                            {% endif %}
-                                                                            <h6 class="mb-0">{{ worker.admin.first_name }} {{ worker.admin.last_name }}</h6>
-                                                                        </div>
-                                                                        <div class="ps-4 ms-2">
-                                                                            <div class="d-flex align-items-center mb-1">
-                                                                                <span class="text-muted me-2"><i class="fas fa-briefcase"></i></span>
-                                                                                <span>{{ worker.completed_tasks }} completed tasks</span>
-                                                                            </div>
-                                                                            <div class="d-flex align-items-center">
-                                                                                <span class="text-muted me-2"><i class="fas fa-star"></i></span>
-                                                                                <span>Rating: {{ worker.rating|floatformat:1 }}/5</span>
-                                                                                <div class="ms-2">
-                                                                                    {% for i in "12345" %}
-                                                                                        {% if forloop.counter <= worker.rating_stars %}
-                                                                                        <i class="fas fa-star text-warning"></i>
-                                                                                        {% elif forloop.counter <= worker.rating_stars_half %}
-                                                                                        <i class="fas fa-star-half-alt text-warning"></i>
-                                                                                        {% else %}
-                                                                                        <i class="far fa-star text-warning"></i>
-                                                                                        {% endif %}
-                                                                                    {% endfor %}
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    {% endfor %}
-                                                </div>
-                                            {% else %}
-                                                <div class="alert alert-info">
-                                                    No workers available for this service at the moment.
-                                                </div>
-                                            {% endif %}
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Preferred Time</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                            <select class="form-select" name="preferred_time" id="preferred_time" required>
+                                                <option value="" disabled selected>Select Time</option>
+                                                <option value="morning">Morning (8:00 AM - 12:00 PM)</option>
+                                                <option value="afternoon">Afternoon (12:00 PM - 4:00 PM)</option>
+                                                <option value="evening">Evening (4:00 PM - 8:00 PM)</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <div class="col-12 mt-3">
-                                <button class="btn btn-primary w-100 py-3" type="submit">
-                                    <i class="fas fa-calendar-check me-2"></i>Book Now
-                                </button>
+                                
+                                <div class="availability-preview mt-4" id="availability-preview" style="display: none;">
+                                    <h6 class="preview-title">
+                                        <i class="fas fa-user-check me-2"></i>Worker Availability Preview
+                                    </h6>
+                                    <div class="availability-status">
+                                        <div class="text-center py-3" id="availability-loading">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                            <p class="mt-2 mb-0">Checking worker availability...</p>
+                                        </div>
+                                        <div id="availability-results" style="display: none;">
+                                            <!-- Results will be populated here -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <button type="button" class="btn btn-outline-secondary prev-step" data-prev="section-details">
+                                        <i class="fas fa-arrow-left me-2"></i> Back
+                                    </button>
+                                    <button type="button" class="btn btn-primary next-step" data-next="section-worker" id="schedule-next-btn">
+                                        Continue <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </form>
-                </div>
+                        
+                        <!-- Step 3: Worker Selection -->
+                        <div class="form-section" id="section-worker">
+                            <div class="form-card">
+                                <h5 class="form-section-title">
+                                    <i class="fas fa-user-tie me-2"></i>Select a Worker
+                                </h5>
+                                
+                                <div class="schedule-summary mb-4">
+                                    <div class="schedule-badge">
+                                        <i class="fas fa-calendar-check me-2"></i>
+                                        <span id="selected-date-display">Not selected</span>
+                                    </div>
+                                    <div class="schedule-badge">
+                                        <i class="fas fa-clock me-2"></i>
+                                        <span id="selected-time-display">Not selected</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="worker-selection-options">
+                                    <div class="worker-option mb-3">
+                                        <input class="form-check-input" type="radio" name="worker_selection" id="autofast" value="autofast" checked>
+                                        <label class="form-check-label" for="autofast">
+                                            <div class="option-icon autofast-icon">
+                                                <i class="fas fa-bolt"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <h6>AutoFast Assignment</h6>
+                                                <p class="mb-0">Send request to all available workers. First to accept gets the job.</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="worker-option">
+                                        <input class="form-check-input" type="radio" name="worker_selection" id="specific_worker" value="specific">
+                                        <label class="form-check-label" for="specific_worker">
+                                            <div class="option-icon specific-icon">
+                                                <i class="fas fa-user-check"></i>
+                                            </div>
+                                            <div class="option-content">
+                                                <h6>Choose Specific Worker</h6>
+                                                <p class="mb-0">Select a specific worker from our professional team.</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div id="workers_list" class="mt-4" style="display: none;">
+                                    <div id="workers-loading" class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p class="mt-2 mb-0">Loading available workers...</p>
+                                    </div>
+                                    
+                                    <div id="workers-grid-container" style="display: none;">
+                                        {% if available_workers %}
+                                        <div class="workers-grid">
+                                            {% for worker in available_workers %}
+                                            <div class="worker-card-wrapper" data-worker-id="{{ worker.id }}">
+                                                <input type="radio" name="selected_worker" id="worker_{{ worker.id }}" value="{{ worker.id }}" class="worker-radio">
+                                                <label for="worker_{{ worker.id }}" class="worker-card">
+                                                    <div class="worker-card-header">
+                                                        {% if worker.profile_pic %}
+                                                        <img src="{{ worker.profile_pic.url }}" alt="{{ worker.admin.first_name }}" class="worker-avatar">
+                                                        {% else %}
+                                                        <div class="worker-avatar-placeholder">
+                                                            <i class="fas fa-user"></i>
+                                                        </div>
+                                                        {% endif %}
+                                                        <div class="worker-info">
+                                                            <h6 class="worker-name">{{ worker.admin.first_name }} {{ worker.admin.last_name }}</h6>
+                                                            <div class="worker-rating">
+                                                                {% for i in "12345" %}
+                                                                    {% if forloop.counter <= worker.rating_stars %}
+                                                                    <i class="fas fa-star"></i>
+                                                                    {% elif forloop.counter <= worker.rating_stars_half %}
+                                                                    <i class="fas fa-star-half-alt"></i>
+                                                                    {% else %}
+                                                                    <i class="far fa-star"></i>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                                <span>{{ worker.rating|floatformat:1 }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="worker-card-body">
+                                                        <div class="worker-stat">
+                                                            <i class="fas fa-briefcase"></i>
+                                                            <span>{{ worker.completed_tasks }} completed tasks</span>
+                                                        </div>
+                                                        <div class="availability-indicator"></div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        {% else %}
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>No workers available for this service at the moment.
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div id="no-available-workers" class="alert alert-warning mt-3" style="display: none;">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        No workers are available at the selected date and time. Please try a different time or use AutoFast assignment.
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <button type="button" class="btn btn-outline-secondary prev-step" data-prev="section-schedule">
+                                        <i class="fas fa-arrow-left me-2"></i> Back
+                                    </button>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-calendar-check me-2"></i>Confirm Booking
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-    .booking-form label {
-        margin-bottom: 0.5rem;
-        color: #495057;
+    /* Enhanced Styling with Modern Gradients */
+    :root {
+        --primary-color: #4361ee;
+        --primary-light: #4895ef;
+        --primary-dark: #3f37c9;
+        --secondary-color: #4cc9f0;
+        --accent-color: #f72585;
+        --success-color: #4CAF50;
+        --warning-color: #ff9800;
+        --danger-color: #f44336;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+        --gray-color: #6c757d;
+        --border-radius: 10px;
+        --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
     }
     
-    .booking-form .form-control,
-    .booking-form .form-select {
-        border-radius: 0.25rem;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    /* Hero Section */
+    .service-hero-section {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.9), rgba(76, 201, 240, 0.9)), 
+                    url('{% static "user_assets/img/HomeServices1.jpg" %}') center/cover no-repeat;
+        padding: 80px 0;
+        margin-bottom: 40px;
+        color: white;
+        position: relative;
     }
     
-    .booking-form .form-control:focus,
-    .booking-form .form-select:focus {
-        border-color: #f97316;
-        box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+    /* Booking Container */
+    .booking-container {
+        max-width: 1200px;
+        margin: 0 auto;
     }
     
-    .service-page-header {
-        background: linear-gradient(rgba(53, 53, 53, .7), rgba(53, 53, 53, .7)), url('{% static "user_assets/img/HomeServices1.jpg" %}') center center no-repeat;
+    /* Service Info Section */
+    .service-info-section {
+        position: relative;
+        min-height: 100%;
+    }
+    
+    .service-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         background-size: cover;
+        background-position: center;
+    }
+    
+    .service-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.9), rgba(76, 201, 240, 0.8));
+        padding: 40px;
+    }
+    
+    .service-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+    
+    .service-icon {
+        font-size: 36px;
+        color: white;
+    }
+    
+    .service-description {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: var(--border-radius);
+        padding: 15px;
+        backdrop-filter: blur(5px);
+    }
+    
+    .service-features {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 30px;
+        padding: 8px 15px;
+        backdrop-filter: blur(5px);
+    }
+    
+    .feature-item i {
+        color: #4cc9f0;
+    }
+    
+    /* Booking Form Section */
+    .booking-form-section {
+        background: white;
+    }
+    
+    .section-title h2 {
+        color: var(--primary-dark);
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .section-title h2:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        border-radius: 3px;
+    }
+    
+    /* Form Progress */
+    .form-progress {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .progress-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .step-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: var(--gray-color);
+        margin-bottom: 8px;
+        transition: var(--transition);
+    }
+    
+    .progress-step.active .step-icon {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.3);
+    }
+    
+    .step-label {
+        font-size: 14px;
+        color: var(--gray-color);
+        transition: var(--transition);
+    }
+    
+    .progress-step.active .step-label {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+    
+    .progress-connector {
+        flex-grow: 1;
+        height: 3px;
+        background: #e9ecef;
+        margin: 0 10px;
+        position: relative;
+        top: -20px;
+        z-index: 0;
+    }
+    
+    /* Form Sections */
+    .form-section {
+        display: none;
+    }
+    
+    .form-section.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .form-card {
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    .form-section-title {
+        margin-bottom: 20px;
+        color: var(--primary-dark);
+        display: flex;
+        align-items: center;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .form-section-title i {
+        color: var(--primary-color);
+    }
+    
+    /* Form Controls */
+    .form-control, .form-select {
+        border: 1px solid #ced4da;
+        border-radius: var(--border-radius);
+        padding: 10px 15px;
+        transition: var(--transition);
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 0.25rem rgba(76, 201, 240, 0.25);
+    }
+    
+    .input-group-text {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        color: white;
+        border: none;
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
+    
+    /* Worker Selection */
+    .worker-selection-options {
+        margin-bottom: 20px;
+    }
+    
+    .worker-option {
+        position: relative;
+        margin-bottom: 15px;
+    }
+    
+    .worker-option input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .worker-option label {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #ced4da;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .worker-option input:checked + label {
+        border-color: var(--primary-color);
+        background: rgba(76, 201, 240, 0.05);
+        box-shadow: 0 0 0 1px var(--primary-color);
+    }
+    
+    .option-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: white;
+        font-size: 20px;
+    }
+    
+    .autofast-icon {
+        background: linear-gradient(135deg, #f72585, #b5179e);
+    }
+    
+    .specific-icon {
+        background: linear-gradient(135deg, #4361ee, #4895ef);
+    }
+    
+    .option-content {
+        flex: 1;
+    }
+    
+    .option-content h6 {
+        margin-bottom: 5px;
+        color: var(--dark-color);
+    }
+    
+    .option-content p {
+        color: var(--gray-color);
+        font-size: 14px;
+    }
+    
+    /* Workers Grid */
+    .workers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+    }
+    
+    .worker-card-wrapper {
+        position: relative;
+    }
+    
+    .worker-radio {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .worker-card {
+        display: block;
+        border: 1px solid #ced4da;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        transition: var(--transition);
+        cursor: pointer;
+        height: 100%;
+    }
+    
+    .worker-radio:checked + .worker-card {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-color);
+        transform: translateY(-3px);
+    }
+    
+    .worker-card-header {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-bottom: 1px solid #ced4da;
+    }
+    
+    .worker-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .worker-avatar-placeholder {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+    
+    .worker-info {
+        flex: 1;
+    }
+    
+    .worker-name {
+        margin-bottom: 5px;
+        font-size: 16px;
+    }
+    
+    .worker-rating {
+        display: flex;
+        align-items: center;
+        color: #ff9800;
+        font-size: 14px;
+    }
+    
+    .worker-rating span {
+        margin-left: 5px;
+        color: var(--gray-color);
+    }
+    
+    .worker-card-body {
+        padding: 15px;
+    }
+    
+    .worker-stat {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        color: var(--gray-color);
+        font-size: 14px;
+    }
+    
+    .worker-stat i {
+        margin-right: 8px;
+        color: var(--primary-color);
+    }
+    
+    .availability-indicator {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    
+    /* Booking Summary */
+    .booking-summary {
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .summary-title {
+        margin-bottom: 15px;
+        color: var(--primary-dark);
+        font-weight: 600;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+    
+    .summary-label {
+        color: var(--gray-color);
+    }
+    
+    .summary-value {
+        font-weight: 500;
+    }
+    
+    /* Buttons */
+    .btn {
+        border-radius: 30px;
+        padding: 8px 20px;
+        transition: var(--transition);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        border: none;
+    }
+    
+    .btn-success:hover {
+        background: linear-gradient(135deg, #27ae60, #219653);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+    
+    .btn-outline-secondary {
+        border-color: #ced4da;
+        color: var(--gray-color);
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: #f8f9fa;
+        border-color: #adb5bd;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 991px) {
+        .service-info-section {
+            min-height: 400px;
+        }
+        
+        .workers-grid {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .workers-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+        
+        .worker-name {
+            font-size: 14px;
+        }
+    }
+    
+    /* Animations */
+    .animated {
+        animation-duration: 1s;
+        animation-fill-mode: both;
+    }
+    
+    .fadeInDown {
+        animation-name: fadeInDown;
+    }
+    
+    .fadeIn {
+        animation-name: fadeIn;
+    }
+    
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translate3d(0, -20px, 0);
+        }
+        to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Schedule Summary */
+    .schedule-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .schedule-badge {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(76, 201, 240, 0.1));
+        border-radius: 30px;
+        padding: 8px 15px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--primary-dark);
+        border: 1px solid rgba(76, 201, 240, 0.2);
+    }
+
+    .schedule-badge i {
+        color: var(--primary-color);
+        margin-right: 5px;
+    }
+
+    /* Availability Preview */
+    .availability-preview {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(76, 201, 240, 0.05));
+        border-radius: var(--border-radius);
+        padding: 15px;
+        margin-top: 20px;
+        border: 1px solid rgba(76, 201, 240, 0.1);
+    }
+
+    .preview-title {
+        margin-bottom: 15px;
+        color: var(--primary-dark);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .preview-title i {
+        color: var(--primary-color);
+    }
+
+    .availability-status {
+        min-height: 100px;
+    }
+
+    .availability-count {
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .count-item {
+        flex: 1;
+        padding: 10px;
+    }
+
+    .count-value {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .count-label {
+        font-size: 14px;
+        color: var(--gray-color);
+    }
+
+    .available-count {
+        color: var(--success-color);
+    }
+
+    .unavailable-count {
+        color: var(--danger-color);
+    }
+
+    .availability-message {
+        text-align: center;
+        padding: 10px;
+        border-radius: var(--border-radius);
+        margin-top: 10px;
+    }
+
+    .availability-message.success {
+        background-color: rgba(46, 204, 113, 0.1);
+        color: var(--success-color);
+        border: 1px solid rgba(46, 204, 113, 0.2);
+    }
+
+    .availability-message.warning {
+        background-color: rgba(243, 156, 18, 0.1);
+        color: var(--warning-color);
+        border: 1px solid rgba(243, 156, 18, 0.2);
+    }
+
+    .availability-message.danger {
+        background-color: rgba(231, 76, 60, 0.1);
+        color: var(--danger-color);
+        border: 1px solid rgba(231, 76, 60, 0.2);
+    }
+
+    /* Worker Card Improvements */
+    .worker-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .worker-card.available::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 40px 40px 0;
+        border-color: transparent var(--success-color) transparent transparent;
+        z-index: 1;
+    }
+
+    .worker-card.available::after {
+        content: '\f00c';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: white;
+        z-index: 2;
+        font-size: 12px;
+    }
+
+    .worker-card.unavailable {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    .worker-card.unavailable::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 40px 40px 0;
+        border-color: transparent var(--danger-color) transparent transparent;
+        z-index: 1;
+    }
+
+    .worker-card.unavailable::after {
+        content: '\f00d';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: white;
+        z-index: 2;
+        font-size: 12px;
+    }
+
+    .availability-indicator .text-success {
+        display: flex;
+        align-items: center;
+        background-color: rgba(46, 204, 113, 0.1);
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+
+    .availability-indicator .text-danger {
+        display: flex;
+        align-items: center;
+        background-color: rgba(231, 76, 60, 0.1);
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: 500;
     }
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const autoFastRadio = document.getElementById('autofast');
-        const specificWorkerRadio = document.getElementById('specific_worker');
-        const workersList = document.getElementById('workers_list');
+document.addEventListener('DOMContentLoaded', function() {
+    // Set minimum date for date picker to today
+    const dateInput = document.getElementById('preferred_date');
+    const timeSelect = document.getElementById('preferred_time');
+    
+    if (dateInput) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const formattedDate = `${yyyy}-${mm}-${dd}`;
+        dateInput.min = formattedDate;
         
-        // Show/hide workers list based on initial selection
-        if (specificWorkerRadio.checked) {
-            workersList.style.display = 'block';
-        } else {
-            workersList.style.display = 'none';
-        }
+        // Set default value to today
+        dateInput.value = formattedDate;
         
-        autoFastRadio.addEventListener('change', function() {
-            if (this.checked) {
-                workersList.style.display = 'none';
-            }
-        });
-        
-        specificWorkerRadio.addEventListener('change', function() {
-            if (this.checked) {
-                workersList.style.display = 'block';
-            }
-        });
-        
-        // Ensure at least one worker is selected when submitting the form
-        const bookingForm = document.querySelector('.booking-form');
-        bookingForm.addEventListener('submit', function(event) {
-            if (specificWorkerRadio.checked) {
-                const selectedWorker = document.querySelector('input[name="selected_worker"]:checked');
-                if (!selectedWorker) {
-                    event.preventDefault();
-                    alert('Please select a worker or choose AutoFast option.');
+        // Format date for display
+        const formattedDisplayDate = formatDateForDisplay(formattedDate);
+        document.getElementById('selected-date-display').textContent = formattedDisplayDate;
+    }
+    
+    // Multi-step form navigation
+    const nextButtons = document.querySelectorAll('.next-step');
+    const prevButtons = document.querySelectorAll('.prev-step');
+    const progressSteps = document.querySelectorAll('.progress-step');
+    
+    nextButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const currentSection = this.closest('.form-section');
+            const nextSectionId = this.getAttribute('data-next');
+            const nextSection = document.getElementById(nextSectionId);
+            
+            // If moving from schedule to worker section, check worker availability
+            if (nextSectionId === 'section-worker') {
+                const dateValue = dateInput.value;
+                const timeValue = timeSelect.value;
+                
+                if (!dateValue || !timeValue) {
+                    alert('Please select both date and time before proceeding.');
+                    return;
                 }
+                
+                // Update worker availability before showing the worker section
+                document.getElementById('workers-loading').style.display = 'block';
+                document.getElementById('workers-grid-container').style.display = 'none';
+                document.getElementById('no-available-workers').style.display = 'none';
+                
+                // Update the selected date/time display
+                const formattedDisplayDate = formatDateForDisplay(dateValue);
+                document.getElementById('selected-date-display').textContent = formattedDisplayDate;
+                
+                const selectedTimeOption = timeSelect.options[timeSelect.selectedIndex];
+                document.getElementById('selected-time-display').textContent = selectedTimeOption.text;
+                
+                // Show worker section and update availability
+                updateWorkerAvailability();
             }
+            
+            // Hide current section
+            currentSection.classList.remove('active');
+            
+            // Show next section
+            nextSection.classList.add('active');
+            
+            // Update progress indicator
+            const stepId = nextSectionId.replace('section-', 'step-');
+            progressSteps.forEach(step => step.classList.remove('active'));
+            document.getElementById(stepId).classList.add('active');
+            
+            // Scroll to top of the form
+            window.scrollTo({
+                top: document.querySelector('.booking-form-section').offsetTop - 20,
+                behavior: 'smooth'
+            });
         });
     });
+    
+    prevButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const currentSection = this.closest('.form-section');
+            const prevSectionId = this.getAttribute('data-prev');
+            const prevSection = document.getElementById(prevSectionId);
+            
+            // Hide current section
+            currentSection.classList.remove('active');
+            
+            // Show previous section
+            prevSection.classList.add('active');
+            
+            // Update progress indicator
+            const stepId = prevSectionId.replace('section-', 'step-');
+            progressSteps.forEach(step => step.classList.remove('active'));
+            document.getElementById(stepId).classList.add('active');
+            
+            // Scroll to top of the form
+            window.scrollTo({
+                top: document.querySelector('.booking-form-section').offsetTop - 20,
+                behavior: 'smooth'
+            });
+        });
+    });
+    
+    // Worker selection logic
+    const autoFastRadio = document.getElementById('autofast');
+    const specificWorkerRadio = document.getElementById('specific_worker');
+    const workersList = document.getElementById('workers_list');
+    
+    // Show/hide workers list based on initial selection
+    if (specificWorkerRadio.checked) {
+        workersList.style.display = 'block';
+    } else {
+        workersList.style.display = 'none';
+    }
+    
+    autoFastRadio.addEventListener('change', function() {
+        if (this.checked) {
+            workersList.style.display = 'none';
+            // Uncheck all worker selections when switching to AutoFast
+            document.querySelectorAll('input[name="selected_worker"]').forEach(radio => {
+                radio.checked = false;
+            });
+        }
+    });
+    
+    specificWorkerRadio.addEventListener('change', function() {
+        if (this.checked) {
+            workersList.style.display = 'block';
+        }
+    });
+    
+    // Date and time selection preview
+    dateInput.addEventListener('change', function() {
+        checkAvailabilityPreview();
+    });
+    
+    timeSelect.addEventListener('change', function() {
+        checkAvailabilityPreview();
+    });
+    
+    // Function to format date for display
+    function formatDateForDisplay(dateString) {
+        const date = new Date(dateString);
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+    
+    // Function to check availability preview
+    function checkAvailabilityPreview() {
+        const dateValue = dateInput.value;
+        const timeValue = timeSelect.value;
+        
+        if (dateValue && timeValue) {
+            // Show availability preview
+            document.getElementById('availability-preview').style.display = 'block';
+            document.getElementById('availability-loading').style.display = 'block';
+            document.getElementById('availability-results').style.display = 'none';
+            
+            // Make AJAX request to check availability
+            setTimeout(function() {
+                fetchAvailabilityPreview(dateValue, timeValue);
+            }, 500); // Small delay for better UX
+        }
+    }
+    
+    // Function to fetch availability preview
+    function fetchAvailabilityPreview(dateValue, timeValue) {
+        // Count available workers
+        let availableCount = 0;
+        let unavailableCount = 0;
+        
+        // Make AJAX requests for each worker
+        const workerPromises = [];
+        
+        document.querySelectorAll('.worker-card-wrapper').forEach(wrapper => {
+            const workerId = wrapper.getAttribute('data-worker-id');
+            
+            const promise = fetch(`/check-worker-availability/?worker_id=${workerId}&date=${dateValue}&time_slot=${timeValue}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.available) {
+                        availableCount++;
+                    } else {
+                        unavailableCount++;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking availability:', error);
+                });
+            
+            workerPromises.push(promise);
+        });
+        
+        // When all requests are done
+        Promise.all(workerPromises).then(() => {
+            // Hide loading
+            document.getElementById('availability-loading').style.display = 'none';
+            document.getElementById('availability-results').style.display = 'block';
+            
+            // Build results HTML
+            let resultsHTML = `
+                <div class="availability-count">
+                    <div class="count-item">
+                        <span class="count-value available-count">${availableCount}</span>
+                        <span class="count-label">Available Workers</span>
+                    </div>
+                    <div class="count-item">
+                        <span class="count-value unavailable-count">${unavailableCount}</span>
+                        <span class="count-label">Unavailable Workers</span>
+                    </div>
+                </div>
+            `;
+            
+            // Add message based on availability
+            if (availableCount > 0) {
+                if (availableCount >= 3) {
+                    resultsHTML += `
+                        <div class="availability-message success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Great! Many workers are available at this time.
+                        </div>
+                    `;
+                } else {
+                    resultsHTML += `
+                        <div class="availability-message warning">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Limited workers available. Book soon to secure your slot!
+                        </div>
+                    `;
+                }
+            } else {
+                resultsHTML += `
+                    <div class="availability-message danger">
+                        <i class="fas fa-times-circle me-2"></i>
+                        No workers available at this time. Please try a different time.
+                    </div>
+                `;
+            }
+            
+            // Update results
+            document.getElementById('availability-results').innerHTML = resultsHTML;
+        });
+    }
+    
+    // Function to check worker availability
+    function updateWorkerAvailability() {
+        const selectedDate = dateInput.value;
+        const selectedTime = timeSelect.value;
+        
+        if (!selectedDate || !selectedTime) return;
+        
+        let availableWorkersCount = 0;
+        const totalWorkers = document.querySelectorAll('.worker-card-wrapper').length;
+        const workerPromises = [];
+        
+        // Check each worker's availability
+        document.querySelectorAll('.worker-card-wrapper').forEach(wrapper => {
+            const radioInput = wrapper.querySelector('input[type="radio"]');
+            const workerId = radioInput.value;
+            const card = wrapper.querySelector('.worker-card');
+            let indicator = card.querySelector('.availability-indicator');
+            
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.className = 'availability-indicator';
+                card.querySelector('.worker-card-body').appendChild(indicator);
+            }
+            
+            // Reset card classes
+            card.classList.remove('available', 'unavailable');
+            
+            // Make AJAX request to check availability
+            const promise = fetch(`/check-worker-availability/?worker_id=${workerId}&date=${selectedDate}&time_slot=${selectedTime}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.available) {
+                        indicator.innerHTML = '<div class="text-success"><i class="fas fa-check-circle me-2"></i>Available</div>';
+                        card.classList.add('available');
+                        radioInput.disabled = false;
+                        availableWorkersCount++;
+                    } else {
+                        indicator.innerHTML = '<div class="text-danger"><i class="fas fa-times-circle me-2"></i>Not Available</div>';
+                        card.classList.add('unavailable');
+                        radioInput.disabled = true;
+                        
+                        // If this was the selected worker, unselect it
+                        if (radioInput.checked) {
+                            radioInput.checked = false;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking availability:', error);
+                    indicator.innerHTML = '<div class="text-warning"><i class="fas fa-exclamation-circle me-2"></i>Error checking availability</div>';
+                });
+            
+            workerPromises.push(promise);
+        });
+        
+        // When all requests are done
+        Promise.all(workerPromises).then(() => {
+            // Hide loading
+            document.getElementById('workers-loading').style.display = 'none';
+            document.getElementById('workers-grid-container').style.display = 'block';
+            
+            // Show message if no workers are available
+            if (availableWorkersCount === 0 && totalWorkers > 0) {
+                document.getElementById('no-available-workers').style.display = 'block';
+            } else {
+                document.getElementById('no-available-workers').style.display = 'none';
+            }
+        });
+    }
+    
+    // Form validation before submission
+    document.querySelector('.booking-form').addEventListener('submit', function(event) {
+        // Validate worker selection
+        if (specificWorkerRadio.checked) {
+            const selectedWorker = document.querySelector('input[name="selected_worker"]:checked:not([disabled])');
+            if (!selectedWorker) {
+                event.preventDefault();
+                alert('Please select an available worker or choose AutoFast option.');
+                return;
+            }
+        }
+        
+        // Validate date and time
+        if (!dateInput.value) {
+            event.preventDefault();
+            alert('Please select a preferred date.');
+            return;
+        }
+        
+        if (!timeSelect.value) {
+            event.preventDefault();
+            alert('Please select a preferred time slot.');
+            return;
+        }
+    });
+});
 </script>
-
-<style>
-    .worker-card {
-        transition: all 0.2s ease;
-        border: 1px solid #dee2e6;
-    }
-    
-    .worker-card:hover {
-        border-color: #f97316;
-        box-shadow: 0 0.125rem 0.25rem rgba(249, 115, 22, 0.15);
-    }
-    
-    input[type="radio"]:checked + label .worker-card {
-        border-color: #f97316;
-        box-shadow: 0 0.125rem 0.25rem rgba(249, 115, 22, 0.15);
-    }
-</style>
-
-<!-- Add Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 {% endblock %}

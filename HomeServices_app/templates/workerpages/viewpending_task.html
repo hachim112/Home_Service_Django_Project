@@ -33,31 +33,12 @@
         background: #f8f9fa;
         border-top: 1px solid #eee;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
-        gap: 10px;
     }
     
     .badge-pending {
-        background: linear-gradient(135deg, #f1c40f, #f39c12);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-weight: 500;
-        font-size: 12px;
-    }
-    
-    .badge-specific {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-weight: 500;
-        font-size: 12px;
-    }
-    
-    .badge-autofast {
-        background: linear-gradient(135deg, #3498db, #2980b9);
+        background: linear-gradient(135deg, #f39c12, #e67e22);
         color: white;
         padding: 5px 10px;
         border-radius: 20px;
@@ -122,33 +103,32 @@
         font-size: 14px;
     }
     
-    .btn-complete {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
-        border: none;
-        color: white;
+    .btn-action {
         padding: 8px 20px;
         border-radius: 8px;
         font-weight: 500;
         transition: all 0.3s ease;
+        color: white;
+        border: none;
+    }
+    
+    .btn-action:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-complete {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
     }
     
     .btn-complete:hover {
-        transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
     }
     
     .btn-reject {
         background: linear-gradient(135deg, #e74c3c, #c0392b);
-        border: none;
-        color: white;
-        padding: 8px 20px;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: all 0.3s ease;
     }
     
     .btn-reject:hover {
-        transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
     }
     
@@ -175,30 +155,11 @@
         margin: 0 auto;
     }
     
-    .task-details-section {
-        background: #f8f9fa;
+    .schedule-info {
+        background: rgba(78, 205, 196, 0.1);
         border-radius: 10px;
         padding: 15px;
-        margin-top: 15px;
-    }
-    
-    .task-details-section h5 {
-        font-weight: 600;
         margin-bottom: 15px;
-        color: #333;
-    }
-    
-    .detail-item {
-        margin-bottom: 10px;
-    }
-    
-    .detail-label {
-        font-weight: 600;
-        color: #555;
-    }
-    
-    .detail-value {
-        color: #333;
     }
 </style>
 
@@ -220,7 +181,7 @@
     {% endif %}
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">Assigned Tasks</h1>
+        <h1 class="h3">Pending Tasks</h1>
         <div class="d-flex">
             <div class="dropdown">
                 <button class="btn btn-outline-primary dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -236,20 +197,14 @@
     
     {% if Response_records %}
         <div class="row">
-            {% for records in Response_records %}
+            {% for response in Response_records %}
             <div class="col-lg-6">
                 <div class="card task-card">
                     <div class="task-header">
-                        <div>{{ records.requests.service.Name }}</div>
-                        {% if records.status != True %}
-                            <span class="badge-pending">
-                                <i class="fas fa-clock mr-1"></i> Pending
-                            </span>
-                        {% else %}
-                            <span class="badge-specific">
-                                <i class="fas fa-check-circle mr-1"></i> Completed
-                            </span>
-                        {% endif %}
+                        <div>{{ response.requests.service.Name }}</div>
+                        <span class="badge-pending">
+                            <i class="fas fa-clock mr-1"></i> Pending
+                        </span>
                     </div>
                     <div class="task-body">
                         <div class="customer-info">
@@ -257,84 +212,62 @@
                                 <i class="fas fa-user"></i>
                             </div>
                             <div class="customer-details">
-                                <div class="customer-name">{{ records.requests.user.admin.first_name }} {{ records.requests.user.admin.last_name }}</div>
+                                <div class="customer-name">{{ response.requests.user.admin.first_name }} {{ response.requests.user.admin.last_name }}</div>
                                 <div class="customer-location">
-                                    <i class="fas fa-map-marker-alt mr-1"></i> {{ records.requests.Address }}, {{ records.requests.city.name }}
+                                    <i class="fas fa-map-marker-alt mr-1"></i> {{ response.requests.Address }}, {{ response.requests.city.name }}
                                 </div>
                             </div>
                         </div>
                         
                         <div class="service-type">
-                            <i class="fas fa-tools mr-1"></i> {{ records.requests.service.Name }}
+                            <i class="fas fa-tools mr-1"></i> {{ response.requests.service.Name }}
                         </div>
                         
                         <div class="problem-description">
                             <strong>Problem Description:</strong>
-                            <p class="mb-0 mt-2">{{ records.requests.Problem_Description }}</p>
+                            <p class="mb-0 mt-2">{{ response.requests.Problem_Description }}</p>
                         </div>
                         
-                        <div class="task-date">
-                            <i class="far fa-calendar-alt mr-1"></i> Assigned on {{ records.Date|date:"F d, Y" }}
-                        </div>
-                        
-                        <div class="task-details-section">
-                            <h5>Customer Information</h5>
+                        <div class="schedule-info">
+                            <h6 class="mb-3"><i class="far fa-calendar-check mr-1"></i> Schedule Information</h6>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="detail-item">
-                                        <div class="detail-label">Name:</div>
-                                        <div class="detail-value">{{ records.requests.user.admin.first_name }} {{ records.requests.user.admin.last_name }}</div>
-                                    </div>
+                                <div class="col-md-6 mb-2">
+                                    <strong>Date:</strong> 
+                                    <span>{{ response.scheduled_date|date:"F d, Y" }}</span>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="detail-item">
-                                        <div class="detail-label">Phone:</div>
-                                        <div class="detail-value">{{ records.requests.contact }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="detail-item">
-                                        <div class="detail-label">Address:</div>
-                                        <div class="detail-value">{{ records.requests.House_No }}, {{ records.requests.Address }}, {{ records.requests.city.name }}, {{ records.requests.pin }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="detail-item">
-                                        <div class="detail-label">Landmark:</div>
-                                        <div class="detail-value">{{ records.requests.landmark|default:"Not provided" }}</div>
-                                    </div>
+                                <div class="col-md-6 mb-2">
+                                    <strong>Time:</strong> 
+                                    <span>
+                                        {% if response.scheduled_time == 'morning' %}
+                                            Morning (8:00 AM - 12:00 PM)
+                                        {% elif response.scheduled_time == 'afternoon' %}
+                                            Afternoon (12:00 PM - 4:00 PM)
+                                        {% elif response.scheduled_time == 'evening' %}
+                                            Evening (4:00 PM - 8:00 PM)
+                                        {% else %}
+                                            {{ response.scheduled_time }}
+                                        {% endif %}
+                                    </span>
                                 </div>
                             </div>
-                            
-                            <h5 class="mt-4">Selection Method</h5>
-                            <div class="detail-item">
-                                <div class="detail-value">
-                                    {% if records.worker_specifically_chosen %}
-                                        <span class="badge badge-success">
-                                            <i class="fas fa-user-check mr-1"></i> You were specifically chosen by the customer
-                                        </span>
-                                    {% else %}
-                                        <span class="badge badge-primary">
-                                            <i class="fas fa-bolt mr-1"></i> AutoFast Request
-                                        </span>
-                                    {% endif %}
-                                </div>
-                            </div>
+                        </div>
+                        
+                        <div class="task-date mt-3">
+                            <i class="far fa-calendar-alt mr-1"></i> Assigned on {{ response.Date|date:"F d, Y" }}
                         </div>
                     </div>
                     <div class="task-footer">
-                        {% if records.status != True %}
-                            <a href="{% url 'reject' action='reject' id=records.id %}" class="btn btn-reject">
-                                <i class="fas fa-times mr-1"></i> Reject
+                        <div>
+                            <i class="fas fa-phone-alt mr-1"></i> {{ response.user_contact }}
+                        </div>
+                        <div>
+                            <a href="{% url 'markcompleted' action='completed' id=response.id %}" class="btn btn-complete btn-action mr-2">
+                                <i class="fas fa-check-circle mr-1"></i> Mark Completed
                             </a>
-                            <a href="{% url 'markcompleted' action='completed' id=records.id %}" class="btn btn-complete">
-                                <i class="fas fa-check mr-1"></i> Mark Completed
+                            <a href="{% url 'reject' action='reject' id=response.id %}" class="btn btn-reject btn-action" onclick="return confirm('Are you sure you want to reject this request? The job will remain open for other workers.');">
+                                <i class="fas fa-times-circle mr-1"></i> Reject
                             </a>
-                        {% else %}
-                            <span class="text-success">
-                                <i class="fas fa-check-circle mr-1"></i> Task Completed
-                            </span>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -344,8 +277,11 @@
         <div class="card">
             <div class="card-body empty-state">
                 <i class="fas fa-clipboard-check"></i>
-                <h4>No Assigned Tasks</h4>
-                <p>You don't have any assigned tasks at the moment. Check the Available Requests section to accept new tasks.</p>
+                <h4>No Pending Tasks</h4>
+                <p>You don't have any pending tasks at the moment. Check the available requests to accept new jobs.</p>
+                <a href="{% url 'available_requests' %}" class="btn btn-primary mt-3">
+                    <i class="fas fa-search mr-1"></i> View Available Requests
+                </a>
             </div>
         </div>
     {% endif %}
@@ -357,44 +293,28 @@
         setTimeout(function() {
             $('.alert').alert('close');
         }, 5000);
-    });
-
-    // Handle mark complete button click
-    $('.btn-complete').on('click', function(e) {
-        // Disable the button to prevent multiple clicks
-        $(this).prop('disabled', true);
-        $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Completing...');
         
-        // Get the card element
-        var card = $(this).closest('.task-card');
+        // Confirm before marking as completed
+        $('.btn-complete').on('click', function(e) {
+            if (!confirm('Are you sure you want to mark this task as completed?')) {
+                e.preventDefault();
+            } else {
+                // Disable the button to prevent multiple clicks
+                $(this).prop('disabled', true);
+                $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Processing...');
+            }
+        });
         
-        // Add a fade-out animation
-        card.css('transition', 'all 0.5s ease');
-        card.css('opacity', '0.5');
-        
-        // Let the default link action proceed
-    });
-
-    // Handle reject button click
-    $('.btn-reject').on('click', function(e) {
         // Confirm before rejecting
-        if (!confirm('Are you sure you want to reject this task? This action cannot be undone.')) {
-            e.preventDefault();
-            return false;
-        }
-        
-        // Disable the button to prevent multiple clicks
-        $(this).prop('disabled', true);
-        $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Rejecting...');
-        
-        // Get the card element
-        var card = $(this).closest('.task-card');
-        
-        // Add a fade-out animation
-        card.css('transition', 'all 0.5s ease');
-        card.css('opacity', '0.5');
-        
-        // Let the default link action proceed
+        $('.btn-reject').on('click', function(e) {
+            if (!confirm('Are you sure you want to reject this request? The job will remain open for other workers.')) {
+                e.preventDefault();
+            } else {
+                // Disable the button to prevent multiple clicks
+                $(this).prop('disabled', true);
+                $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Processing...');
+            }
+        });
     });
 </script>
 {% endblock %}

@@ -28,7 +28,7 @@ urlpatterns = [
 
     path('admmin_home/', views.admmin_home.as_view(), name='admmin_home'),
     path('workers_home/', views.workers_home.as_view(), name='workers_home'),
-
+    path('worker_availability/', views.WorkerAvailabilityView.as_view(), name='worker_availability'),
 
 
     path('manageworker/', views.manageworker.as_view(), name='manageworker'),
@@ -131,6 +131,7 @@ urlpatterns = [
     
     
     # Add these URL patterns to your urls.py file
+    path('check-worker-availability/', views.check_worker_availability_ajax, name='check_worker_availability'),
 
 path('workerprofile/', views.workerprofile.as_view(), name='workerprofile'),
 path('edit-worker-profile/', views.edit_worker_profile.as_view(), name='edit_worker_profile'),

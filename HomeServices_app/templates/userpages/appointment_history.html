@@ -1,20 +1,62 @@
 {% extends "userpages/user_header_footer.html" %}
 {% block content %}
 {% load static %}
-<div class="container mt-5 mb-5">
-    <div class="row">
-        <div class="col-12">
-            <h2 class="mb-4 d-flex align-items-center">
-                <i class="fas fa-calendar-check me-2 text-primary"></i>
-                Appointment History
-            </h2>
-            
-            <div class="card shadow-sm mb-4">
+
+<div class="appointment-history-container">
+    <div class="container py-5">
+        <!-- Header Section -->
+        <div class="section-header text-center mb-5">
+            <h1 class="display-5 fw-bold text-gradient">My Appointments</h1>
+            <p class="text-muted">Track and manage all your service appointments</p>
+        </div>
+        
+        <!-- Appointment Dashboard -->
+        <div class="appointment-dashboard">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card pending-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>{{ requests|length }}</h3>
+                            <p>Pending Requests</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card assigned-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>{{ assigned_responses|length }}</h3>
+                            <p>Assigned Services</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card completed-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>{{ completed_responses|length }}</h3>
+                            <p>Completed Services</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Appointment Tabs -->
+        <div class="appointment-tabs-container">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
                 <div class="card-header bg-white py-3">
                     <ul class="nav nav-tabs card-header-tabs" id="appointmentTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="true">
-                                <i class="fas fa-clock me-1"></i> Pending
+                                <i class="fas fa-clock me-2"></i>Pending
                                 {% if requests %}
                                 <span class="badge bg-warning text-dark ms-1">{{ requests|length }}</span>
                                 {% endif %}
@@ -22,37 +64,96 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="assigned-tab" data-bs-toggle="tab" data-bs-target="#assigned" type="button" role="tab" aria-controls="assigned" aria-selected="false">
-                                <i class="fas fa-user-check me-1"></i> Assigned
-                                {% if responses %}
-                                <span class="badge bg-primary ms-1">{{ responses|length }}</span>
+                                <i class="fas fa-user-check me-2"></i>Assigned
+                                {% if assigned_responses %}
+                                <span class="badge bg-primary ms-1">{{ assigned_responses|length }}</span>
+                                {% endif %}
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button" role="tab" aria-controls="completed" aria-selected="false">
+                                <i class="fas fa-check-circle me-2"></i>Completed
+                                {% if completed_responses %}
+                                <span class="badge bg-success ms-1">{{ completed_responses|length }}</span>
                                 {% endif %}
                             </button>
                         </li>
                     </ul>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <div class="tab-content" id="appointmentTabsContent">
                         <!-- Pending Requests Tab -->
                         <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tab">
                             {% if requests %}
                                 <div class="row">
                                     {% for request_data in requests %}
-                                    <div class="col-md-6 mb-4">
-                                        <div class="card h-100 border-warning position-relative">
-                                            <div class="ribbon ribbon-top-right"><span>Pending</span></div>
-                                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                                <h5 class="card-title mb-0">{{ request_data.service.Name }}</h5>
-                                                <span class="badge bg-warning text-dark">Waiting for worker</span>
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="appointment-card pending-appointment">
+                                            <div class="appointment-status">
+                                                <span class="status-badge pending">Pending</span>
                                             </div>
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <p class="card-text mb-1"><i class="far fa-calendar-alt text-muted me-2"></i><strong>Requested:</strong> {{ request_data.dateofrequest|date:"F d, Y" }}</p>
-                                                    <p class="card-text mb-1"><i class="fas fa-info-circle text-muted me-2"></i><strong>Problem:</strong> {{ request_data.Problem_Description }}</p>
-                                                    <p class="card-text mb-1"><i class="fas fa-map-marker-alt text-muted me-2"></i><strong>Address:</strong> {{ request_data.House_No }}, {{ request_data.Address }}, {{ request_data.city.name }}</p>
-                                                    <p class="card-text mb-1"><i class="fas fa-phone text-muted me-2"></i><strong>Contact:</strong> {{ request_data.contact }}</p>
+                                            <div class="appointment-header">
+                                                <div class="service-icon">
+                                                    <i class="fas fa-tools"></i>
+                                                </div>
+                                                <div class="service-info">
+                                                    <h5 class="service-name">{{ request_data.service.Name }}</h5>
+                                                    <div class="service-date">
+                                                        <i class="far fa-calendar-alt me-2"></i>{{ request_data.dateofrequest|date:"F d, Y" }}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="card-footer bg-transparent">
+                                            <div class="appointment-body">
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="far fa-calendar-check text-primary"></i>
+                                                        <span>Preferred Date</span>
+                                                    </div>
+                                                    <div class="info-value">{{ request_data.preferred_date|date:"F d, Y" }}</div>
+                                                </div>
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="far fa-clock text-primary"></i>
+                                                        <span>Preferred Time</span>
+                                                    </div>
+                                                    <div class="info-value">
+                                                        {% if request_data.preferred_time == 'morning' %}
+                                                            Morning (8:00 AM - 12:00 PM)
+                                                        {% elif request_data.preferred_time == 'afternoon' %}
+                                                            Afternoon (12:00 PM - 4:00 PM)
+                                                        {% elif request_data.preferred_time == 'evening' %}
+                                                            Evening (4:00 PM - 8:00 PM)
+                                                        {% else %}
+                                                            {{ request_data.preferred_time }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="fas fa-info-circle text-primary"></i>
+                                                        <span>Problem</span>
+                                                    </div>
+                                                    <div class="info-value problem-description">{{ request_data.Problem_Description }}</div>
+                                                </div>
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="fas fa-map-marker-alt text-primary"></i>
+                                                        <span>Address</span>
+                                                    </div>
+                                                    <div class="info-value">{{ request_data.House_No }}, {{ request_data.Address }}, {{ request_data.city.name }}</div>
+                                                </div>
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="fas fa-phone text-primary"></i>
+                                                        <span>Contact</span>
+                                                    </div>
+                                                    <div class="info-value">{{ request_data.contact }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="appointment-footer">
+                                                <div class="appointment-status-message">
+                                                    <i class="fas fa-info-circle me-2"></i>Waiting for worker assignment
+                                                </div>
                                                 <a class="btn btn-danger btn-sm" href="{% url 'CancelRequest' request_data.id %}">
                                                     <i class="fas fa-times-circle me-1"></i> Cancel Request
                                                 </a>
@@ -62,13 +163,14 @@
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                <div class="alert alert-info d-flex align-items-center">
-                                    <i class="fas fa-info-circle me-3 fs-4"></i>
-                                    <div>You don't have any pending requests.</div>
-                                </div>
-                                <div class="text-center mt-3">
-                                    <a href="{% url 'services' %}" class="btn btn-primary">
-                                        <i class="fas fa-plus-circle me-1"></i> Book a Service
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="fas fa-calendar-times"></i>
+                                    </div>
+                                    <h4>No Pending Requests</h4>
+                                    <p>You don't have any pending service requests at the moment.</p>
+                                    <a href="{% url 'services' %}" class="btn btn-primary mt-3">
+                                        <i class="fas fa-plus-circle me-2"></i>Book a Service
                                     </a>
                                 </div>
                             {% endif %}
@@ -76,56 +178,186 @@
                         
                         <!-- Assigned Requests Tab -->
                         <div class="tab-pane fade" id="assigned" role="tabpanel" aria-labelledby="assigned-tab">
-                            {% if responses %}
+                            {% if assigned_responses %}
                                 <div class="row">
-                                    {% for response in responses %}
-                                    <div class="col-md-6 mb-4">
-                                        <div class="card h-100 {% if response.status %}border-success{% else %}border-primary{% endif %} position-relative">
-                                            <div class="ribbon ribbon-top-right">
-                                                <span class="{% if response.status %}bg-success{% else %}bg-primary{% endif %}">
-                                                    {% if response.status %}Completed{% else %}In Progress{% endif %}
-                                                </span>
+                                    {% for response in assigned_responses %}
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="appointment-card assigned-appointment">
+                                            <div class="appointment-status">
+                                                <span class="status-badge assigned">In Progress</span>
                                             </div>
-                                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                                <h5 class="card-title mb-0">{{ response.requests.service.Name }}</h5>
-                                                <span class="badge {% if response.status %}bg-success{% else %}bg-primary{% endif %}">
-                                                    {% if response.status %}Completed{% else %}In Progress{% endif %}
-                                                </span>
+                                            <div class="appointment-header">
+                                                <div class="service-icon">
+                                                    <i class="fas fa-tools"></i>
+                                                </div>
+                                                <div class="service-info">
+                                                    <h5 class="service-name">{{ response.requests.service.Name }}</h5>
+                                                    <div class="service-date">
+                                                        <i class="far fa-calendar-alt me-2"></i>{{ response.requests.dateofrequest|date:"F d, Y" }}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <p class="card-text mb-1"><i class="far fa-calendar-alt text-muted me-2"></i><strong>Requested:</strong> {{ response.requests.dateofrequest|date:"F d, Y" }}</p>
-                                                    <p class="card-text mb-1"><i class="far fa-calendar-check text-muted me-2"></i><strong>Assigned:</strong> {{ response.Date|date:"F d, Y" }}</p>
-                                                    <p class="card-text mb-1"><i class="fas fa-info-circle text-muted me-2"></i><strong>Problem:</strong> {{ response.requests.Problem_Description }}</p>
+                                            <div class="appointment-body">
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="far fa-calendar-check text-primary"></i>
+                                                        <span>Scheduled Date</span>
+                                                    </div>
+                                                    <div class="info-value">{{ response.scheduled_date|date:"F d, Y" }}</div>
+                                                </div>
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="far fa-clock text-primary"></i>
+                                                        <span>Scheduled Time</span>
+                                                    </div>
+                                                    <div class="info-value">
+                                                        {% if response.scheduled_time == 'morning' %}
+                                                            Morning (8:00 AM - 12:00 PM)
+                                                        {% elif response.scheduled_time == 'afternoon' %}
+                                                            Afternoon (12:00 PM - 4:00 PM)
+                                                        {% elif response.scheduled_time == 'evening' %}
+                                                            Evening (4:00 PM - 8:00 PM)
+                                                        {% else %}
+                                                            {{ response.scheduled_time }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="fas fa-info-circle text-primary"></i>
+                                                        <span>Problem</span>
+                                                    </div>
+                                                    <div class="info-value problem-description">{{ response.requests.Problem_Description }}</div>
                                                 </div>
                                                 
                                                 <!-- Worker Information Section -->
-                                                <div class="worker-info mt-3 p-3 bg-light rounded">
-                                                    <h6 class="mb-2"><i class="fa fa-user-circle text-primary"></i> Worker Information</h6>
-                                                    <p class="mb-1"><strong>Name:</strong> {{ response.assigned_worker.admin.first_name }} {{ response.assigned_worker.admin.last_name }}</p>
-                                                    <p class="mb-1"><strong>Contact:</strong> {{ response.assigned_worker.contact_number }}</p>
-                                                    <p class="mb-0"><strong>Specialization:</strong> {{ response.assigned_worker.designation }}</p>
+                                                <div class="worker-info-section">
+                                                    <h6 class="worker-info-title">
+                                                        <i class="fas fa-user-circle text-primary me-2"></i>Worker Information
+                                                    </h6>
+                                                    <div class="worker-profile">
+                                                        {% if response.assigned_worker.profile_pic %}
+                                                        <img src="{{ response.assigned_worker.profile_pic.url }}" alt="{{ response.assigned_worker.admin.first_name }}" class="worker-avatar">
+                                                        {% else %}
+                                                        <div class="worker-avatar-placeholder">
+                                                            <i class="fas fa-user"></i>
+                                                        </div>
+                                                        {% endif %}
+                                                        <div class="worker-details">
+                                                            <div class="worker-name">{{ response.assigned_worker.admin.first_name }} {{ response.assigned_worker.admin.last_name }}</div>
+                                                            <div class="worker-contact">{{ response.assigned_worker.contact_number }}</div>
+                                                            <div class="worker-specialization">{{ response.assigned_worker.designation }}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="card-footer bg-transparent">
-                                                {% if not response.status %}
-                                                    <a class="btn btn-outline-primary btn-sm" href="tel:{{ response.assigned_worker.contact_number }}">
-                                                        <i class="fa fa-phone"></i> Call Worker
-                                                    </a>
-                                                {% else %}
-                                                    <a class="btn btn-outline-success btn-sm" href="{% url 'feedback_form' %}">
-                                                        <i class="fa fa-star"></i> Leave Feedback
-                                                    </a>
-                                                {% endif %}
+                                            <div class="appointment-footer">
+                                                <div class="appointment-status-message">
+                                                    <i class="fas fa-spinner fa-spin me-2"></i>Service in progress
+                                                </div>
+                                                <a class="btn btn-primary btn-sm" href="tel:{{ response.assigned_worker.contact_number }}">
+                                                    <i class="fas fa-phone-alt me-1"></i> Call Worker
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                <div class="alert alert-info d-flex align-items-center">
-                                    <i class="fas fa-info-circle me-3 fs-4"></i>
-                                    <div>You don't have any assigned requests yet.</div>
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="fas fa-user-clock"></i>
+                                    </div>
+                                    <h4>No Assigned Services</h4>
+                                    <p>You don't have any assigned service requests at the moment.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Completed Requests Tab -->
+                        <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+                            {% if completed_responses %}
+                                <div class="row">
+                                    {% for response in completed_responses %}
+                                    <div class="col-lg-6 mb-4">
+                                        <div class="appointment-card completed-appointment">
+                                            <div class="appointment-status">
+                                                <span class="status-badge completed">Completed</span>
+                                            </div>
+                                            <div class="appointment-header">
+                                                <div class="service-icon">
+                                                    <i class="fas fa-tools"></i>
+                                                </div>
+                                                <div class="service-info">
+                                                    <h5 class="service-name">{{ response.requests.service.Name }}</h5>
+                                                    <div class="service-date">
+                                                        <i class="far fa-calendar-alt me-2"></i>{{ response.requests.dateofrequest|date:"F d, Y" }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="appointment-body">
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="far fa-calendar-check text-success"></i>
+                                                        <span>Completed Date</span>
+                                                    </div>
+                                                    <div class="info-value">{{ response.Date|date:"F d, Y" }}</div>
+                                                </div>
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="fas fa-info-circle text-success"></i>
+                                                        <span>Problem</span>
+                                                    </div>
+                                                    <div class="info-value problem-description">{{ response.requests.Problem_Description }}</div>
+                                                </div>
+                                                <div class="info-group">
+                                                    <div class="info-label">
+                                                        <i class="fas fa-map-marker-alt text-success"></i>
+                                                        <span>Address</span>
+                                                    </div>
+                                                    <div class="info-value">{{ response.requests.House_No }}, {{ response.requests.Address }}, {{ response.requests.city.name }}</div>
+                                                </div>
+                                                
+                                                <!-- Worker Information Section -->
+                                                <div class="worker-info-section">
+                                                    <h6 class="worker-info-title">
+                                                        <i class="fas fa-user-circle text-success me-2"></i>Worker Information
+                                                    </h6>
+                                                    <div class="worker-profile">
+                                                        {% if response.assigned_worker.profile_pic %}
+                                                        <img src="{{ response.assigned_worker.profile_pic.url }}" alt="{{ response.assigned_worker.admin.first_name }}" class="worker-avatar">
+                                                        {% else %}
+                                                        <div class="worker-avatar-placeholder">
+                                                            <i class="fas fa-user"></i>
+                                                        </div>
+                                                        {% endif %}
+                                                        <div class="worker-details">
+                                                            <div class="worker-name">{{ response.assigned_worker.admin.first_name }} {{ response.assigned_worker.admin.last_name }}</div>
+                                                            <div class="worker-contact">{{ response.assigned_worker.contact_number }}</div>
+                                                            <div class="worker-specialization">{{ response.assigned_worker.designation }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="appointment-footer">
+                                                <div class="appointment-status-message">
+                                                    <i class="fas fa-check-circle me-2"></i>Service completed successfully
+                                                </div>
+                                                <a class="btn btn-success btn-sm" href="{% url 'feedback_form' %}">
+                                                    <i class="fas fa-star me-1"></i> Leave Feedback
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="fas fa-clipboard-check"></i>
+                                    </div>
+                                    <h4>No Completed Services</h4>
+                                    <p>You don't have any completed service requests yet.</p>
                                 </div>
                             {% endif %}
                         </div>
@@ -136,76 +368,478 @@
     </div>
 </div>
 
+<style>
+    /* Modern Styling with Gradients */
+    :root {
+        --primary-color: #4361ee;
+        --primary-light: #4895ef;
+        --primary-dark: #3f37c9;
+        --secondary-color: #4cc9f0;
+        --accent-color: #f72585;
+        --success-color: #2ecc71;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+        --gray-color: #6c757d;
+        --border-radius: 10px;
+        --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+    
+    /* Container */
+    .appointment-history-container {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+    }
+    
+    /* Section Header */
+    .section-header {
+        margin-bottom: 40px;
+    }
+    
+    .text-gradient {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    
+    /* Appointment Dashboard */
+    .appointment-dashboard {
+        margin-bottom: 40px;
+    }
+    
+    .stat-card {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        transition: var(--transition);
+        height: 100%;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .pending-card {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+        color: white;
+    }
+    
+    .assigned-card {
+        background: linear-gradient(135deg, #4361ee, #4895ef);
+        color: white;
+    }
+    
+    .completed-card {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+        font-size: 24px;
+    }
+    
+    .stat-content h3 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .stat-content p {
+        margin-bottom: 0;
+        opacity: 0.9;
+    }
+    
+    /* Appointment Tabs */
+    .appointment-tabs-container {
+        margin-bottom: 40px;
+    }
+    
+    .nav-tabs {
+        border-bottom: none;
+    }
+    
+    .nav-tabs .nav-link {
+        border: none;
+        color: var(--gray-color);
+        font-weight: 500;
+        padding: 12px 20px;
+        border-radius: 0;
+        transition: var(--transition);
+    }
+    
+    .nav-tabs .nav-link:hover {
+        color: var(--primary-color);
+        background-color: rgba(76, 201, 240, 0.05);
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: var(--primary-color);
+        background-color: transparent;
+        border-bottom: 3px solid var(--primary-color);
+    }
+    
+    .badge {
+        padding: 0.35em 0.65em;
+        font-weight: 500;
+        border-radius: 30px;
+    }
+    
+    /* Appointment Cards */
+    .appointment-card {
+        position: relative;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        transition: var(--transition);
+        background: white;
+        height: 100%;
+    }
+    
+    .appointment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .appointment-status {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 1;
+    }
+    
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .status-badge.pending {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+        color: white;
+    }
+    
+    .status-badge.assigned {
+        background: linear-gradient(135deg, #4361ee, #4895ef);
+        color: white;
+    }
+    
+    .status-badge.completed {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+    }
+    
+    .appointment-header {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .pending-appointment .appointment-header {
+        background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+    }
+    
+    .assigned-appointment .appointment-header {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(72, 149, 239, 0.1));
+    }
+    
+    .completed-appointment .appointment-header {
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+    }
+    
+    .service-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 20px;
+        color: white;
+    }
+    
+    .pending-appointment .service-icon {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+    }
+    
+    .assigned-appointment .service-icon {
+        background: linear-gradient(135deg, #4361ee, #4895ef);
+    }
+    
+    .completed-appointment .service-icon {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+    }
+    
+    .service-info {
+        flex: 1;
+    }
+    
+    .service-name {
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    
+    .service-date {
+        font-size: 14px;
+        color: var(--gray-color);
+    }
+    
+    .appointment-body {
+        padding: 20px;
+    }
+    
+    .info-group {
+        margin-bottom: 15px;
+    }
+    
+    .info-label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        color: var(--gray-color);
+        font-size: 14px;
+    }
+    
+    .info-label i {
+        margin-right: 8px;
+    }
+    
+    .info-value {
+        font-weight: 500;
+    }
+    
+    .problem-description {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: var(--border-radius);
+        font-size: 14px;
+    }
+    
+    .worker-info-section {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: var(--border-radius);
+    }
+    
+    .pending-appointment .worker-info-section {
+        background: linear-gradient(135deg, rgba(243, 156, 18, 0.05), rgba(230, 126, 34, 0.05));
+    }
+    
+    .assigned-appointment .worker-info-section {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(72, 149, 239, 0.05));
+        border-left: 3px solid var(--primary-color);
+    }
+    
+    .completed-appointment .worker-info-section {
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), rgba(39, 174, 96, 0.05));
+        border-left: 3px solid var(--success-color);
+    }
+    
+    .worker-info-title {
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    
+    .worker-profile {
+        display: flex;
+        align-items: center;
+    }
+    
+    .worker-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 2px solid white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .worker-avatar-placeholder {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-right: 15px;
+    }
+    
+    .worker-details {
+        flex: 1;
+    }
+    
+    .worker-name {
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+    
+    .worker-contact, .worker-specialization {
+        font-size: 14px;
+        color: var(--gray-color);
+    }
+    
+    .appointment-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .pending-appointment .appointment-footer {
+        background: linear-gradient(135deg, rgba(243, 156, 18, 0.05), rgba(230, 126, 34, 0.05));
+    }
+    
+    .assigned-appointment .appointment-footer {
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(72, 149, 239, 0.05));
+    }
+    
+    .completed-appointment .appointment-footer {
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), rgba(39, 174, 96, 0.05));
+    }
+    
+    .appointment-status-message {
+        font-size: 14px;
+        color: var(--gray-color);
+    }
+    
+    .btn {
+        border-radius: 30px;
+        padding: 8px 15px;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        border: none;
+    }
+    
+    .btn-success:hover {
+        background: linear-gradient(135deg, #27ae60, #219653);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        border: none;
+    }
+    
+    .btn-danger:hover {
+        background: linear-gradient(135deg, #c0392b, #a93226);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+    }
+    
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 32px;
+        color: var(--gray-color);
+    }
+    
+    .empty-state h4 {
+        margin-bottom: 10px;
+        color: var(--dark-color);
+    }
+    
+    .empty-state p {
+        color: var(--gray-color);
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 767px) {
+        .appointment-card {
+            margin-bottom: 20px;
+        }
+        
+        .appointment-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .service-icon {
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+        
+        .appointment-footer {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .appointment-status-message {
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
 <!-- Add Font Awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-<style>
-    .badge {
-        padding: 0.5em 0.8em;
-        font-weight: normal;
-    }
-    .worker-info {
-        border-left: 3px solid #007bff;
-    }
-    .card {
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-    .card:hover {
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        transform: translateY(-2px);
-    }
-    .card-header {
-        border-bottom: 1px solid rgba(0,0,0,0.125);
-    }
-    
-    /* Ribbon style */
-    .ribbon {
-        width: 150px;
-        height: 150px;
-        overflow: hidden;
-        position: absolute;
-        z-index: 1;
-    }
-    .ribbon-top-right {
-        top: -10px;
-        right: -10px;
-    }
-    .ribbon-top-right::before,
-    .ribbon-top-right::after {
-        border-top-color: transparent;
-        border-right-color: transparent;
-    }
-    .ribbon-top-right::before {
-        top: 0;
-        left: 0;
-    }
-    .ribbon-top-right::after {
-        bottom: 0;
-        right: 0;
-    }
-    .ribbon-top-right span {
-        position: absolute;
-        top: 30px;
-        right: -25px;
-        transform: rotate(45deg);
-        width: 150px;
-        padding: 5px 0;
-        background-color: #ffc107;
-        color: #212529;
-        text-align: center;
-        font-size: 12px;
-        font-weight: bold;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .ribbon-top-right span.bg-success {
-        background-color: #28a745 !important;
-        color: white;
-    }
-    .ribbon-top-right span.bg-primary {
-        background-color: #007bff !important;
-        color: white;
-    }
-</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add animation to cards
+        const cards = document.querySelectorAll('.appointment-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('animate__animated', 'animate__fadeInUp');
+        });
+        
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    });
+</script>
 {% endblock %}

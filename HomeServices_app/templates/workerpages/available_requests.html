@@ -237,6 +237,28 @@
                             <p class="mb-0 mt-2">{{ service_request.Problem_Description }}</p>
                         </div>
                         
+                        <!-- Add date and time information -->
+                        <div class="d-flex mb-3">
+                            <div class="mr-4">
+                                <i class="far fa-calendar-alt mr-1"></i> 
+                                <strong>Preferred Date:</strong> 
+                                <span class="badge badge-light">{{ service_request.preferred_date|date:"F d, Y" }}</span>
+                            </div>
+                            <div>
+                                <i class="far fa-clock mr-1"></i> 
+                                <strong>Preferred Time:</strong> 
+                                <span class="badge badge-light">
+                                    {% if service_request.preferred_time == 'morning' %}
+                                        Morning (8:00 AM - 12:00 PM)
+                                    {% elif service_request.preferred_time == 'afternoon' %}
+                                        Afternoon (12:00 PM - 4:00 PM)
+                                    {% elif service_request.preferred_time == 'evening' %}
+                                        Evening (4:00 PM - 8:00 PM)
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        
                         <div class="request-date">
                             <i class="far fa-calendar-alt mr-1"></i> Requested on {{ service_request.dateofrequest|date:"F d, Y" }}
                         </div>

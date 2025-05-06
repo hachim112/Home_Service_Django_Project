@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import random
 from django.db.models import Q, Avg
 from django.contrib.auth import authenticate, login, logout
@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.db import transaction
-from .models import Response, State, workers, users, ServiceCatogarys, Country, City, Feedback, ServiceRequests
+from .models import Response, State, workers, users, ServiceCatogarys, Country, City, Feedback, ServiceRequests, WorkerAvailability
 from .forms import stateform
 from django.contrib import messages
 from django.db.models import Q
@@ -27,6 +27,98 @@ class Commenlib:
         self.DEFAULT_REDIRECT_PATH={'ROOT':'/'}
 
 common_lib = Commenlib()
+
+def check_worker_availability(worker, date_str, time_slot):
+    """
+    Check if a worker is available at the specified date and time slot.
+    
+    Args:
+        worker: The worker object to check
+        date_str: Date string in YYYY-MM-DD format
+        time_slot: 'morning', 'afternoon', or 'evening'
+        
+    Returns:
+        True if available, False otherwise
+    """
+    from datetime import datetime
+    
+    # Convert string date to datetime object
+    try:
+        date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+    except (ValueError, TypeError):
+        # If date is invalid, assume worker is not available
+        return False
+    
+    try:
+        # Check if there's an availability record for this date
+        availability = WorkerAvailability.objects.get(worker=worker, date=date_obj)
+        
+        # Check the specific time slot
+        if time_slot == 'morning':
+            if not availability.morning_available:
+                return False
+        elif time_slot == 'afternoon':
+            if not availability.afternoon_available:
+                return False
+        elif time_slot == 'evening':
+            if not availability.evening_available:
+                return False
+        else:
+            # Invalid time slot
+            return False
+            
+    except WorkerAvailability.DoesNotExist:
+        # If no record exists, assume all slots are available by default
+        pass
+    
+    # Check if the worker has any conflicting appointments at the same time slot
+    # This includes both specifically assigned requests and accepted requests
+    existing_appointments = Response.objects.filter(
+        assigned_worker=worker,
+        scheduled_date=date_obj,
+        scheduled_time=time_slot,
+        status=False  # Only check pending appointments
+    ).exists()
+    
+    # Also check if there are any pending service requests that this worker has been specifically chosen for
+    specifically_chosen = Response.objects.filter(
+        assigned_worker=worker,
+        requests__preferred_date=date_obj,
+        requests__preferred_time=time_slot,
+        worker_specifically_chosen=True,
+        status=False
+    ).exists()
+    
+    # If there are no conflicting appointments, the worker is available
+    return not (existing_appointments or specifically_chosen)
+
+# Add this AJAX endpoint view function
+def check_worker_availability_ajax(request):
+    """
+    AJAX endpoint to check worker availability
+    """
+    if request.method == 'GET':
+        worker_id = request.GET.get('worker_id')
+        date_str = request.GET.get('date')
+        time_slot = request.GET.get('time_slot')
+        
+        if not all([worker_id, date_str, time_slot]):
+            return JsonResponse({'error': 'Missing parameters'}, status=400)
+        
+        try:
+            worker = workers.objects.get(id=worker_id)
+            is_available = check_worker_availability(worker, date_str, time_slot)
+            
+            return JsonResponse({
+                'worker_id': worker_id,
+                'available': is_available
+            })
+        except workers.DoesNotExist:
+            return JsonResponse({'error': 'Worker not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 # Create your views here.
 class Login(View):
@@ -283,11 +375,12 @@ class bookservice(LoginRequiredMixin, View):
             'available_workers': available_workers,
         }
         return render(request,'userpages/servicebook.html',context)
+
+    # Find the post method in the bookservice class and replace it with this implementation
     
-    def post(self,request,id):
+    def post(self, request, id):
         user_id = request.user.id
-        user=users.objects.get(admin=user_id)
-        print(user)
+        user = users.objects.get(admin=user_id)
         problem_description = request.POST.get('Problem_Description')
         service_id = ServiceCatogarys.objects.get(id=id)
         address = request.POST.get('Address')
@@ -297,9 +390,39 @@ class bookservice(LoginRequiredMixin, View):
         landmark = request.POST.get('landmark')
         contact = request.POST.get('contact')
         
+        # Get date and time preferences
+        preferred_date = request.POST.get('preferred_date')
+        preferred_time = request.POST.get('preferred_time')
+        
         # Get worker selection type and selected worker if applicable
         worker_selection = request.POST.get('worker_selection', 'autofast')
         selected_worker_id = request.POST.get('selected_worker') if worker_selection == 'specific' else None
+
+        # Check worker availability based on selection type
+        if worker_selection == 'specific' and selected_worker_id:
+            # Check if the specific worker is available at the requested time
+            selected_worker = workers.objects.get(id=selected_worker_id)
+            is_available = check_worker_availability(selected_worker, preferred_date, preferred_time)
+        
+            if not is_available:
+                messages.error(request, f"{selected_worker.admin.first_name} {selected_worker.admin.last_name} is not available at the selected date and time. Please choose a different time or worker.")
+                return self.get(request, id)  # Return to the form with error message
+        else:
+            # For AutoFast, check if any eligible workers are available
+            eligible_workers = workers.objects.filter(
+                designation=service_id.Name,
+                acc_activation=True,
+                avalability_status=True
+            )
+        
+            available_workers = []
+            for worker in eligible_workers:
+                if check_worker_availability(worker, preferred_date, preferred_time):
+                    available_workers.append(worker)
+        
+            if not available_workers:
+                messages.error(request, "No workers are available at the selected date and time. Please choose a different time.")
+                return self.get(request, id)  # Return to the form with error message
 
         # Create a new ServiceRequests instance and save it
         service_request = ServiceRequests(
@@ -312,39 +435,36 @@ class bookservice(LoginRequiredMixin, View):
             House_No=house_no,
             landmark=landmark,
             contact=contact,
+            preferred_date=preferred_date,
+            preferred_time=preferred_time
         )
         
         # If a specific worker was selected, create a response record immediately
         if worker_selection == 'specific' and selected_worker_id:
             selected_worker = workers.objects.get(id=selected_worker_id)
-            
+        
             # For specifically chosen workers, we still mark the request as unassigned
             # until the worker accepts it
             service_request.status = False
             service_request.save()
-            
+        
             # Create response with worker_specifically_chosen=True
             Response.objects.create(
                 requests=service_request,
                 assigned_worker=selected_worker,
                 status=False,  # Not completed yet
-                worker_specifically_chosen=True
+                worker_specifically_chosen=True,
+                scheduled_date=preferred_date,
+                scheduled_time=preferred_time
             )
-            
+        
             messages.success(request, f"Your service request has been sent to {selected_worker.admin.first_name} {selected_worker.admin.last_name}. Waiting for acceptance.")
         else:
             # For autofast requests, mark as unassigned and don't create any response records
             service_request.status = False
             service_request.save()
-            
-            # Get all eligible workers for this service
-            eligible_workers = workers.objects.filter(
-                designation=service_id.Name,
-                acc_activation=True,
-                avalability_status=True
-            )
-            
-            messages.success(request, f"Your service request has been sent to {eligible_workers.count()} available workers. The first to accept will be assigned.")
+        
+            messages.success(request, f"Your service request has been sent to {len(available_workers)} available workers. The first to accept will be assigned.")
 
         # Redirect to appointment history page
         return HttpResponseRedirect('/Viewappointment_history')
@@ -945,7 +1065,13 @@ class acceptrequest(LoginRequiredMixin, View):
                     request_record.status = True
                     request_record.save()
                     
-                    # The response already exists, no need to create a new one
+                    # Update the scheduled date and time if not already set
+                    if not existing_response.scheduled_date:
+                        existing_response.scheduled_date = request_record.preferred_date
+                    if not existing_response.scheduled_time:
+                        existing_response.scheduled_time = request_record.preferred_time
+                    existing_response.save()
+                    
                     messages.success(request, "You have accepted a request that specifically chose you.")
                 elif request_record.status == False:
                     # This is an autofast request that's still available
@@ -958,7 +1084,9 @@ class acceptrequest(LoginRequiredMixin, View):
                         requests=request_record,
                         assigned_worker=worker,
                         status=False,  # Not completed yet
-                        worker_specifically_chosen=False  # This was an autofast request
+                        worker_specifically_chosen=False,  # This was an autofast request
+                        scheduled_date=request_record.preferred_date,
+                        scheduled_time=request_record.preferred_time
                     )
                     
                     messages.success(request, "You have accepted this service request.")
@@ -966,16 +1094,6 @@ class acceptrequest(LoginRequiredMixin, View):
                     # The request was already taken by another worker
                     messages.error(request, "This request has already been accepted by another worker.")
                     return HttpResponseRedirect('/AvailableRequests')
-                
-                return HttpResponseRedirect('/WorkerpendingTask')
-            
-            elif action == 'reject' and request_record.status == True:
-                # This is for rejecting an already accepted request
-                request_record.status = False
-                request_record.save()
-                
-                response = Response.objects.get(requests=request_record)
-                response.delete()
                 
                 return HttpResponseRedirect('/WorkerpendingTask')
             
@@ -1025,7 +1143,8 @@ class Viewappointment_history(LoginRequiredMixin, View):
 
         # Initialize lists to store request and response data
         request_list = []
-        response_list = []
+        assigned_responses = []
+        completed_responses = []
 
         for request_data in requests_data:
             # Check if a response exists for the request
@@ -1035,15 +1154,20 @@ class Viewappointment_history(LoginRequiredMixin, View):
                 # Add worker contact information to the response
                 worker = response.assigned_worker
                 response.worker_contact = worker.contact_number
-                # Add the response to the list
-                response_list.append(response)
+                
+                # Check if the response is completed or still in progress
+                if response.status:
+                    completed_responses.append(response)
+                else:
+                    assigned_responses.append(response)
             else:
                 # If no response exists, add the request to the request list
                 request_list.append(request_data)
 
         context = {
             'requests': request_list,
-            'responses': response_list,
+            'assigned_responses': assigned_responses,
+            'completed_responses': completed_responses,
         }
 
         return render(request, 'userpages/appointment_history.html', context)
@@ -1178,18 +1302,19 @@ class reject(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
     def get(self, request, action, id):
         try:
-            response_record = Response.objects.get(id=id)
-            request_record = response_record.requests
-            
-            # Mark the service request as unassigned
-            request_record.status = False
-            request_record.save()
-            
-            # Delete the response record
-            response_record.delete()
-            
-            messages.success(request, "Request rejected successfully.")
-            return HttpResponseRedirect('/AvailableRequests')
+            with transaction.atomic():
+                response_record = Response.objects.get(id=id)
+                request_record = response_record.requests
+                
+                # Mark the service request as unassigned
+                request_record.status = False
+                request_record.save()
+                
+                # Delete the response record
+                response_record.delete()
+                
+                messages.success(request, "Request rejected successfully. The job remains open for other workers.")
+                return HttpResponseRedirect('/AvailableRequests')
         except Response.DoesNotExist:
             messages.error(request, "Response not found.")
             return HttpResponseRedirect('/WorkerpendingTask')
@@ -1600,12 +1725,6 @@ class update_worker_profile(LoginRequiredMixin, View):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
-        contact_number = request.POST.get('contact_number')
-        address = request.POST.get('address')
-        
-        # Update user model
-        user.first_name = first_name
-        user.last_name = last_name
         
         # Only update email if it's changed and not already in use
         if email != user.email:
@@ -1731,3 +1850,109 @@ class DeleteUser(LoginRequiredMixin, View):
 class contact(View):
     def get(self, request):
         return render(request, 'userpages/contact.html')
+
+# Add this AJAX endpoint view function after your other view functions
+def check_worker_availability_ajax(request):
+    """
+    AJAX endpoint to check worker availability
+    """
+    if request.method == 'GET':
+        worker_id = request.GET.get('worker_id')
+        date_str = request.GET.get('date')
+        time_slot = request.GET.get('time_slot')
+        
+        if not all([worker_id, date_str, time_slot]):
+            return JsonResponse({'error': 'Missing parameters'}, status=400)
+        
+        try:
+            worker = workers.objects.get(id=worker_id)
+            is_available = check_worker_availability(worker, date_str, time_slot)
+            
+            return JsonResponse({
+                'worker_id': worker_id,
+                'available': is_available
+            })
+        except workers.DoesNotExist:
+            return JsonResponse({'error': 'Worker not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+# Add this class to your views.py file
+
+class WorkerAvailabilityView(LoginRequiredMixin, View):
+    login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
+    
+    def get(self, request):
+        # Get the current worker
+        worker_id = request.user.id
+        worker = workers.objects.get(admin=worker_id)
+        
+        # Get date range (today + next 14 days)
+        today = datetime.now().date()
+        date_range = [today + timedelta(days=i) for i in range(15)]
+        
+        # Get existing availability records
+        availability_records = WorkerAvailability.objects.filter(
+            worker=worker,
+            date__gte=today
+        )
+        
+        # Create a dictionary for easy lookup
+        availability_dict = {record.date: record for record in availability_records}
+        
+        # Prepare data for template
+        availability_data = []
+        for date in date_range:
+            if date in availability_dict:
+                record = availability_dict[date]
+                availability_data.append({
+                    'date': date,
+                    'formatted_date': date.strftime('%A, %b %d, %Y'),
+                    'morning_available': record.morning_available,
+                    'afternoon_available': record.afternoon_available,
+                    'evening_available': record.evening_available,
+                    'record_exists': True
+                })
+            else:
+                availability_data.append({
+                    'date': date,
+                    'formatted_date': date.strftime('%A, %b %d, %Y'),
+                    'morning_available': True,
+                    'afternoon_available': True,
+                    'evening_available': True,
+                    'record_exists': False
+                })
+        
+        context = {
+            'availability_data': availability_data,
+            'worker': worker
+        }
+        
+        return render(request, 'workerpages/availability.html', context)
+    
+    def post(self, request):
+        # Get the current worker
+        worker_id = request.user.id
+        worker = workers.objects.get(admin=worker_id)
+        
+        # Get form data
+        date = request.POST.get('date')
+        morning = request.POST.get('morning') == 'on'
+        afternoon = request.POST.get('afternoon') == 'on'
+        evening = request.POST.get('evening') == 'on'
+        
+        # Update or create availability record
+        WorkerAvailability.objects.update_or_create(
+            worker=worker,
+            date=date,
+            defaults={
+                'morning_available': morning,
+                'afternoon_available': afternoon,
+                'evening_available': evening
+            }
+        )
+        
+        messages.success(request, f"Availability for {date} updated successfully.")
+        return redirect('worker_availability')
