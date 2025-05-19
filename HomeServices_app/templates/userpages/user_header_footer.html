@@ -4,15 +4,17 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Fixtoria</title>
+    <title>Fixtoria - Home Services</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="home services, cleaning, repair, maintenance" name="keywords">
+    <meta content="Fixtoria provides professional home services including cleaning, repair, and maintenance." name="description">
 
     <link href="{% static 'user_assets/img/favicon.ico' %}" rel="icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="{% static 'user_assets/lib/animate/animate.min.css' %}" rel="stylesheet">
     <link href="{% static 'user_assets/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
     <link href="{% static 'user_assets/lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
@@ -20,29 +22,182 @@
     <link href="{% static 'user_assets/css/style.css' %}" rel="stylesheet">
 
     <style>
-        .navbar-custom {
-            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+        :root {
+            --primary: #2c5364;
+            --secondary: #203a43;
+            --dark: #0f2027;
+            --light: #f8f9fa;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
         }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .navbar-custom {
+            background: linear-gradient(to right, var(--dark), var(--secondary), var(--primary));
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+        
         .navbar-custom .nav-link,
         .navbar-custom .dropdown-toggle,
         .navbar-custom .btn {
             color: #fff !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
-        .navbar-custom .nav-link:hover {
-            color: #ffd700 !important;
+        
+        .navbar-custom .nav-link:hover,
+        .navbar-custom .dropdown-toggle:hover {
+            color: var(--warning) !important;
+            transform: translateY(-2px);
         }
+        
+        .navbar-custom .nav-link.active {
+            color: var(--warning) !important;
+            position: relative;
+        }
+        
+        .navbar-custom .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background-color: var(--warning);
+        }
+        
         .navbar .dropdown-toggle img {
             border: 2px solid #fff;
             transition: transform 0.2s ease;
         }
+        
         .navbar .dropdown-toggle:hover img {
             transform: scale(1.1);
         }
-        .footer {
-            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+        
+        .dropdown-menu {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
+        
+        .dropdown-item {
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--light);
+            transform: translateX(5px);
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, var(--dark), var(--primary));
+            color: #fff;
+        }
+        
+        .footer a {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        
         .footer a:hover {
-            color: #ffd700 !important;
+            color: var(--warning) !important;
+            transform: translateX(5px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-light {
+            border-color: #fff;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-light:hover {
+            background-color: #fff;
+            color: var(--primary) !important;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-social {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-social:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-to-top {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            z-index: 99;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px);
+        }
+        
+        .rounded-4 {
+            border-radius: 10px !important;
+        }
+        
+        .shadow-sm {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
+        }
+        
+        @media (max-width: 991.98px) {
+            .navbar-custom .navbar-nav {
+                background: linear-gradient(to bottom, var(--secondary), var(--primary));
+                border-radius: 0 0 15px 15px;
+                padding: 10px;
+            }
+            
+            .navbar-custom .nav-link.active::after {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -84,43 +239,49 @@
     </div>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-custom sticky-top p-0 shadow-sm">
-        <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <h2 class="m-0 text-white">Fixtoria</h2>
-        </a>
-        <button type="button" class="navbar-toggler me-4 text-white" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="{% url 'index' %}" class="nav-item nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
-                <a href="{% url 'about' %}" class="nav-item nav-link {% if 'about' in request.path %}active{% endif %}">About</a>
-                <a href="{% url 'services' %}" class="nav-item nav-link {% if 'services' in request.path %}active{% endif %}">Service</a>
-                <a href="{% url 'all_workers' %}" class="nav-item nav-link {% if 'all_workers' in request.path %}active{% endif %}">Our Team</a>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'feedback_form' %}" class="nav-item nav-link {% if 'feedback_form' in request.path %}active{% endif %}">Give Feedbacks</a>
-                {% endif %}
-                <a href="{% url 'contact' %}" class="nav-item nav-link {% if 'contact' in request.path %}active{% endif %}">Contact</a>
-            </div>
-
-            {% if user.is_authenticated %}
-                <div class="dropdown pe-4">
-                    <button class="btn dropdown-toggle d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        {% if user_profile and user_profile.profile_pic %}
-                            <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
-                        {% endif %}
-                        <span>{{ user.first_name }}</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="{% url 'userprofile' %}">Profile</a></li>
-                        <li><a class="dropdown-item" href="{% url 'Viewappointment_history' %}">Appointments</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'index' %}">Logout</a></li>
-                    </ul>
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top p-0 shadow">
+        <div class="container">
+            <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+                <h2 class="m-0 text-white">Fixtoria</h2>
+            </a>
+            <button type="button" class="navbar-toggler me-4 text-white" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto p-4 p-lg-0">
+                    <a href="{% url 'index' %}" class="nav-item nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
+                    <a href="{% url 'about' %}" class="nav-item nav-link {% if 'about' in request.path %}active{% endif %}">About</a>
+                    <a href="{% url 'services' %}" class="nav-item nav-link {% if 'services' in request.path %}active{% endif %}">Services</a>
+                    <a href="{% url 'all_workers' %}" class="nav-item nav-link {% if 'all_workers' in request.path %}active{% endif %}">Our Team</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'feedback_form' %}" class="nav-item nav-link {% if 'feedback_form' in request.path %}active{% endif %}">Feedback</a>
+                    {% endif %}
+                    <a href="{% url 'contact' %}" class="nav-item nav-link {% if 'contact' in request.path %}active{% endif %}">Contact</a>
                 </div>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Us <i class="fa fa-arrow-right ms-3"></i></a>
-            {% endif %}
+
+                {% if user.is_authenticated %}
+                    <div class="dropdown pe-4">
+                        <button class="btn dropdown-toggle d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user_profile and user_profile.profile_pic %}
+                                <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
+                            {% else %}
+                                <i class="fas fa-user-circle me-2" style="font-size: 24px;"></i>
+                            {% endif %}
+                            <span>{{ user.first_name }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'userprofile' %}"><i class="fas fa-user me-2 text-primary"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'Viewappointment_history' %}"><i class="fas fa-calendar-alt me-2 text-primary"></i>Appointments</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'index' %}"><i class="fas fa-sign-out-alt me-2 text-danger"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary rounded-pill py-2 px-4 ms-3 d-none d-lg-block">
+                        <i class="fas fa-sign-in-alt me-2"></i>Join Us
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 
@@ -134,7 +295,7 @@
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4">Address</h4>
                     <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Guelma, Algeria</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+213685749622</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+213 685749622</p>
                     <p class="mb-2"><i class="fa fa-envelope me-3"></i>fixtoria@gmail.com</p>
                     <div class="d-flex pt-2">
                         <a class="btn btn-outline-light btn-social rounded-circle me-2" href="#"><i class="fab fa-twitter"></i></a>
@@ -145,41 +306,50 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4">Services</h4>
-                    <a class="btn btn-link" href="#">General Carpentry</a>
-                    <a class="btn btn-link" href="#">Home Cleaning</a>
-                    <a class="btn btn-link" href="#">Office Cleaning</a>
-                    <a class="btn btn-link" href="#">House Painting</a>
+                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>General Carpentry</a>
+                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>Home Cleaning</a>
+                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>Office Cleaning</a>
+                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>House Painting</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4">Quick Links</h4>
-                    <a class="btn btn-link" href="{% url 'about' %}">About Us</a>
-                    <a class="btn btn-link" href="{% url 'contact' %}">Contact Us</a>
-                    <a class="btn btn-link" href="{% url 'services' %}">Our Services</a>
-                    <a class="btn btn-link" href="#">Terms & Conditions</a>
-                    <a class="btn btn-link" href="#">Support</a>
+                    <a class="btn btn-link" href="{% url 'about' %}"><i class="fas fa-angle-right me-2"></i>About Us</a>
+                    <a class="btn btn-link" href="{% url 'contact' %}"><i class="fas fa-angle-right me-2"></i>Contact Us</a>
+                    <a class="btn btn-link" href="{% url 'services' %}"><i class="fas fa-angle-right me-2"></i>Our Services</a>
+                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>Terms & Conditions</a>
+                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>Support</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-light mb-4">Newsletter</h4>
+                    <p>Subscribe to our newsletter to receive updates and special offers.</p>
                     <div class="position-relative mx-auto" style="max-width: 400px;">
-                        <input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
-                        <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Sign Up</button>
+                        <input class="form-control border-0 w-100 py-3 ps-4 pe-5 rounded-pill" type="text" placeholder="Your email">
+                        <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2 rounded-pill">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container text-center">
+        <div class="container">
             <div class="copyright">
-                &copy; <a class="border-bottom text-light" href="#">Fixtoria</a>, All Right Reserved.
-                Designed by <a class="border-bottom text-light" href="#">YourName</a>
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="#">Fixtoria</a>, All Right Reserved.
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        Designed by <a class="border-bottom" href="#">YourName</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'user_assets/lib/wow/wow.min.js' %}"></script>
     <script src="{% static 'user_assets/lib/easing/easing.min.js' %}"></script>
     <script src="{% static 'user_assets/lib/waypoints/waypoints.min.js' %}"></script>
@@ -188,6 +358,31 @@
     <script src="{% static 'user_assets/lib/isotope/isotope.pkgd.min.js' %}"></script>
     <script src="{% static 'user_assets/lib/lightbox/js/lightbox.min.js' %}"></script>
     <script src="{% static 'user_assets/js/main.js' %}"></script>
+    
+    <script>
+        // Enhanced back to top button
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 300) {
+                $('.back-to-top').addClass('active');
+            } else {
+                $('.back-to-top').removeClass('active');
+            }
+        });
+        
+        $('.back-to-top').click(function () {
+            $('html, body').animate({scrollTop: 0}, 500, 'easeInOutExpo');
+            return false;
+        });
+        
+        // Navbar animation on scroll
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+                $('.navbar-custom').addClass('shadow').css('padding', '0');
+            } else {
+                $('.navbar-custom').removeClass('shadow').css('padding', '0');
+            }
+        });
+    </script>
 </body>
 
 </html>

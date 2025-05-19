@@ -3,14 +3,15 @@
 {% load static %}
 
 <!-- Page Header Start -->
-<div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
-    <div class="container py-5">
+<div class="container-fluid page-header py-5 mb-5 position-relative wow fadeIn" data-wow-delay="0.1s">
+    <div class="overlay position-absolute w-100 h-100" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))"></div>
+    <div class="container position-relative py-5 z-1">
         <h1 class="display-3 text-white animated slideInRight">Worker Profile</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb animated slideInRight mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'all_workers' %}">Our Team</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ worker.admin.first_name }}</li>
+                <li class="breadcrumb-item"><a class="text-white" href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a class="text-white" href="{% url 'all_workers' %}">Our Team</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">{{ worker.admin.first_name }}</li>
             </ol>
         </nav>
     </div>
@@ -23,119 +24,182 @@
         <div class="row g-5">
             <!-- Worker Info -->
             <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="card border-0 shadow">
-                    <div class="card-body text-center p-4">
-                        {% if worker.profile_pic %}
-                        <img src="{{ worker.profile_pic.url }}" alt="{{ worker.admin.first_name }}" class="img-fluid rounded-circle mb-4" style="width: 150px; height: 150px; object-fit: cover;">
-                        {% else %}
-                        <img src="{% static 'user_assets/img/default_user_icon.jpg' %}" alt="{{ worker.admin.first_name }}" class="img-fluid rounded-circle mb-4" style="width: 150px; height: 150px; object-fit: cover;">
-                        {% endif %}
-                        
-                        <h3 class="mb-1">{{ worker.admin.first_name }} {{ worker.admin.last_name }}</h3>
-                        <p class="text-primary mb-3">{{ worker.designation }}</p>
-                        
-                        <!-- Rating -->
-                        <div class="d-flex justify-content-center mb-3">
-                            {% for i in "12345" %}
-                            {% if forloop.counter <= avg_rating %}
-                            <i class="fa fa-star text-primary me-1"></i>
-                                {% elif forloop.counter <= avg_rating|add:0.5 and avg_rating|floatformat:1|slice:"-1:" == "5" %}
-                                    <i class="fa fa-star-half-alt text-primary me-1"></i>
-                                {% else %}
-                                    <i class="fa fa-star text-muted me-1"></i>
-                                {% endif %}
-                            {% endfor %}
-                            <span class="ms-1">{{ avg_rating }} ({{ rating_count }} reviews)</span>
+                <div class="card border-0 rounded-4 shadow-sm overflow-hidden">
+                    <div class="card-body text-center p-0">
+                        <div class="bg-primary text-white py-4">
+                            <h3 class="mb-0">{{ worker.admin.first_name }} {{ worker.admin.last_name }}</h3>
+                            <p class="mb-0">{{ worker.designation }}</p>
                         </div>
-                        
-                        <!-- Stats -->
-                        <div class="d-flex justify-content-between mb-4">
-                            <div class="text-center px-3">
-                                <h4 class="mb-0 text-primary">{{ completed_services }}</h4>
-                                <small class="text-muted">Services</small>
+                        <div class="p-4">
+                            {% if worker.profile_pic %}
+                            <img src="{{ worker.profile_pic.url }}" alt="{{ worker.admin.first_name }}" class="img-fluid rounded-circle mb-4 border border-5 border-white shadow" style="width: 150px; height: 150px; object-fit: cover; margin-top: -75px;">
+                            {% else %}
+                            <img src="{% static 'user_assets/img/default_user_icon.jpg' %}" alt="{{ worker.admin.first_name }}" class="img-fluid rounded-circle mb-4 border border-5 border-white shadow" style="width: 150px; height: 150px; object-fit: cover; margin-top: -75px;">
+                            {% endif %}
+                            
+                            <!-- Rating -->
+                            <div class="d-flex justify-content-center mb-3">
+                                {% for i in "12345" %}
+                                {% if forloop.counter <= avg_rating %}
+                                <i class="fas fa-star text-warning me-1"></i>
+                                    {% elif forloop.counter <= avg_rating|add:0.5 and avg_rating|floatformat:1|slice:"-1:" == "5" %}
+                                        <i class="fas fa-star-half-alt text-warning me-1"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning me-1"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ms-1">{{ avg_rating }} ({{ rating_count }} reviews)</span>
                             </div>
-                            <div class="text-center px-3">
-                                <h4 class="mb-0 text-primary">{{ rating_count }}</h4>
-                                <small class="text-muted">Reviews</small>
+                            
+                            <!-- Stats -->
+                            <div class="row g-0 mb-4">
+                                <div class="col-4 border-end">
+                                    <div class="text-center p-3">
+                                        <h4 class="mb-0 text-primary">{{ completed_services }}</h4>
+                                        <small class="text-muted">Services</small>
+                                    </div>
+                                </div>
+                                <div class="col-4 border-end">
+                                    <div class="text-center p-3">
+                                        <h4 class="mb-0 text-primary">{{ rating_count }}</h4>
+                                        <small class="text-muted">Reviews</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-center p-3">
+                                        <h4 class="mb-0 text-primary">{{ worker.experience|default:"N/A" }}</h4>
+                                        <small class="text-muted">Experience</small>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-center px-3">
-                                <h4 class="mb-0 text-primary">{{ worker.experience|default:"N/A" }}</h4>
-                                <small class="text-muted">Experience</small>
-                            </div>
+                            
+                            <!-- Book Service Button -->
+                            {% if worker.designation_id %}
+                            <a href="{% url 'bookservice' id=worker.designation_id %}" class="btn btn-primary py-3 px-5 w-100 rounded-pill">
+                                <i class="fas fa-calendar-check me-2"></i>Book Service
+                            </a>
+                            {% else %}
+                            <button class="btn btn-secondary py-3 px-5 w-100 rounded-pill" disabled>
+                                <i class="fas fa-calendar-times me-2"></i>Book Service
+                            </button>
+                            {% endif %}
                         </div>
-                        
-                        <!-- Book Service Button -->
-                        {% if worker.designation_id %}
-                        <a href="{% url 'bookservice' id=worker.designation_id %}" class="btn btn-primary py-3 px-5 w-100">Book Service</a>
-                    {% else %}
-                        <button class="btn btn-secondary py-3 px-5 w-100" disabled>Book Service</button>
-                    {% endif %}                    </div>
+                    </div>
                 </div>
                 
                 <!-- Rating Distribution -->
-                <div class="card border-0 shadow mt-4">
+                <div class="card border-0 rounded-4 shadow-sm mt-4">
                     <div class="card-body p-4">
-                        <h4 class="mb-3">Rating Distribution</h4>
+                        <h4 class="mb-3 border-bottom pb-2">Rating Distribution</h4>
                         {% for i in "54321"|make_list %}
                         {% with rating_distribution.i as rating_data %}
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="me-2">{{ i }} <i class="fa fa-star text-primary"></i></div>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-2 text-nowrap">{{ i }} <i class="fas fa-star text-warning"></i></div>
                             <div class="progress flex-grow-1" style="height: 8px;">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ rating_data.percentage }}%;" aria-valuenow="{{ rating_data.percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ rating_data.percentage }}%;" aria-valuenow="{{ rating_data.percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                            <div class="ms-2">{{ rating_data.count }}</div>
+                            <div class="ms-2 text-nowrap">{{ rating_data.count }}</div>
                         </div>
                         {% endwith %}
-                    {% endfor %}
-                    
+                        {% endfor %}
                     </div>
                 </div>
             </div>
             
             <!-- Feedback List -->
             <div class="col-lg-8 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="mb-4">
-                    <h2 class="mb-3">About {{ worker.admin.first_name }}</h2>
-                    <p>{{ worker.about|default:"Professional service provider with expertise in their field. Committed to delivering high-quality service and customer satisfaction." }}</p>
+                <div class="card border-0 rounded-4 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h2 class="mb-3 border-bottom pb-2">About {{ worker.admin.first_name }}</h2>
+                        <p>{{ worker.about|default:"Professional service provider with expertise in their field. Committed to delivering high-quality service and customer satisfaction." }}</p>
+                    </div>
                 </div>
                 
-                <h3 class="mb-4">Client Reviews</h3>
-                
-                {% if feedback_list %}
-                    {% for feedback in feedback_list %}
-                    <div class="testimonial-item bg-light rounded p-4 mb-4">
-                        <div class="d-flex align-items-center mb-3">
-                            {% if feedback.User.profile_pic %}
-                            <img class="img-fluid rounded-circle flex-shrink-0 me-3" src="{{ feedback.User.profile_pic.url }}" style="width: 50px; height: 50px;">
-                            {% else %}
-                            <img class="img-fluid rounded-circle flex-shrink-0 me-3" src="{% static 'user_assets/img/default_user_icon.jpg' %}" style="width: 50px; height: 50px;">
-                            {% endif %}
-                            <div>
-                                <h5 class="mb-0">{{ feedback.User.username }}</h5>
-                                <small class="text-muted">{{ feedback.Date|date:"F d, Y" }}</small>
-                            </div>
-                            <div class="ms-auto">
-                                {% for i in "12345" %}
-                                    {% if forloop.counter <= feedback.Rating %}
-                                        <i class="fa fa-star text-primary"></i>
+                <div class="card border-0 rounded-4 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="mb-4 border-bottom pb-2">Client Reviews</h3>
+                        
+                        {% if feedback_list %}
+                            {% for feedback in feedback_list %}
+                            <div class="testimonial-item bg-light rounded-4 p-4 mb-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    {% if feedback.User.profile_pic %}
+                                    <img class="img-fluid rounded-circle flex-shrink-0 me-3 border border-3 border-white shadow-sm" src="{{ feedback.User.profile_pic.url }}" style="width: 60px; height: 60px; object-fit: cover;">
                                     {% else %}
-                                        <i class="fa fa-star text-muted"></i>
+                                    <img class="img-fluid rounded-circle flex-shrink-0 me-3 border border-3 border-white shadow-sm" src="{% static 'user_assets/img/default_user_icon.jpg' %}" style="width: 60px; height: 60px; object-fit: cover;">
                                     {% endif %}
-                                {% endfor %}
+                                    <div>
+                                        <h5 class="mb-0">{{ feedback.User.username }}</h5>
+                                        <small class="text-muted">{{ feedback.Date|date:"F d, Y" }}</small>
+                                    </div>
+                                    <div class="ms-auto">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= feedback.Rating %}
+                                                <i class="fas fa-star text-warning"></i>
+                                            {% else %}
+                                                <i class="far fa-star text-warning"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <p class="mb-0">{{ feedback.Description }}</p>
                             </div>
-                        </div>
-                        <p class="mb-0">{{ feedback.Description }}</p>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="far fa-comment-dots fa-4x text-muted mb-3"></i>
+                                <p>No reviews yet. Be the first to leave a review after using this service.</p>
+                            </div>
+                        {% endif %}
                     </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="text-center py-5">
-                        <p>No reviews yet. Be the first to leave a review after using this service.</p>
-                    </div>
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 <!-- Worker Profile End -->
+
+<!-- Add custom CSS for this page -->
+<style>
+    .page-header {
+        background: url('{% static "user_assets/img/HomeServices1.jpg" %}') center center no-repeat;
+        background-size: cover;
+    }
+    
+    .z-1 {
+        z-index: 1;
+    }
+    
+    .card {
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .testimonial-item {
+        transition: all 0.3s ease;
+    }
+    
+    .testimonial-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .overlay {
+        top: 0;
+        left: 0;
+    }
+</style>
 
 {% endblock %}

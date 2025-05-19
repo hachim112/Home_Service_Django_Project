@@ -5,18 +5,30 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
+            <!-- Success Alert for non-AJAX submissions -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <div class="card shadow">
+                <div class="card-header bg-gradient-primary text-white py-3">
                     <h2 class="mb-0 text-center">
                         <i class="fas fa-star text-warning me-2"></i>Provide Feedback
                     </h2>
                 </div>
                 <div class="card-body p-4">
-                    <form method="post" class="feedback-form">
+                    <form method="post" class="feedback-form" id="feedbackForm">
                         {% csrf_token %}
                         
                         <div class="form-group mb-4">
-                            <label for="employ" class="form-label fw-bold">Select Employee:</label>
+                            <label for="employ" class="form-label fw-bold">
+                                <i class="fas fa-user-tie me-2 text-primary"></i>Select Employee:
+                            </label>
                             <select class="form-select form-control-lg" id="employ" name="employ" required>
                                 <option value="" disabled selected>Select an Employee</option>
                                 {% for worker in workers %}
@@ -26,7 +38,9 @@
                         </div>
 
                         <div class="form-group mb-4">
-                            <label for="rating" class="form-label fw-bold">Rating:</label>
+                            <label for="rating" class="form-label fw-bold">
+                                <i class="fas fa-star-half-alt me-2 text-primary"></i>Rating:
+                            </label>
                             <div class="star-rating">
                                 <div class="stars">
                                     <i class="far fa-star star-icon" data-rating="1"></i>
@@ -41,12 +55,16 @@
                         </div>
 
                         <div class="form-group mb-4">
-                            <label for="description" class="form-label fw-bold">Your Feedback:</label>
+                            <label for="description" class="form-label fw-bold">
+                                <i class="fas fa-comment-dots me-2 text-primary"></i>Your Feedback:
+                            </label>
                             <textarea class="form-control" id="description" name="description" rows="4" placeholder="Please share your experience with our service..." required></textarea>
                         </div>
                         
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">Submit Feedback</button>
+                            <button type="submit" class="btn btn-primary btn-lg submit-btn">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -61,41 +79,199 @@
     </div>
 </div>
 
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="successModalLabel">
+                    <i class="fas fa-check-circle me-2"></i>Feedback Submitted Successfully
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="success-animation">
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="feedback-details">
+                    <div class="card mb-3 border-0 bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">
+                                <i class="fas fa-user-tie me-2"></i>Employee Information
+                            </h5>
+                            <p class="card-text"><strong>Name:</strong> <span id="employeeName"></span></p>
+                            <p class="card-text"><strong>Designation:</strong> <span id="employeeDesignation"></span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-0 bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">
+                                <i class="fas fa-clipboard-check me-2"></i>Feedback Summary
+                            </h5>
+                            <p class="card-text"><strong>Rating:</strong> <span id="feedbackRating"></span></p>
+                            <p class="card-text"><strong>Date:</strong> <span id="feedbackDate"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
+    /* Enhanced Form Styling */
     .feedback-form label {
         color: #495057;
+        font-size: 1.1rem;
     }
     
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    /* Star Rating Styling */
     .star-rating {
         text-align: center;
-        padding: 10px;
-        border-radius: 5px;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        margin-top: 10px;
     }
     
     .stars {
-        font-size: 2rem;
+        font-size: 2.5rem;
         cursor: pointer;
     }
     
     .star-icon {
         color: #e4e5e9;
         padding: 0 5px;
-        transition: color 0.2s ease;
+        transition: all 0.3s ease;
     }
     
     .star-icon:hover,
     .star-icon.selected {
         color: #ffc107;
+        transform: scale(1.2);
     }
     
     .rating-text {
         color: #6c757d;
-        font-size: 0.9rem;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    
+    /* Card Styling */
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #36b9cc);
+    }
+    
+    /* Button Styling */
+    .btn-primary {
+        background: linear-gradient(45deg, #4e73df, #2e59d9);
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #2e59d9, #4e73df);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46, 89, 217, 0.3);
+    }
+    
+    /* Success Animation */
+    .success-animation {
+        margin: 20px auto;
+        width: 80px;
+        height: 80px;
+    }
+    
+    .checkmark {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: block;
+        stroke-width: 2;
+        stroke: #4bb71b;
+        stroke-miterlimit: 10;
+        box-shadow: inset 0px 0px 0px #4bb71b;
+        animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+    
+    .checkmark__circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        stroke: #4bb71b;
+        fill: none;
+        animation: stroke .6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+    
+    .checkmark__check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        animation: stroke .3s cubic-bezier(0.65, 0, 0.45, 1) .8s forwards;
+    }
+    
+    @keyframes stroke {
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+    
+    @keyframes scale {
+        0%, 100% {
+            transform: none;
+        }
+        50% {
+            transform: scale3d(1.1, 1.1, 1);
+        }
+    }
+    
+    @keyframes fill {
+        100% {
+            box-shadow: inset 0px 0px 0px 30px #4bb71b;
+        }
+    }
+    
+    /* Modal Styling */
+    .modal-content {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #4e73df, #36b9cc);
     }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Star rating functionality
         const stars = document.querySelectorAll('.star-icon');
         const ratingInput = document.getElementById('rating');
         const ratingText = document.querySelector('.rating-text');
@@ -128,6 +304,97 @@
                 
                 // Update text
                 ratingText.textContent = ratingDescriptions[rating];
+            });
+            
+            // Hover effect
+            star.addEventListener('mouseenter', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                
+                stars.forEach(s => {
+                    const sRating = parseInt(s.getAttribute('data-rating'));
+                    if (sRating <= rating) {
+                        s.classList.add('hover');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseleave', function() {
+                stars.forEach(s => {
+                    s.classList.remove('hover');
+                });
+            });
+        });
+        
+        // Form submission with AJAX
+        const form = document.getElementById('feedbackForm');
+        const submitBtn = document.querySelector('.submit-btn');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate form
+            if (form.checkValidity() === false) {
+                e.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+            
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting...';
+            
+            // Get form data
+            const formData = new FormData(form);
+            
+            // Send AJAX request
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Populate modal with data
+                    document.getElementById('employeeName').textContent = data.employee_name;
+                    document.getElementById('employeeDesignation').textContent = data.employee_designation;
+                    
+                    // Display rating as stars
+                    let ratingHtml = '';
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= data.rating) {
+                            ratingHtml += '<i class="fas fa-star text-warning"></i> ';
+                        } else {
+                            ratingHtml += '<i class="far fa-star text-warning"></i> ';
+                        }
+                    }
+                    document.getElementById('feedbackRating').innerHTML = ratingHtml;
+                    document.getElementById('feedbackDate').textContent = data.date;
+                    
+                    // Show success modal
+                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    successModal.show();
+                    
+                    // Reset form
+                    form.reset();
+                    stars.forEach(s => {
+                        s.classList.remove('fas', 'selected');
+                        s.classList.add('far');
+                    });
+                    ratingText.textContent = ratingDescriptions[0];
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while submitting your feedback. Please try again.');
+            })
+            .finally(() => {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Feedback';
             });
         });
     });

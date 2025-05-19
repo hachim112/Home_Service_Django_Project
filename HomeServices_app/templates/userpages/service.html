@@ -3,41 +3,62 @@
 {% load static %}
 
 <!-- Page Header -->
-<div class="container-fluid service-page-header py-5 mb-5">
-    <div class="container py-5">
-        <h1 class="display-3 text-white mb-3 animated slideInDown">Service</h1>
-        <nav aria-label="breadcrumb animated slideInDown">
+<div class="container-fluid service-page-header py-5 mb-5 position-relative">
+    <div class="overlay position-absolute w-100 h-100" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))"></div>
+    <div class="container position-relative py-5 z-1">
+        <h1 class="display-3 text-white mb-3 animated fadeInDown">Our Services</h1>
+        <nav aria-label="breadcrumb animated fadeInDown">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a class="text-white" href="{% url 'index' %}">Home</a></li>
-                <!-- <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li> -->
-                <li class="breadcrumb-item text-white active" aria-current="page">Service</li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Services</li>
             </ol>
         </nav>
     </div>
 </div>
 <!-- Page Header End -->
+
 <!-- Service Start -->
 <div class="container-xxl py-5">
     <div class="container">
         <div class="section-title text-center">
-            <h1 class="display-5 mb-5">Our Services</h1>
+            <span class="text-primary text-uppercase mb-2 d-inline-block">What We Offer</span>
+            <h1 class="display-5 mb-5">Our Premium Services</h1>
         </div>
         <div class="row g-4">
             {% for service in services %}
             <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.{{ forloop.counter0 }}s">
-                <div class="service-item">
-                    <div class="overflow-hidden">
-                        <img class="img-fluid" src="{{ service.img.url }}" alt="{{ service.Name }}" style="width: 100%; height: 100%;">
-                        <!-- Adjust the style as needed, setting max-width to 100% ensures proper fit -->
+                <div class="service-item rounded-4 overflow-hidden shadow-sm h-100 position-relative">
+                    <div class="service-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="{{ service.img.url }}" alt="{{ service.Name }}" style="height: 250px; object-fit: cover;">
+                        <div class="service-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'bookservice' id=service.id %}" class="btn btn-primary px-4 py-3 rounded-pill">
+                                    <i class="fas fa-calendar-check me-2"></i>Book Now
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="btn btn-primary px-4 py-3 rounded-pill">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login to Book
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="p-4 text-center border border-5 border-light border-top-0">
+                    <div class="p-4 text-center">
                         <h4 class="mb-3">{{ service.Name }}</h4>
-                        <p>{{ service.Description|truncatewords_html:20 }}</p>
-                        {% if user.is_authenticated %}
-                            <a class="fw-medium" href="{% url 'bookservice' id=service.id %}">Book Now<i class="fa fa-arrow-right ms-2"></i></a>
-                        {% else %}
-                            <a class="fw-medium" href="{% url 'login' %}">Login to Book<i class="fa fa-sign-in-alt ms-2"></i></a>
-                        {% endif %}
+                        <p class="mb-4">{{ service.Description|truncatewords_html:20 }}</p>
+                        <div class="d-flex justify-content-between">
+                            {% if user.is_authenticated %}
+                                <a class="btn btn-outline-primary rounded-pill px-3" href="{% url 'bookservice' id=service.id %}">
+                                    <i class="fas fa-calendar-check me-2"></i>Book Now
+                                </a>
+                            {% else %}
+                                <a class="btn btn-outline-primary rounded-pill px-3" href="{% url 'login' %}">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login to Book
+                                </a>
+                            {% endif %}
+                            <a class="btn btn-outline-secondary rounded-pill px-3" href="#">
+                                <i class="fas fa-info-circle me-2"></i>Details
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -45,43 +66,99 @@
         </div>
     </div>
 </div>
-    <!-- Service End -->
+<!-- Service End -->
 
-
-    <!-- Quote Start -->
-
-    <!-- Quote End -->
-
-
-    <!-- Testimonial Start -->
-  
-    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="section-title text-center">
-                <h1 class="display-5 mb-5">Feedbacks</h1>
-            </div>
-            <div class="owl-carousel testimonial-carousel">
-                {% for feedback in feedbacks %}
-                <div class="testimonial-item text-center">
-                    <!-- Check if the user has a profile picture -->
+<!-- Testimonial Start -->
+<div class="container-xxl py-5 bg-light">
+    <div class="container">
+        <div class="section-title text-center">
+            <span class="text-primary text-uppercase mb-2 d-inline-block">Testimonials</span>
+            <h1 class="display-5 mb-5">What Our Clients Say</h1>
+        </div>
+        <div class="owl-carousel testimonial-carousel">
+            {% for feedback in feedbacks %}
+            <div class="testimonial-item bg-white p-4 rounded-4 shadow-sm">
+                <div class="d-flex align-items-center mb-4">
                     {% if feedback.User.profile_pic %}
-                    <img class="img-fluid bg-light p-2 mx-auto mb-3" src="{{ feedback.User.profile_pic.url }}" style="width: 90px; height: 90px;">
+                    <img class="img-fluid rounded-circle flex-shrink-0" src="{{ feedback.User.profile_pic.url }}" style="width: 70px; height: 70px; object-fit: cover;">
                     {% else %}
-                    <!-- Display a default user icon -->
-                    <img class="img-fluid bg-light p-2 mx-auto mb-3" src="{% static 'user_assets/img/default_user_icon.jpg' %}" style="width: 90px; height: 90px;">
+                    <img class="img-fluid rounded-circle flex-shrink-0" src="{% static 'user_assets/img/default_user_icon.jpg' %}" style="width: 70px; height: 70px; object-fit: cover;">
                     {% endif %}
-                    <div class="testimonial-text text-center p-4">
-                        <p>{{ feedback.Description }}</p>
-                        <!-- <h5 class="mb-1">{{ feedback.user.username }}</h5> -->
+                    <div class="ms-3">
                         <h5 class="mb-1">{{ feedback.User.username }}</h5>
-                        <span class="fst-italic">{{ feedback.Employ.Name }}</span>
-                        <!-- <span class="fst-italic">{{ feedback.Employ.Name }}</span> -->
+                        <span class="text-muted">Client</span>
+                        <div class="d-flex mt-1">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= feedback.Rating %}
+                                    <small class="fas fa-star text-warning me-1"></small>
+                                {% else %}
+                                    <small class="far fa-star text-warning me-1"></small>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
-                {% endfor %}
+                <p class="mb-3">{{ feedback.Description }}</p>
+                <div class="border-top pt-3">
+                    <p class="mb-0"><strong>Service by:</strong> <a href="{% url 'worker_profile' id=feedback.Employ.id %}" class="text-primary">{{ feedback.Employ.admin.first_name }} {{ feedback.Employ.admin.last_name }}</a></p>
+                </div>
             </div>
+            {% endfor %}
         </div>
     </div>
-    <!-- Testimonial End -->
-        
-    {% endblock %}
+</div>
+<!-- Testimonial End -->
+
+<!-- Add custom CSS for this page -->
+<style>
+    .service-page-header {
+        background: url('{% static "user_assets/img/HomeServices1.jpg" %}') center center no-repeat;
+        background-size: cover;
+    }
+    
+    .z-1 {
+        z-index: 1;
+    }
+    
+    .service-item {
+        transition: all 0.3s ease;
+    }
+    
+    .service-item:hover {
+        transform: translateY(-10px);
+    }
+    
+    .service-overlay {
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        transition: all 0.5s ease;
+    }
+    
+    .service-img:hover .service-overlay {
+        opacity: 1;
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .testimonial-item {
+        transition: all 0.3s ease;
+    }
+    
+    .testimonial-item:hover {
+        transform: translateY(-5px);
+    }
+    
+    .overlay {
+        top: 0;
+        left: 0;
+    }
+</style>
+
+{% endblock %}

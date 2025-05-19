@@ -910,10 +910,12 @@ class EditServices(LoginRequiredMixin, View):
     
 class feedback_form(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
-    def get(self,request):
+    
+    def get(self, request):
         worker = workers.objects.all()
         return render(request, 'userpages/feedback_form.html', {'workers': worker})
-    def post(self,request):
+    
+    def post(self, request):
         rating = int(request.POST['rating'])
         description = request.POST['description']
         user = request.user  # Get the currently logged-in user instance
@@ -922,10 +924,31 @@ class feedback_form(LoginRequiredMixin, View):
         date = datetime.now()
 
         # Create a new Feedback instance and assign the user, employ, and date
-        feedback = Feedback.objects.create(Rating=rating, Description=description, User=user, Employ=employ, Date=date)
+        feedback = Feedback.objects.create(
+            Rating=rating, 
+            Description=description, 
+            User=user, 
+            Employ=employ, 
+            Date=date
+        )
         feedback.save()
-
-        return HttpResponse('feedback_success')
+        
+        # Check if this is an AJAX request
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            # Return JSON response with employee details for the popup
+            return JsonResponse({
+                'success': True,
+                'employee_name': f"{employ.admin.first_name} {employ.admin.last_name}",
+                'employee_designation': employ.designation,
+                'rating': rating,
+                'date': date.strftime('%B %d, %Y'),
+                'message': 'Your feedback has been submitted successfully!'
+            })
+        else:
+            # For regular form submissions, redirect with a success message
+            from django.contrib import messages
+            messages.success(request, 'Your feedback has been submitted successfully!')
+            return redirect('feedback_form')  # Redirect to the same page
 
 class viewfeedbacks(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
