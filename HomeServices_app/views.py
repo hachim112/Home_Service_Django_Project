@@ -20,7 +20,7 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from .models import Country, State, City  # Adjust based on your actual models
 import time
-
+from django.db import transaction, IntegrityError
 
 class Commenlib:
     def __init__(self):
@@ -153,7 +153,7 @@ class User_Register(View):
     def get(self, request):
         return render(request, 'user_register.html')
 
-    def post(self,request):
+    def post(self, request):
         first_name = request.POST.get('firstname')
         last_name = request.POST.get('lastname')
         email = request.POST.get('email')
@@ -161,32 +161,117 @@ class User_Register(View):
         address = request.POST.get('address')
         profile_pics = request.FILES.get('profile_pic')
         gender = request.POST.get('gender')
-        # user_type = request.POST.get('usertype')
         password = request.POST.get('password')
         cpassword = request.POST.get('cpassword')
-        # user_type= 3
+        
+        # Check if email already exists
+        if User.objects.filter(email=email).exists() or User.objects.filter(username=email).exists():
+            context = {
+                'error_msg': 'This email is already in use. Please use a different email address.',
+                # Preserve form data to avoid re-entering everything
+                'form_data': {
+                    'firstname': first_name,
+                    'lastname': last_name,
+                    'email': email,
+                    'contactnumber': contact_number,
+                    'address': address,
+                    'gender': gender
+                }
+            }
+            return render(request, 'user_register.html', context)
+        
+        # Check if contact number already exists
+        if users.objects.filter(contact_number=contact_number).exists():
+            context = {
+                'error_msg': 'This phone number is already in use. Please use a different phone number.',
+                'form_data': {
+                    'firstname': first_name,
+                    'lastname': last_name,
+                    'email': email,
+                    'contactnumber': contact_number,
+                    'address': address,
+                    'gender': gender
+                }
+            }
+            return render(request, 'user_register.html', context)
+        
         # Check if passwords match
         if password == cpassword:
-            new_user = User.objects.create(
-                username=email,
-                email=email,
-                password=make_password(password),
-                first_name=first_name,
-                last_name=last_name,
-                is_active=True,
-                is_staff=False,
-            )
+            try:
+                with transaction.atomic():
+                    # Create new user
+                    new_user = User.objects.create(
+                        username=email,
+                        email=email,
+                        password=make_password(password),
+                        first_name=first_name,
+                        last_name=last_name,
+                        is_active=True,
+                        is_staff=False,
+                    )
 
-
-            users.objects.create(admin=new_user, Address=address, gender=gender, contact_number=contact_number,profile_pic=profile_pics)
-            return render(request, 'login.html', {'msg': "Addd succsfully!"})
-
-
+                    # Create user profile
+                    users.objects.create(
+                        admin=new_user, 
+                        Address=address, 
+                        gender=gender, 
+                        contact_number=contact_number,
+                        profile_pic=profile_pics
+                    )
+                    
+                    return render(request, 'login.html', {'msg': "Registration successful! You can now login."})
+            
+            except IntegrityError as e:
+                # Handle database integrity errors
+                error_message = "Registration failed. "
+                if 'username' in str(e).lower():
+                    error_message += "This email is already in use."
+                elif 'contact_number' in str(e).lower():
+                    error_message += "This phone number is already in use."
+                else:
+                    error_message += "Please check your information and try again."
+                
+                context = {
+                    'error_msg': error_message,
+                    'form_data': {
+                        'firstname': first_name,
+                        'lastname': last_name,
+                        'email': email,
+                        'contactnumber': contact_number,
+                        'address': address,
+                        'gender': gender
+                    }
+                }
+                return render(request, 'user_register.html', context)
+            
+            except Exception as e:
+                # Handle any other errors
+                context = {
+                    'error_msg': f'An error occurred during registration: {str(e)}',
+                    'form_data': {
+                        'firstname': first_name,
+                        'lastname': last_name,
+                        'email': email,
+                        'contactnumber': contact_number,
+                        'address': address,
+                        'gender': gender
+                    }
+                }
+                return render(request, 'user_register.html', context)
         else:
-            return render(request, 'user_register.html', {'msg': "Passwords do not match!"})
-
-        return render(request, 'user_register.html', {'msg': "Something went wrong"})
-
+            # Passwords don't match
+            context = {
+                'error_msg': 'Passwords do not match!',
+                'form_data': {
+                    'firstname': first_name,
+                    'lastname': last_name,
+                    'email': email,
+                    'contactnumber': contact_number,
+                    'address': address,
+                    'gender': gender
+                }
+            }
+            return render(request, 'user_register.html', context)
 
 
 class Worker_Register(View):
@@ -216,8 +301,28 @@ class Worker_Register(View):
             designations = ServiceCatogarys.objects.all()
             context = {
                 'designations': designations,
-                'msg': '<div class="alert alert-danger">This email is already in use. Please use a different email address.</div>',
+                'error_msg': 'This email is already in use. Please use a different email address.',
                 # Preserve form data to avoid re-entering everything
+                'form_data': {
+                    'firstname': firstname,
+                    'lastname': lastname,
+                    'email': email,
+                    'contactnumber': contactnumber,
+                    'dob': dob,
+                    'gender': gender,
+                    'city': city,
+                    'address': address,
+                    'designation': designation
+                }
+            }
+            return render(request, 'workers_registration.html', context)
+        
+        # Check if contact number already exists
+        if workers.objects.filter(contact_number=contactnumber).exists():
+            designations = ServiceCatogarys.objects.all()
+            context = {
+                'designations': designations,
+                'error_msg': 'This phone number is already in use. Please use a different phone number.',
                 'form_data': {
                     'firstname': firstname,
                     'lastname': lastname,
@@ -235,40 +340,69 @@ class Worker_Register(View):
         # Check if passwords match
         if password == cpassword:
             try:
-                # Create new user
-                new_user = User.objects.create(
-                    username=email,
-                    email=email,
-                    password=make_password(password),
-                    first_name=firstname,
-                    last_name=lastname,
-                    is_active=True,
-                    is_staff=True,
-                )
+                with transaction.atomic():
+                    # Create new user
+                    new_user = User.objects.create(
+                        username=email,
+                        email=email,
+                        password=make_password(password),
+                        first_name=firstname,
+                        last_name=lastname,
+                        is_active=True,
+                        is_staff=True,
+                    )
 
-                # Create worker profile
-                new_worker = workers(
-                    admin=new_user, 
-                    contact_number=contactnumber, 
-                    dob=dob, 
-                    Address=address, 
-                    city=city,
-                    gender=gender, 
-                    designation=designation, 
-                    profile_pic=profile_pic,
-                    acc_activation=False, 
-                    avalability_status=True
-                )
-                new_worker.save()
+                    # Create worker profile
+                    new_worker = workers(
+                        admin=new_user, 
+                        contact_number=contactnumber, 
+                        dob=dob, 
+                        Address=address, 
+                        city=city,
+                        gender=gender, 
+                        designation=designation, 
+                        profile_pic=profile_pic,
+                        acc_activation=False, 
+                        avalability_status=True
+                    )
+                    new_worker.save()
 
-                return render(request, 'login.html', {'msg': '<div class="alert alert-success">Registration successful! You can now login.</div>'})
+                    return render(request, 'login.html', {'msg': 'Registration successful! You can now login.'})
+            
+            except IntegrityError as e:
+                # Handle database integrity errors
+                error_message = "Registration failed. "
+                if 'username' in str(e).lower():
+                    error_message += "This email is already in use."
+                elif 'contact_number' in str(e).lower():
+                    error_message += "This phone number is already in use."
+                else:
+                    error_message += "Please check your information and try again."
+                
+                designations = ServiceCatogarys.objects.all()
+                context = {
+                    'designations': designations,
+                    'error_msg': error_message,
+                    'form_data': {
+                        'firstname': firstname,
+                        'lastname': lastname,
+                        'email': email,
+                        'contactnumber': contactnumber,
+                        'dob': dob,
+                        'gender': gender,
+                        'city': city,
+                        'address': address,
+                        'designation': designation
+                    }
+                }
+                return render(request, 'workers_registration.html', context)
             
             except Exception as e:
                 # Handle any other errors
                 designations = ServiceCatogarys.objects.all()
                 context = {
                     'designations': designations,
-                    'msg': f'<div class="alert alert-danger">An error occurred: {str(e)}</div>',
+                    'error_msg': f'An error occurred during registration: {str(e)}',
                     'form_data': {
                         'firstname': firstname,
                         'lastname': lastname,
@@ -287,7 +421,7 @@ class Worker_Register(View):
             designations = ServiceCatogarys.objects.all()
             context = {
                 'designations': designations,
-                'msg': '<div class="alert alert-danger">Passwords do not match!</div>',
+                'error_msg': 'Passwords do not match!',
                 'form_data': {
                     'firstname': firstname,
                     'lastname': lastname,
@@ -302,21 +436,33 @@ class Worker_Register(View):
             }
             return render(request, 'workers_registration.html', context)
 
-
-class home(View):  # Remove LoginRequiredMixin
+class home(View):
     def get(self, request):
         services = ServiceCatogarys.objects.all()
-        feedbacks = Feedback.objects.select_related('User', 'Employ', 'Employ__admin').all()
-        all_services = list(ServiceCatogarys.objects.all())  # Convert QuerySet to a list
-        selected_services = random.sample(all_services, min(len(all_services), 6))  # Select up to 6 random services
-        print('services:', services)
+        
+        # 🔥 THE MAGIC HAPPENS HERE! 🔥
+        # Step 1: Get all feedback with related data
+        feedbacks = Feedback.objects.select_related('User', 'Employ', 'Employ__admin').all()[:10]
+        
+        # Step 2: For each feedback, go get the user's profile picture
+        for feedback in feedbacks:
+            try:
+                # This is like saying: "Hey feedback, who is your user? Now go to that user's profile and get their picture!"
+                user_profile = users.objects.get(admin=feedback.User)
+                feedback.user_profile_pic = user_profile.profile_pic
+            except users.DoesNotExist:
+                # If no profile exists, set to None (no picture)
+                feedback.user_profile_pic = None
+        
+        all_services = list(ServiceCatogarys.objects.all())
+        selected_services = random.sample(all_services, min(len(all_services), 6))
+        
         context = {
             'services': services,
-            'feedbacks': feedbacks,
+            'feedbacks': feedbacks,  # Now each feedback has user_profile_pic!
             'selected_services': selected_services,
         }
         return render(request, 'userpages/index.html', context)
-
 class about(View):  # Remove LoginRequiredMixin
     def get(self,request):
         return render(request, 'userpages/about.html')

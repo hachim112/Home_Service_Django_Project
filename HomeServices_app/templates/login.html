@@ -3,142 +3,489 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Home Services Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <title>fixtoria - Professional Home Services</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
     }
 
     body {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      background-image: url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1470&q=80');
-      background-size: cover;
-      background-position: center;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    .login-container {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 40px;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.37);
-      width: 100%;
-      max-width: 400px;
-      color: #fff;
+    /* Animated background elements */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+      animation: float 20s ease-in-out infinite;
     }
 
-    .login-container h2 {
-      text-align: center;
-      margin-bottom: 30px;
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .main-container {
+      display: flex;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      max-width: 900px;
+      width: 90%;
+      min-height: 600px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .info-panel {
+      flex: 1;
+      background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+      position: relative;
+    }
+
+    .info-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      opacity: 0.3;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo i {
+      color: #f39c12;
+      margin-right: 10px;
+    }
+
+    .info-panel h3 {
+      font-size: 24px;
       font-weight: 600;
-      color: #ffffff;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .info-panel p {
+      font-size: 16px;
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .service-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .service-item:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .service-item i {
+      font-size: 20px;
+      margin-right: 10px;
+      color: #f39c12;
+    }
+
+    .service-item span {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .login-panel {
+      flex: 1;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .login-header h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .login-header p {
+      color: #7f8c8d;
+      font-size: 16px;
     }
 
     .form-group {
       position: relative;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
-    .form-group input {
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #2c3e50;
+      font-size: 14px;
+    }
+
+    /* Fixed input wrapper styling */
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper input {
       width: 100%;
-      padding: 12px 40px 12px 15px;
-      border-radius: 8px;
-      border: none;
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
+      padding: 16px 20px 16px 50px;
+      border: 2px solid #e1e8ed;
+      border-radius: 12px;
       font-size: 16px;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+      font-family: 'Inter', sans-serif;
     }
 
-    .form-group i {
-      position: absolute;
-      right: 15px;
-      top: 12px;
-      color: #ffffffaa;
-    }
-
-    .form-group input:focus {
+    .input-wrapper input:focus {
       outline: none;
-      background: rgba(255, 255, 255, 0.3);
+      border-color: #3498db;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .input-wrapper .field-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7f8c8d;
+      font-size: 16px;
+      z-index: 2;
+      pointer-events: none;
     }
 
     .btn-login {
       width: 100%;
-      padding: 12px;
+      padding: 16px;
       border: none;
-      border-radius: 8px;
-      background: #ff4e50;
-      background: linear-gradient(to right, #f9d423, #ff4e50);
+      border-radius: 12px;
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
       color: white;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: all 0.3s ease;
+      margin-bottom: 24px;
     }
 
     .btn-login:hover {
-      background: linear-gradient(to right, #ff4e50, #f9d423);
+      background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
     }
 
-    .extras {
+    .forgot-password {
       text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
+      margin-bottom: 30px;
     }
 
-    .extras a {
-      color: #f0f0f0;
+    .forgot-password a {
+      color: #3498db;
       text-decoration: none;
-      transition: 0.2s;
+      font-weight: 500;
+      transition: color 0.3s ease;
     }
 
-    .extras a:hover {
-      color: #ffcc70;
+    .forgot-password a:hover {
+      color: #2980b9;
+    }
+
+    .register-section {
+      text-align: center;
+      padding: 24px;
+      background: #f8f9fa;
+      border-radius: 16px;
+      border: 2px dashed #e1e8ed;
+    }
+
+    .register-section h4 {
+      color: #2c3e50;
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .register-buttons {
+      display: flex;
+      gap: 12px;
+      flex-direction: column;
+    }
+
+    .btn-register {
+      padding: 14px 24px;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-register.user {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      color: white;
+    }
+
+    .btn-register.user:hover {
+      background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-register.worker {
+      background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+      color: white;
+    }
+
+    .btn-register.worker:hover {
+      background: linear-gradient(135deg, #229954 0%, #27ae60 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
     }
 
     .error-msg {
-      color: #ffcccc;
-      text-align: center;
-      margin-bottom: 15px;
+      background: #fee;
+      color: #c0392b;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #e74c3c;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+        max-width: 400px;
+        margin: 20px;
+      }
+
+      .info-panel {
+        padding: 40px 30px;
+      }
+
+      .login-panel {
+        padding: 40px 30px;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .register-buttons {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <form method="POST" action="{% url 'login' %}">
-      {% csrf_token %}
-      {% if error_msg %}
-        <p class="error-msg">{{ error_msg }}</p>
-      {% endif %}
-      <h2>Welcome Back!</h2>
+  <div class="main-container">
+    <!-- Info Panel -->
+    <div class="info-panel">
+      <div class="logo">
+        <i class="fas fa-home"></i>fixtoria
+      </div>
+      <h3>Professional Home Services</h3>
+      <p>Connect with trusted professionals for all your home service needs. From plumbing to electrical work, we've got you covered.</p>
+      
+      <div class="services-grid">
+        <div class="service-item">
+          <i class="fas fa-wrench"></i>
+          <span>Plumbing</span>
+        </div>
+        <div class="service-item">
+          <i class="fas fa-bolt"></i>
+          <span>Electrical</span>
+        </div>
+        <div class="service-item">
+          <i class="fas fa-broom"></i>
+          <span>Cleaning</span>
+        </div>
+        <div class="service-item">
+          <i class="fas fa-hammer"></i>
+          <span>Handyman</span>
+        </div>
+        <div class="service-item">
+          <i class="fas fa-paint-roller"></i>
+          <span>Painting</span>
+        </div>
+        <div class="service-item">
+          <i class="fas fa-leaf"></i>
+          <span>Gardening</span>
+        </div>
+      </div>
+    </div>
 
-      <div class="form-group">
-        <input type="text" name="uname" id="uname" placeholder="Username" required>
-        <i class="fas fa-user"></i>
+    <!-- Login Panel -->
+    <div class="login-panel">
+      <div class="login-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to your account</p>
       </div>
 
-      <div class="form-group">
-        <input type="password" name="psw" id="psw" placeholder="Password" required>
-        <i class="fas fa-lock"></i>
-      </div>
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% if error_msg %}
+          <div class="error-msg">
+            <i class="fas fa-exclamation-triangle"></i> {{ error_msg }}
+          </div>
+        {% endif %}
 
-      <button type="submit" class="btn-login">Login</button>
+        <div class="form-group">
+          <label for="uname">Username</label>
+          <div class="input-wrapper">
+            <input type="text" name="uname" id="uname" placeholder="Enter your username" required>
+            <i class="fas fa-user field-icon"></i>
+          </div>
+        </div>
 
-      <div class="extras">
-        <p><a href="{% url 'password-reset' %}">Forgot Password?</a></p>
-        <p>Don't have an account?<br>
-        <a href="{% url 'user_registration' %}">Register as User</a> or 
-        <a href="{% url 'Worker_Register' %}">Register as Worker</a></p>
-      </div>
-    </form>
+        <div class="form-group">
+          <label for="psw">Password</label>
+          <div class="input-wrapper">
+            <input type="password" name="psw" id="psw" placeholder="Enter your password" required>
+            <i class="fas fa-lock field-icon"></i>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+
+        <div class="forgot-password">
+          <a href="{% url 'password-reset' %}">Forgot your password?</a>
+        </div>
+
+        <div class="register-section">
+          <h4>New to fixtoria?</h4>
+          <div class="register-buttons">
+            <a href="{% url 'user_registration' %}" class="btn-register user">
+              <i class="fas fa-user-plus"></i>
+              Register as Customer
+            </a>
+            <a href="{% url 'Worker_Register' %}" class="btn-register worker">
+              <i class="fas fa-tools"></i>
+              Register as Service Provider
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
+
+  <script>
+    // Add some interactive animations
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animate service items on load
+      const serviceItems = document.querySelectorAll('.service-item');
+      serviceItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          item.style.transition = 'all 0.6s ease';
+          item.style.opacity = '1';
+          item.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
+
+      // Add focus animations to form inputs
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          const icon = this.parentElement.querySelector('.field-icon');
+          if (icon) {
+            icon.style.color = '#3498db';
+          }
+        });
+        
+        input.addEventListener('blur', function() {
+          const icon = this.parentElement.querySelector('.field-icon');
+          if (icon) {
+            icon.style.color = '#7f8c8d';
+          }
+        });
+      });
+
+      // Form group animations
+      const formGroups = document.querySelectorAll('.form-group');
+      formGroups.forEach((group, index) => {
+        group.style.opacity = '0';
+        group.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          group.style.transition = 'all 0.6s ease';
+          group.style.opacity = '1';
+          group.style.transform = 'translateY(0)';
+        }, (index + serviceItems.length) * 100);
+      });
+    });
+  </script>
 </body>
 </html>

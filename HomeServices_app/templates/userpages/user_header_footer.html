@@ -4,21 +4,32 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Fixtoria - Home Services</title>
+    <title>Fixtoria - Professional Home Services</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="home services, cleaning, repair, maintenance" name="keywords">
-    <meta content="Fixtoria provides professional home services including cleaning, repair, and maintenance." name="description">
+    <meta content="home services, cleaning, repair, maintenance, plumber, electrician" name="keywords">
+    <meta content="Fixtoria provides professional home services including cleaning, repair, maintenance, plumbing, and electrical work." name="description">
 
+    <!-- Favicon -->
     <link href="{% static 'user_assets/img/favicon.ico' %}" rel="icon">
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- CSS Libraries -->
     <link href="{% static 'user_assets/lib/animate/animate.min.css' %}" rel="stylesheet">
     <link href="{% static 'user_assets/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
     <link href="{% static 'user_assets/lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
     <link href="{% static 'user_assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    
+    <!-- Custom Stylesheet -->
     <link href="{% static 'user_assets/css/style.css' %}" rel="stylesheet">
 
     <style>
@@ -31,83 +42,373 @@
             --warning: #ffc107;
             --danger: #dc3545;
             --info: #17a2b8;
+            --purple: #6f42c1;
+            --orange: #fd7e14;
+            --teal: #20c997;
+            --pink: #e83e8c;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
+            line-height: 1.6;
+            color: #333;
         }
         
+        /* Advanced Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+        
+        /* Loading Spinner Enhancement */
+        #spinner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .spinner-grow {
+            background: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        /* Advanced Topbar */
+        .topbar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-bottom: 3px solid var(--warning);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .topbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .topbar .contact-info {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .topbar .contact-info small {
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .topbar .contact-info small:hover {
+            color: var(--warning);
+            transform: translateX(3px);
+        }
+        
+        .topbar .social-links a {
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .topbar .social-links a:hover {
+            background: var(--warning);
+            color: var(--dark) !important;
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        }
+        
+        /* Revolutionary Navbar */
         .navbar-custom {
-            background: linear-gradient(to right, var(--dark), var(--secondary), var(--primary));
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding: 0;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
         }
         
-        .navbar-custom .nav-link,
-        .navbar-custom .dropdown-toggle,
-        .navbar-custom .btn {
-            color: #fff !important;
-            font-weight: 500;
+        .navbar-custom.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .navbar-brand {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
             transition: all 0.3s ease;
         }
         
-        .navbar-custom .nav-link:hover,
-        .navbar-custom .dropdown-toggle:hover {
-            color: var(--warning) !important;
-            transform: translateY(-2px);
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
         }
         
-        .navbar-custom .nav-link.active {
-            color: var(--warning) !important;
+        .navbar-brand:hover::after {
+            width: 100%;
+        }
+        
+        .navbar-brand i {
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--dark) !important;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 1rem 1.5rem !important;
             position: relative;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        .navbar-custom .nav-link.active::after {
+        .navbar-nav .nav-link::before {
             content: '';
             position: absolute;
             bottom: 0;
             left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
+            width: 0;
             height: 3px;
-            background-color: var(--warning);
+            background: var(--gradient-primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
         }
         
-        .navbar .dropdown-toggle img {
-            border: 2px solid #fff;
-            transition: transform 0.2s ease;
+        .navbar-nav .nav-link:hover::before,
+        .navbar-nav .nav-link.active::before {
+            width: 80%;
         }
         
-        .navbar .dropdown-toggle:hover img {
+        .navbar-nav .nav-link:hover {
+            color: var(--primary) !important;
+            transform: translateY(-2px);
+        }
+        
+        .navbar-nav .nav-link.active {
+            color: var(--primary) !important;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 25px;
+        }
+        
+        /* Advanced User Dropdown */
+        .user-dropdown {
+            position: relative;
+        }
+        
+        .user-dropdown .dropdown-toggle {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 50px;
+            padding: 8px 20px;
+            color: white !important;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .user-dropdown .dropdown-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .user-dropdown .dropdown-toggle img {
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .user-dropdown .dropdown-toggle:hover img {
+            border-color: white;
             transform: scale(1.1);
         }
         
         .dropdown-menu {
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             overflow: hidden;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95);
+            margin-top: 10px;
         }
         
         .dropdown-item {
-            padding: 10px 20px;
+            padding: 12px 20px;
             transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
         }
         
         .dropdown-item:hover {
-            background-color: var(--light);
+            background: var(--gradient-primary);
+            color: white !important;
             transform: translateX(5px);
         }
         
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Join Us Button */
+        .btn-join {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            color: white !important;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-join::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-join:hover::before {
+            left: 100%;
+        }
+        
+        .btn-join:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            color: white !important;
+        }
+        
+        /* Mobile Menu Enhancement */
+        .navbar-toggler {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: var(--gradient-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        /* Advanced Footer */
         .footer {
-            background: linear-gradient(135deg, var(--dark), var(--primary));
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
             color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><defs><pattern id="footerPattern" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="1000" height="300" fill="url(%23footerPattern)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .footer .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .footer h4 {
+            color: var(--warning);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .footer h4::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--gradient-secondary);
+            border-radius: 2px;
         }
         
         .footer a {
             color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
             transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
         }
         
         .footer a:hover {
@@ -115,60 +416,121 @@
             transform: translateX(5px);
         }
         
-        .btn-primary {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+        .footer .btn-link {
             border: none;
-            transition: all 0.3s ease;
+            padding: 8px 0;
+            text-align: left;
+            background: none;
         }
         
-        .btn-primary:hover {
-            background: linear-gradient(to right, var(--secondary), var(--primary));
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        .footer .btn-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            padding-left: 10px;
         }
         
-        .btn-outline-light {
-            border-color: #fff;
-            color: #fff;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-outline-light:hover {
-            background-color: #fff;
-            color: var(--primary) !important;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
+        /* Social Media Buttons */
         .btn-social {
-            width: 38px;
-            height: 38px;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-social::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 50%;
+        }
+        
+        .btn-social:hover::before {
+            opacity: 1;
+        }
+        
+        .btn-social i {
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
         }
         
         .btn-social:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
         
+        .btn-social:hover i {
+            color: white;
+        }
+        
+        /* Newsletter Section */
+        .newsletter-input {
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .newsletter-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--warning);
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+        }
+        
+        .newsletter-btn {
+            background: var(--gradient-secondary);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .newsletter-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(248, 147, 251, 0.4);
+        }
+        
+        /* Back to Top Button */
         .back-to-top {
             position: fixed;
             right: 30px;
             bottom: 30px;
             z-index: 99;
             border-radius: 50%;
-            width: 48px;
-            height: 48px;
+            width: 55px;
+            height: 55px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.5s ease;
             opacity: 0;
             visibility: hidden;
+            background: var(--gradient-primary);
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
         .back-to-top.active {
@@ -177,107 +539,242 @@
         }
         
         .back-to-top:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
         
-        .rounded-4 {
-            border-radius: 10px !important;
+        /* Copyright Section */
+        .copyright {
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 0;
         }
         
-        .shadow-sm {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
+        .copyright a {
+            color: var(--warning);
+            font-weight: 600;
         }
         
+        /* Responsive Design */
         @media (max-width: 991.98px) {
             .navbar-custom .navbar-nav {
-                background: linear-gradient(to bottom, var(--secondary), var(--primary));
-                border-radius: 0 0 15px 15px;
-                padding: 10px;
+                background: rgba(255, 255, 255, 0.98);
+                border-radius: 15px;
+                padding: 20px;
+                margin-top: 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(20px);
             }
             
-            .navbar-custom .nav-link.active::after {
+            .navbar-nav .nav-link {
+                padding: 12px 20px !important;
+                border-radius: 10px;
+                margin: 5px 0;
+            }
+            
+            .navbar-nav .nav-link:hover {
+                background: var(--gradient-primary);
+                color: white !important;
+                transform: translateX(10px);
+            }
+            
+            .navbar-nav .nav-link.active::before {
                 display: none;
             }
+            
+            .topbar .row > div {
+                text-align: center !important;
+                padding: 10px 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .footer .row > div {
+                margin-bottom: 2rem;
+            }
+            
+            .back-to-top {
+                width: 45px;
+                height: 45px;
+                right: 20px;
+                bottom: 20px;
+            }
+        }
+        
+        /* Custom Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .animate-on-scroll {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        /* Utility Classes */
+        .text-gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .bg-gradient-primary {
+            background: var(--gradient-primary) !important;
+        }
+        
+        .bg-gradient-secondary {
+            background: var(--gradient-secondary) !important;
+        }
+        
+        .shadow-custom {
+            box-shadow: var(--shadow-lg) !important;
+        }
+        
+        .rounded-custom {
+            border-radius: 15px !important;
+        }
+        
+        .border-gradient {
+            border: 2px solid transparent;
+            background: linear-gradient(white, white) padding-box, var(--gradient-primary) border-box;
         }
     </style>
 </head>
 
 <body>
-    <!-- Spinner -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
+    <!-- Advanced Spinner -->
+    <div id="spinner" class="show position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow mx-2" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 
-    <!-- Topbar -->
-    <div class="container-fluid bg-light p-0">
-        <div class="row gx-0 d-none d-lg-flex">
-            <div class="col-lg-7 px-5 text-start">
-                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
-                    <small class="fa fa-map-marker-alt text-primary me-2"></small>
-                    <small>Guelma, Algeria</small>
+    <!-- Advanced Topbar -->
+    <div class="container-fluid topbar d-none d-lg-block">
+        <div class="container">
+            <div class="row gx-0 align-items-center">
+                <div class="col-lg-7 px-5 text-start contact-info">
+                    <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                        <small class="fa fa-map-marker-alt me-2"></small>
+                        <small>Guelma, Algeria</small>
+                    </div>
+                    <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                        <small class="far fa-clock me-2"></small>
+                        <small>Mon - Fri : 09.00 AM - 09.00 PM</small>
+                    </div>
+                    <div class="h-100 d-inline-flex align-items-center py-3">
+                        <small class="fa fa-phone-alt me-2"></small>
+                        <small>+213 675884411</small>
+                    </div>
                 </div>
-                <div class="h-100 d-inline-flex align-items-center py-3">
-                    <small class="far fa-clock text-primary me-2"></small>
-                    <small>Mon - Fri : 09.00 AM - 09.00 PM</small>
-                </div>
-            </div>
-            <div class="col-lg-5 px-5 text-end">
-                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
-                    <small class="fa fa-phone-alt text-primary me-2"></small>
-                    <small>+213 675884411</small>
-                </div>
-                <div class="h-100 d-inline-flex align-items-center">
-                    <a class="btn btn-sm-square bg-white text-primary me-1" href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-sm-square bg-white text-primary me-1" href="#"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-sm-square bg-white text-primary me-1" href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a class="btn btn-sm-square bg-white text-primary me-0" href="#"><i class="fab fa-instagram"></i></a>
+                <div class="col-lg-5 px-5 text-end">
+                    <div class="h-100 d-inline-flex align-items-center social-links">
+                        <a class="btn btn-social rounded-circle me-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-social rounded-circle me-2" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-social rounded-circle me-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="btn btn-social rounded-circle" href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-custom sticky-top p-0 shadow">
+    <!-- Revolutionary Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top shadow-custom">
         <div class="container">
             <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-                <h2 class="m-0 text-white">Fixtoria</h2>
+                <i class="fas fa-home"></i>
+                <span>Fixtoria</span>
             </a>
-            <button type="button" class="navbar-toggler me-4 text-white" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto p-4 p-lg-0">
-                    <a href="{% url 'index' %}" class="nav-item nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
-                    <a href="{% url 'about' %}" class="nav-item nav-link {% if 'about' in request.path %}active{% endif %}">About</a>
-                    <a href="{% url 'services' %}" class="nav-item nav-link {% if 'services' in request.path %}active{% endif %}">Services</a>
-                    <a href="{% url 'all_workers' %}" class="nav-item nav-link {% if 'all_workers' in request.path %}active{% endif %}">Our Team</a>
+                    <a href="{% url 'index' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                    <a href="{% url 'about' %}" class="nav-item nav-link {% if 'about' in request.path %}active{% endif %}">
+                        <i class="fas fa-info-circle me-1"></i>About
+                    </a>
+                    <a href="{% url 'services' %}" class="nav-item nav-link {% if 'services' in request.path %}active{% endif %}">
+                        <i class="fas fa-tools me-1"></i>Services
+                    </a>
+                    <a href="{% url 'all_workers' %}" class="nav-item nav-link {% if 'all_workers' in request.path %}active{% endif %}">
+                        <i class="fas fa-users me-1"></i>Our Team
+                    </a>
                     {% if user.is_authenticated %}
-                        <a href="{% url 'feedback_form' %}" class="nav-item nav-link {% if 'feedback_form' in request.path %}active{% endif %}">Feedback</a>
+                        <a href="{% url 'feedback_form' %}" class="nav-item nav-link {% if 'feedback_form' in request.path %}active{% endif %}">
+                            <i class="fas fa-star me-1"></i>Feedback
+                        </a>
                     {% endif %}
-                    <a href="{% url 'contact' %}" class="nav-item nav-link {% if 'contact' in request.path %}active{% endif %}">Contact</a>
+                    <a href="{% url 'contact' %}" class="nav-item nav-link {% if 'contact' in request.path %}active{% endif %}">
+                        <i class="fas fa-envelope me-1"></i>Contact
+                    </a>
                 </div>
 
                 {% if user.is_authenticated %}
-                    <div class="dropdown pe-4">
+                    <div class="dropdown user-dropdown pe-4">
                         <button class="btn dropdown-toggle d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            {% if user_profile and user_profile.profile_pic %}
-                                <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
+                            {% if user.users.profile_pic %}
+                                <img src="{{ user.users.profile_pic.url }}" alt="Profile" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
                             {% else %}
                                 <i class="fas fa-user-circle me-2" style="font-size: 24px;"></i>
                             {% endif %}
-                            <span>{{ user.first_name }}</span>
+                            <span>{{ user.first_name|default:user.username }}</span>
+                            <i class="fas fa-chevron-down ms-2"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{% url 'userprofile' %}"><i class="fas fa-user me-2 text-primary"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'Viewappointment_history' %}"><i class="fas fa-calendar-alt me-2 text-primary"></i>Appointments</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'userprofile' %}">
+                                    <i class="fas fa-user me-2 text-primary"></i>My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'Viewappointment_history' %}">
+                                    <i class="fas fa-calendar-alt me-2 text-success"></i>My Appointments
+                                </a>
+                            </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'index' %}"><i class="fas fa-sign-out-alt me-2 text-danger"></i>Logout</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'logout' %}?next={% url 'index' %}">
+                                    <i class="fas fa-sign-out-alt me-2 text-danger"></i>Logout
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-primary rounded-pill py-2 px-4 ms-3 d-none d-lg-block">
+                    <a href="{% url 'login' %}" class="btn btn-join d-none d-lg-block">
                         <i class="fas fa-sign-in-alt me-2"></i>Join Us
                     </a>
                 {% endif %}
@@ -285,71 +782,136 @@
         </div>
     </nav>
 
+    <!-- Main Content -->
     {% block content %}
     {% endblock %}
 
-    <!-- Footer -->
+    <!-- Advanced Footer -->
     <div class="container-fluid text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
-                    <h4 class="text-light mb-4">Address</h4>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Guelma, Algeria</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+213 685749622</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>fixtoria@gmail.com</p>
-                    <div class="d-flex pt-2">
-                        <a class="btn btn-outline-light btn-social rounded-circle me-2" href="#"><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-outline-light btn-social rounded-circle me-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social rounded-circle me-2" href="#"><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-outline-light btn-social rounded-circle" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <h4 class="text-light mb-4">
+                        <i class="fas fa-map-marker-alt me-2"></i>Address
+                    </h4>
+                    <div class="contact-info">
+                        <p class="mb-3">
+                            <i class="fa fa-map-marker-alt me-3"></i>
+                            <span>Guelma, Algeria</span>
+                        </p>
+                        <p class="mb-3">
+                            <i class="fa fa-phone-alt me-3"></i>
+                            <span>+213 685749622</span>
+                        </p>
+                        <p class="mb-3">
+                            <i class="fa fa-envelope me-3"></i>
+                            <span>fixtoria@gmail.com</span>
+                        </p>
+                    </div>
+                    <div class="d-flex pt-3">
+                        <a class="btn btn-social rounded-circle me-2" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-social rounded-circle me-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-social rounded-circle me-2" href="#"><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-social rounded-circle" href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
+                
                 <div class="col-lg-3 col-md-6">
-                    <h4 class="text-light mb-4">Services</h4>
-                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>General Carpentry</a>
-                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>Home Cleaning</a>
-                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>Office Cleaning</a>
-                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>House Painting</a>
+                    <h4 class="text-light mb-4">
+                        <i class="fas fa-tools me-2"></i>Services
+                    </h4>
+                    <a class="btn btn-link" href="#">
+                        <i class="fas fa-hammer me-2"></i>General Carpentry
+                    </a>
+                    <a class="btn btn-link" href="#">
+                        <i class="fas fa-broom me-2"></i>Home Cleaning
+                    </a>
+                    <a class="btn btn-link" href="#">
+                        <i class="fas fa-building me-2"></i>Office Cleaning
+                    </a>
+                    <a class="btn btn-link" href="#">
+                        <i class="fas fa-paint-roller me-2"></i>House Painting
+                    </a>
+                    <a class="btn btn-link" href="#">
+                        <i class="fas fa-wrench me-2"></i>Plumbing Services
+                    </a>
+                    <a class="btn btn-link" href="#">
+                        <i class="fas fa-bolt me-2"></i>Electrical Work
+                    </a>
                 </div>
+                
                 <div class="col-lg-3 col-md-6">
-                    <h4 class="text-light mb-4">Quick Links</h4>
-                    <a class="btn btn-link" href="{% url 'about' %}"><i class="fas fa-angle-right me-2"></i>About Us</a>
-                    <a class="btn btn-link" href="{% url 'contact' %}"><i class="fas fa-angle-right me-2"></i>Contact Us</a>
-                    <a class="btn btn-link" href="{% url 'services' %}"><i class="fas fa-angle-right me-2"></i>Our Services</a>
-                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>Terms & Conditions</a>
-                    <a class="btn btn-link" href="#"><i class="fas fa-angle-right me-2"></i>Support</a>
+                    <h4 class="text-light mb-4">
+                        <i class="fas fa-link me-2"></i>Quick Links
+                    </h4>
+                    <a class="btn btn-link" href="{% url 'about' %}">
+                        <i class="fas fa-info-circle me-2"></i>About Us
+                    </a>
+                    <a class="btn btn-link" href="{% url 'contact' %}">
+                        <i class="fas fa-envelope me-2"></i>Contact Us
+                    </a>
+                    <a class="btn btn-link" href="{% url 'services' %}">
+                        <i class="fas fa-tools me-2"></i>Our Services
+                    </a>
+                    <a class="btn btn-link" href="#">
+                        <i class="fas fa-file-contract me-2"></i>Terms & Conditions
+                    </a>
+                    <a class="btn btn-link" href="#">
+                        <i class="fas fa-shield-alt me-2"></i>Privacy Policy
+                    </a>
+                    <a class="btn btn-link" href="#">
+                        <i class="fas fa-headset me-2"></i>Support
+                    </a>
                 </div>
+                
                 <div class="col-lg-3 col-md-6">
-                    <h4 class="text-light mb-4">Newsletter</h4>
-                    <p>Subscribe to our newsletter to receive updates and special offers.</p>
+                    <h4 class="text-light mb-4">
+                        <i class="fas fa-newspaper me-2"></i>Newsletter
+                    </h4>
+                    <p class="mb-4">Subscribe to our newsletter to receive updates, special offers, and home maintenance tips.</p>
                     <div class="position-relative mx-auto" style="max-width: 400px;">
-                        <input class="form-control border-0 w-100 py-3 ps-4 pe-5 rounded-pill" type="text" placeholder="Your email">
-                        <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2 rounded-pill">
+                        <input class="newsletter-input w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email address">
+                        <button type="button" class="newsletter-btn position-absolute top-0 end-0 mt-2 me-2">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
+                    <small class="text-muted mt-2 d-block">
+                        <i class="fas fa-lock me-1"></i>
+                        We respect your privacy. Unsubscribe at any time.
+                    </small>
                 </div>
             </div>
         </div>
+        
         <div class="container">
             <div class="copyright">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#">Fixtoria</a>, All Right Reserved.
+                        <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+                            <i class="fas fa-copyright me-2"></i>
+                            <span>&copy; <a class="border-bottom" href="#">Fixtoria</a>, All Rights Reserved.</span>
+                        </div>
                     </div>
                     <div class="col-md-6 text-center text-md-end">
-                        Designed by <a class="border-bottom" href="#">YourName</a>
+                        <div class="d-flex align-items-center justify-content-center justify-content-md-end">
+                            <span>Designed with</span>
+                            <i class="fas fa-heart text-danger mx-2"></i>
+                            <span>by <a class="border-bottom" href="#">Fixtoria Team</a></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- Back to Top Button -->
+    <a href="#" class="btn btn-lg back-to-top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'user_assets/lib/wow/wow.min.js' %}"></script>
     <script src="{% static 'user_assets/lib/easing/easing.min.js' %}"></script>
     <script src="{% static 'user_assets/lib/waypoints/waypoints.min.js' %}"></script>
@@ -360,27 +922,104 @@
     <script src="{% static 'user_assets/js/main.js' %}"></script>
     
     <script>
-        // Enhanced back to top button
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 300) {
-                $('.back-to-top').addClass('active');
-            } else {
-                $('.back-to-top').removeClass('active');
+        // Advanced JavaScript Enhancements
+        $(document).ready(function() {
+            // Spinner
+            setTimeout(function() {
+                $('#spinner').removeClass('show');
+            }, 1000);
+            
+            // Navbar scroll effect
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 100) {
+                    $('.navbar-custom').addClass('scrolled');
+                } else {
+                    $('.navbar-custom').removeClass('scrolled');
+                }
+            });
+            
+            // Back to top button
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 300) {
+                    $('.back-to-top').addClass('active');
+                } else {
+                    $('.back-to-top').removeClass('active');
+                }
+            });
+            
+            $('.back-to-top').click(function () {
+                $('html, body').animate({scrollTop: 0}, 800, 'easeInOutExpo');
+                return false;
+            });
+            
+            // Smooth scrolling for anchor links
+            $('a[href^="#"]').on('click', function(event) {
+                var target = $(this.getAttribute('href'));
+                if( target.length ) {
+                    event.preventDefault();
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 100
+                    }, 800, 'easeInOutExpo');
+                }
+            });
+            
+            // Add animation to elements when they come into view
+            $(window).scroll(function() {
+                $('.animate-on-scroll').each(function() {
+                    var elementTop = $(this).offset().top;
+                    var elementBottom = elementTop + $(this).outerHeight();
+                    var viewportTop = $(window).scrollTop();
+                    var viewportBottom = viewportTop + $(window).height();
+                    
+                    if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                        $(this).addClass('animate-on-scroll');
+                    }
+                });
+            });
+            
+            // Newsletter subscription
+            $('.newsletter-btn').click(function() {
+                var email = $('.newsletter-input').val();
+                if (email && validateEmail(email)) {
+                    // Add your newsletter subscription logic here
+                    alert('Thank you for subscribing to our newsletter!');
+                    $('.newsletter-input').val('');
+                } else {
+                    alert('Please enter a valid email address.');
+                }
+            });
+            
+            // Email validation function
+            function validateEmail(email) {
+                var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
             }
+            
+            // Mobile menu close on link click
+            $('.navbar-nav .nav-link').on('click', function() {
+                if ($(window).width() < 992) {
+                    $('.navbar-collapse').collapse('hide');
+                }
+            });
+            
+            // Add loading state to buttons
+            $('button[type="submit"], .btn-primary').click(function() {
+                var $btn = $(this);
+                var originalText = $btn.html();
+                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Loading...');
+                
+                setTimeout(function() {
+                    $btn.html(originalText);
+                }, 2000);
+            });
         });
         
-        $('.back-to-top').click(function () {
-            $('html, body').animate({scrollTop: 0}, 500, 'easeInOutExpo');
-            return false;
-        });
+        // Initialize WOW.js for animations
+        new WOW().init();
         
-        // Navbar animation on scroll
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 100) {
-                $('.navbar-custom').addClass('shadow').css('padding', '0');
-            } else {
-                $('.navbar-custom').removeClass('shadow').css('padding', '0');
-            }
+        // Preloader
+        window.addEventListener('load', function() {
+            document.getElementById('spinner').style.display = 'none';
         });
     </script>
 </body>
