@@ -21,13 +21,14 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      overflow: hidden;
+      /* FIXED: Removed overflow: hidden to allow scrolling */
+      padding: 20px 0;
     }
 
     /* Animated background elements */
     body::before {
       content: '';
-      position: absolute;
+      position: fixed; /* Changed from absolute to fixed */
       top: 0;
       left: 0;
       right: 0;
@@ -37,6 +38,7 @@
         radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
       animation: float 20s ease-in-out infinite;
+      z-index: -1; /* Ensure background stays behind content */
     }
 
     @keyframes float {
@@ -53,9 +55,10 @@
       overflow: hidden;
       max-width: 900px;
       width: 90%;
-      min-height: 600px;
+      /* FIXED: Removed min-height to allow natural content flow */
       position: relative;
       z-index: 1;
+      margin: 20px auto; /* Added margin for spacing */
     }
 
     .info-panel {
@@ -67,6 +70,7 @@
       justify-content: center;
       color: white;
       position: relative;
+      min-height: 600px; /* Ensure minimum height */
     }
 
     .info-panel::before {
@@ -150,6 +154,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      min-height: 600px; /* Ensure minimum height */
     }
 
     .login-header {
@@ -182,7 +187,6 @@
       font-size: 14px;
     }
 
-    /* Fixed input wrapper styling */
     .input-wrapper {
       position: relative;
       display: flex;
@@ -230,6 +234,10 @@
       cursor: pointer;
       transition: all 0.3s ease;
       margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .btn-login:hover {
@@ -320,21 +328,34 @@
       margin-bottom: 20px;
       border-left: 4px solid #e74c3c;
       font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
+    /* IMPROVED: Better mobile responsiveness */
     @media (max-width: 768px) {
+      body {
+        padding: 10px;
+        align-items: flex-start; /* Allow content to start from top on mobile */
+      }
+
       .main-container {
         flex-direction: column;
-        max-width: 400px;
-        margin: 20px;
+        max-width: none;
+        width: 100%;
+        margin: 10px;
+        border-radius: 16px;
       }
 
       .info-panel {
         padding: 40px 30px;
+        min-height: auto; /* Allow natural height on mobile */
       }
 
       .login-panel {
         padding: 40px 30px;
+        min-height: auto; /* Allow natural height on mobile */
       }
 
       .services-grid {
@@ -344,6 +365,56 @@
       .register-buttons {
         flex-direction: column;
       }
+
+      .logo {
+        font-size: 28px;
+      }
+
+      .info-panel h3 {
+        font-size: 20px;
+      }
+
+      .login-header h2 {
+        font-size: 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+
+      .main-container {
+        margin: 5px;
+        border-radius: 12px;
+      }
+
+      .info-panel,
+      .login-panel {
+        padding: 30px 20px;
+      }
+
+      .input-wrapper input {
+        padding: 14px 16px 14px 45px;
+        font-size: 14px;
+      }
+
+      .btn-login,
+      .btn-register {
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+    }
+
+    /* ADDED: Smooth scrolling for better UX */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* ADDED: Ensure content is always accessible */
+    .main-container {
+      max-height: none;
+      overflow: visible;
     }
   </style>
 </head>
@@ -396,7 +467,8 @@
         {% csrf_token %}
         {% if error_msg %}
           <div class="error-msg">
-            <i class="fas fa-exclamation-triangle"></i> {{ error_msg }}
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>{{ error_msg }}</span>
           </div>
         {% endif %}
 
@@ -417,7 +489,8 @@
         </div>
 
         <button type="submit" class="btn-login">
-          <i class="fas fa-sign-in-alt"></i> Sign In
+          <i class="fas fa-sign-in-alt"></i>
+          <span>Sign In</span>
         </button>
 
         <div class="forgot-password">
@@ -463,6 +536,7 @@
           const icon = this.parentElement.querySelector('.field-icon');
           if (icon) {
             icon.style.color = '#3498db';
+            icon.style.transform = 'translateY(-50%) scale(1.1)';
           }
         });
         
@@ -470,6 +544,7 @@
           const icon = this.parentElement.querySelector('.field-icon');
           if (icon) {
             icon.style.color = '#7f8c8d';
+            icon.style.transform = 'translateY(-50%) scale(1)';
           }
         });
       });
@@ -484,6 +559,21 @@
           group.style.opacity = '1';
           group.style.transform = 'translateY(0)';
         }, (index + serviceItems.length) * 100);
+      });
+
+      // Add keyboard navigation support
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+          const form = e.target.closest('form');
+          if (form) {
+            const inputs = form.querySelectorAll('input[required]');
+            const currentIndex = Array.from(inputs).indexOf(e.target);
+            if (currentIndex < inputs.length - 1) {
+              e.preventDefault();
+              inputs[currentIndex + 1].focus();
+            }
+          }
+        }
       });
     });
   </script>
