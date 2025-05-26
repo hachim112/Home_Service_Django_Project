@@ -1118,9 +1118,36 @@ class ViewRequests(LoginRequiredMixin, View):
 
 class ViewColleagues(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
-    def get(self,request):
+    def get(self, request):
+        # Get all workers
         workers_records = workers.objects.all()
-        context = {'workers_records': workers_records}
+        
+        # Get all available service categories for the filter dropdown
+        service_categories = ServiceCatogarys.objects.all().order_by('Name')
+        
+        # Get filter parameters from request
+        service_filter = request.GET.get('service', '')
+        search_query = request.GET.get('search', '')
+        
+        # Apply service filter if specified
+        if service_filter and service_filter != 'all':
+            workers_records = workers_records.filter(designation__icontains=service_filter)
+        
+        # Apply search filter if specified
+        if search_query:
+            workers_records = workers_records.filter(
+                Q(admin__first_name__icontains=search_query) |
+                Q(admin__last_name__icontains=search_query) |
+                Q(designation__icontains=search_query) |
+                Q(city__icontains=search_query)
+            )
+        
+        context = {
+            'workers_records': workers_records,
+            'service_categories': service_categories,
+            'current_service_filter': service_filter,
+            'current_search': search_query,
+        }
         return render(request, 'workerpages/View_colleagues.html', context)
 
 class WorkerViewRequests(LoginRequiredMixin, View):
@@ -1493,18 +1520,15 @@ class reject(LoginRequiredMixin, View):
 
 class AvailableRequests(LoginRequiredMixin, View):
     login_url = common_lib.DEFAULT_REDIRECT_PATH['ROOT']
-    
+
     def get(self, request):
-        # Get the current worker's designation and ID
         worker_id = request.user.id
         worker = workers.objects.get(admin=worker_id)
         worker_designation = worker.designation
         
-        # Get filter and sort parameters
         filter_type = request.GET.get('filter', 'all')
         sort_order = request.GET.get('sort', 'newest')
         
-        # Get unassigned service requests that match the worker's designation
         regular_requests = ServiceRequests.objects.filter(
             service__Name=worker_designation,
             status=False,
@@ -1512,18 +1536,15 @@ class AvailableRequests(LoginRequiredMixin, View):
             id__in=Response.objects.filter(worker_specifically_chosen=True).values_list('requests_id', flat=True)
         )
         
-        # Get specifically assigned requests for this worker that haven't been accepted yet
         specifically_chosen_requests = ServiceRequests.objects.filter(
             service__Name=worker_designation,
             status=False,
-            response__assigned_worker=worker,
-            response__worker_specifically_chosen=True
+            responses__assigned_worker=worker,
+            responses__worker_specifically_chosen=True
         )
         
-        # Combine both querysets
         all_available = list(regular_requests)
         
-        # Add specifically chosen requests
         for service_request in specifically_chosen_requests:
             if service_request not in all_available:
                 all_available.append(service_request)
@@ -1564,7 +1585,6 @@ class AvailableRequests(LoginRequiredMixin, View):
             'current_worker_id': worker.id,
         }
         return render(request, 'workerpages/available_requests.html', context)
-
 # ⬇️ Correctly add this OUTSIDE any class (not indented)
 def completed_requests(request):
     if not request.user.is_authenticated or not request.user.is_staff:

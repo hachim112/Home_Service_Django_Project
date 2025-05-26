@@ -8,27 +8,47 @@
         transition: all 0.3s ease;
         margin-bottom: 20px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
     }
     
     .dashboard-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     }
     
     .card-header {
         padding: 20px;
         color: white;
         font-weight: 600;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+        pointer-events: none;
     }
     
     .card-body {
         padding: 20px;
+        position: relative;
     }
     
     .stat-value {
         font-size: 36px;
         font-weight: 700;
         margin-bottom: 5px;
+        background: linear-gradient(135deg, #4ecdc4, #2cbfc7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     
     .stat-label {
@@ -52,11 +72,21 @@
         background: linear-gradient(135deg, #3498db, #2980b9);
     }
     
+    .bg-gradient-danger {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+    }
+    
     .activity-item {
         padding: 15px;
         border-bottom: 1px solid #eee;
         display: flex;
         align-items: center;
+        transition: all 0.3s ease;
+    }
+    
+    .activity-item:hover {
+        background: rgba(78, 205, 196, 0.05);
+        transform: translateX(5px);
     }
     
     .activity-item:last-child {
@@ -72,6 +102,7 @@
         justify-content: center;
         color: white;
         margin-right: 15px;
+        font-size: 16px;
     }
     
     .activity-content {
@@ -81,27 +112,18 @@
     .activity-title {
         font-weight: 600;
         margin-bottom: 5px;
+        color: #333;
+    }
+    
+    .activity-description {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 3px;
     }
     
     .activity-time {
         font-size: 12px;
-        color: #666;
-    }
-    
-    .notification-badge {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background: #e74c3c;
-        color: white;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        font-weight: 600;
+        color: #999;
     }
     
     .quick-action {
@@ -112,11 +134,15 @@
         background: #f8f9fa;
         margin-bottom: 15px;
         transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
     }
     
     .quick-action:hover {
         background: #e9ecef;
         transform: translateX(5px);
+        text-decoration: none;
+        color: inherit;
     }
     
     .quick-action-icon {
@@ -143,7 +169,130 @@
         font-size: 12px;
         color: #666;
     }
+    
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin: 20px 0;
+    }
+    
+    .chart-small {
+        height: 200px;
+    }
+    
+    .progress-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        position: relative;
+        background: conic-gradient(from 0deg, #4ecdc4 0%, #4ecdc4 var(--progress, 0%), #e9ecef var(--progress, 0%), #e9ecef 100%);
+    }
+    
+    .progress-circle::before {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: white;
+    }
+    
+    .progress-text {
+        position: relative;
+        z-index: 1;
+        font-weight: 700;
+        font-size: 18px;
+        color: #4ecdc4;
+    }
+    
+    .trend-indicator {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+    
+    .trend-up {
+        background: rgba(46, 204, 113, 0.1);
+        color: #27ae60;
+    }
+    
+    .trend-down {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+    }
+    
+    .trend-neutral {
+        background: rgba(149, 165, 166, 0.1);
+        color: #95a5a6;
+    }
+    
+    .metric-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .metric-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+    
+    .metric-label {
+        color: #7f8c8d;
+        font-size: 14px;
+    }
+    
+    .fade-in {
+        animation: fadeIn 0.6s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { 
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .count-animation {
+        animation: slideUp 0.8s ease-out;
+    }
 </style>
+
+<!-- Hidden data container for JavaScript -->
+<div id="dashboard-data" style="display: none;"
+     data-completed="{{ completed_requests|default:0 }}"
+     data-pending="{{ pending_requests|default:0 }}"
+     data-total="{{ total_requests|default:0 }}"
+     data-clients="{{ total_clients|default:0 }}"
+     data-available="{{ available_count|default:0 }}">
+</div>
 
 <div class="container-fluid">
     <!-- Notifications -->
@@ -164,127 +313,226 @@
     
     <div class="row">
         <div class="col-md-12">
-            <h1 class="h3 mb-4">Worker Dashboard</h1>
+            <h1 class="h3 mb-4">
+                <span id="greeting">Good Day</span>, {{ request.user.get_full_name|default:request.user.username }}!
+                <small class="text-muted">Here's your performance overview</small>
+            </h1>
         </div>
     </div>
     
-    <!-- Stats Cards -->
+    <!-- Enhanced Stats Cards -->
     <div class="row">
         <div class="col-md-3">
-            <div class="card dashboard-card">
-                <div class="card-header bg-gradient-primary">
+            <div class="card dashboard-card fade-in">
+                <div class="card-header bg-gradient-success">
                     <i class="fas fa-clipboard-check mr-2"></i> Completed Tasks
+                    {% if completed_requests > 0 %}
+                        <span class="trend-indicator trend-up">
+                            <i class="fas fa-arrow-up"></i> Active
+                        </span>
+                    {% endif %}
                 </div>
-                <div class="card-body">
-                    <div class="stat-value">{{ completed_requests }}</div>
+                <div class="card-body text-center">
+                    <div class="stat-value count-animation">{{ completed_requests|default:0 }}</div>
                     <div class="stat-label">Total completed service requests</div>
+                    {% if total_requests > 0 %}
+                        <div class="mt-2">
+                            <small class="text-success">
+                                {{ completed_requests|default:0 }}/{{ total_requests|default:0 }} completed
+                                ({% widthratio completed_requests total_requests 100 %}%)
+                            </small>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
         
         <div class="col-md-3">
-            <div class="card dashboard-card">
+            <div class="card dashboard-card fade-in" style="animation-delay: 0.1s;">
                 <div class="card-header bg-gradient-warning">
                     <i class="fas fa-clock mr-2"></i> Pending Tasks
+                    {% if pending_requests > 0 %}
+                        <span class="badge badge-light">{{ pending_requests }}</span>
+                    {% endif %}
                 </div>
-                <div class="card-body">
-                    <div class="stat-value">{{ pending_requests }}</div>
+                <div class="card-body text-center">
+                    <div class="stat-value count-animation">{{ pending_requests|default:0 }}</div>
                     <div class="stat-label">Tasks waiting to be completed</div>
+                    {% if pending_requests > 0 %}
+                        <div class="mt-2">
+                            <small class="text-warning">
+                                <i class="fas fa-exclamation-triangle"></i> Requires attention
+                            </small>
+                        </div>
+                    {% else %}
+                        <div class="mt-2">
+                            <small class="text-success">
+                                <i class="fas fa-check"></i> All caught up!
+                            </small>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
         
         <div class="col-md-3">
-            <div class="card dashboard-card">
-                <div class="card-header bg-gradient-success">
+            <div class="card dashboard-card fade-in" style="animation-delay: 0.2s;">
+                <div class="card-header bg-gradient-primary">
                     <i class="fas fa-tasks mr-2"></i> Total Requests
                 </div>
-                <div class="card-body">
-                    <div class="stat-value">{{ total_requests }}</div>
+                <div class="card-body text-center">
+                    <div class="stat-value count-animation">{{ total_requests|default:0 }}</div>
                     <div class="stat-label">All-time assigned requests</div>
+                    {% if total_requests > 0 %}
+                        <div class="mt-2">
+                            <small class="text-info">
+                                Success rate: {% if total_requests > 0 %}{% widthratio completed_requests total_requests 100 %}%{% else %}0%{% endif %}
+                            </small>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
         
         <div class="col-md-3">
-            <div class="card dashboard-card">
+            <div class="card dashboard-card fade-in" style="animation-delay: 0.3s;">
                 <div class="card-header bg-gradient-info">
                     <i class="fas fa-users mr-2"></i> Clients Served
                 </div>
-                <div class="card-body">
-                    <div class="stat-value">{{ total_clients }}</div>
+                <div class="card-body text-center">
+                    <div class="stat-value count-animation">{{ total_clients|default:0 }}</div>
                     <div class="stat-label">Unique clients you've helped</div>
+                    {% if total_clients > 0 and total_requests > 0 %}
+                        <div class="mt-2">
+                            <small class="text-info">
+                                Avg: {% widthratio total_requests total_clients 1 %} tasks per client
+                            </small>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
     
+    <!-- Charts and Analytics Row -->
     <div class="row mt-4">
-        <!-- Quick Actions -->
+        <!-- Performance Overview Chart -->
+        <div class="col-md-8">
+            <div class="card dashboard-card">
+                <div class="card-header bg-gradient-primary">
+                    <i class="fas fa-chart-line mr-2"></i> Performance Overview
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Completion Rate Circle -->
         <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-gradient-success">
+                    <i class="fas fa-percentage mr-2"></i> Completion Rate
+                </div>
+                <div class="card-body text-center">
+                    <div class="progress-circle" id="completionCircle">
+                        <div class="progress-text" id="completionText">0%</div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="metric-value" style="font-size: 20px;">{{ completed_requests|default:0 }}</div>
+                                <div class="metric-label">Completed</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="metric-value" style="font-size: 20px;">{{ pending_requests|default:0 }}</div>
+                                <div class="metric-label">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Task Distribution and Quick Actions -->
+    <div class="row mt-4">
+        <!-- Task Distribution Chart -->
+        <div class="col-md-6">
+            <div class="card dashboard-card">
+                <div class="card-header bg-gradient-info">
+                    <i class="fas fa-chart-pie mr-2"></i> Task Distribution
+                </div>
+                <div class="card-body">
+                    <div class="chart-container chart-small">
+                        <canvas id="taskDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="col-md-6">
             <div class="card dashboard-card">
                 <div class="card-header bg-gradient-primary">
                     <i class="fas fa-bolt mr-2"></i> Quick Actions
                 </div>
                 <div class="card-body p-0">
-                    <a href="{% url 'available_requests' %}" class="text-decoration-none">
-                        <div class="quick-action">
-                            <div class="quick-action-icon bg-gradient-primary">
-                                <i class="fas fa-search"></i>
-                            </div>
-                            <div class="quick-action-content">
-                                <div class="quick-action-title">Available Requests</div>
-                                <div class="quick-action-description">Find new service requests to accept</div>
-                            </div>
-                            {% if available_count > 0 %}
-                            <span class="badge badge-primary">{{ available_count }}</span>
-                            {% endif %}
+                    <a href="{% url 'available_requests' %}" class="quick-action">
+                        <div class="quick-action-icon bg-gradient-primary">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <div class="quick-action-title">Available Requests</div>
+                            <div class="quick-action-description">Find new service requests to accept</div>
+                        </div>
+                        {% if available_count > 0 %}
+                        <span class="badge badge-primary">{{ available_count }}</span>
+                        {% endif %}
+                    </a>
+                    
+                    <a href="{% url 'WorkerpendingTask' %}" class="quick-action">
+                        <div class="quick-action-icon bg-gradient-warning">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <div class="quick-action-title">Pending Tasks</div>
+                            <div class="quick-action-description">View and manage your assigned tasks</div>
+                        </div>
+                        {% if pending_requests > 0 %}
+                        <span class="badge badge-warning">{{ pending_requests }}</span>
+                        {% endif %}
+                    </a>
+                    
+                    <a href="{% url 'completed_requests' %}" class="quick-action">
+                        <div class="quick-action-icon bg-gradient-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="quick-action-content">
+                            <div class="quick-action-title">Completed Tasks</div>
+                            <div class="quick-action-description">Review your completed service requests</div>
                         </div>
                     </a>
                     
-                    <a href="{% url 'WorkerpendingTask' %}" class="text-decoration-none">
-                        <div class="quick-action">
-                            <div class="quick-action-icon bg-gradient-warning">
-                                <i class="fas fa-clipboard-list"></i>
-                            </div>
-                            <div class="quick-action-content">
-                                <div class="quick-action-title">Pending Tasks</div>
-                                <div class="quick-action-description">View and manage your assigned tasks</div>
-                            </div>
-                            {% if pending_requests > 0 %}
-                            <span class="badge badge-warning">{{ pending_requests }}</span>
-                            {% endif %}
+                    <a href="{% url 'viewworkerfeedbacks' %}" class="quick-action">
+                        <div class="quick-action-icon bg-gradient-info">
+                            <i class="fas fa-star"></i>
                         </div>
-                    </a>
-                    <a href="{% url 'completed_requests' %}" class="text-decoration-none">
-                        <div class="quick-action">
-                            <div class="quick-action-icon bg-gradient-success">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="quick-action-content">
-                                <div class="quick-action-title">Completed Tasks</div>
-                                <div class="quick-action-description">Review your completed service requests</div>
-                            </div>
-                        </div>
-                    </a>
-                    
-                    <a href="{% url 'viewworkerfeedbacks' %}" class="text-decoration-none">
-                        <div class="quick-action">
-                            <div class="quick-action-icon bg-gradient-info">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="quick-action-content">
-                                <div class="quick-action-title">My Feedback</div>
-                                <div class="quick-action-description">See what clients are saying about you</div>
-                            </div>
+                        <div class="quick-action-content">
+                            <div class="quick-action-title">My Feedback</div>
+                            <div class="quick-action-description">See what clients are saying about you</div>
                         </div>
                     </a>
                 </div>
             </div>
         </div>
-        
-        <!-- Recent Activity -->
-        <div class="col-md-8">
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="row mt-4">
+        <div class="col-md-12">
             <div class="card dashboard-card">
                 <div class="card-header bg-gradient-primary">
                     <i class="fas fa-history mr-2"></i> Recent Activity
@@ -332,11 +580,218 @@
 </div>
 
 <script>
-    // Auto-dismiss alerts after 5 seconds
-    $(document).ready(function() {
-        setTimeout(function() {
-            $('.alert').alert('close');
-        }, 5000);
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    // Get data from hidden data container
+    const dataContainer = document.getElementById('dashboard-data');
+    
+    if (!dataContainer) {
+        console.error('Dashboard data container not found');
+        return;
+    }
+    
+    // Extract data safely
+    const chartData = {
+        completed: parseInt(dataContainer.getAttribute('data-completed')) || 0,
+        pending: parseInt(dataContainer.getAttribute('data-pending')) || 0,
+        total: parseInt(dataContainer.getAttribute('data-total')) || 0,
+        clients: parseInt(dataContainer.getAttribute('data-clients')) || 0,
+        available: parseInt(dataContainer.getAttribute('data-available')) || 0
+    };
+    
+    console.log('Dashboard Data Loaded:', chartData);
+    
+    // Calculate completion rate
+    const completionRate = chartData.total > 0 ? Math.round((chartData.completed / chartData.total) * 100) : 0;
+    
+    // Update completion circle
+    const completionCircle = document.getElementById('completionCircle');
+    const completionText = document.getElementById('completionText');
+    
+    if (completionCircle && completionText) {
+        const progressDegrees = (completionRate / 100) * 360;
+        completionCircle.style.setProperty('--progress', progressDegrees + 'deg');
+        completionText.textContent = completionRate + '%';
+    }
+    
+    // Initialize Performance Chart
+    const performanceCtx = document.getElementById('performanceChart');
+    if (performanceCtx && typeof Chart !== 'undefined') {
+        try {
+            new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Current'],
+                    datasets: [{
+                        label: 'Completed Tasks',
+                        data: [
+                            Math.max(0, chartData.completed - 4),
+                            Math.max(0, chartData.completed - 3),
+                            Math.max(0, chartData.completed - 2),
+                            Math.max(0, chartData.completed - 1),
+                            chartData.completed
+                        ],
+                        borderColor: '#4ecdc4',
+                        backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#4ecdc4',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }, {
+                        label: 'Total Assigned',
+                        data: [
+                            Math.max(0, chartData.total - 4),
+                            Math.max(0, chartData.total - 3),
+                            Math.max(0, chartData.total - 2),
+                            Math.max(0, chartData.total - 1),
+                            chartData.total
+                        ],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#3498db',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error creating performance chart:', error);
+            performanceCtx.parentElement.innerHTML = '<div class="text-center p-4"><p>Chart could not be loaded</p></div>';
+        }
+    }
+    
+    // Initialize Task Distribution Chart
+    const distributionCtx = document.getElementById('taskDistributionChart');
+    if (distributionCtx && typeof Chart !== 'undefined') {
+        try {
+            const distributionData = [];
+            const distributionLabels = [];
+            const distributionColors = [];
+            
+            if (chartData.completed > 0) {
+                distributionData.push(chartData.completed);
+                distributionLabels.push('Completed');
+                distributionColors.push('#2ecc71');
+            }
+            
+            if (chartData.pending > 0) {
+                distributionData.push(chartData.pending);
+                distributionLabels.push('Pending');
+                distributionColors.push('#f1c40f');
+            }
+            
+            if (chartData.available > 0) {
+                distributionData.push(chartData.available);
+                distributionLabels.push('Available');
+                distributionColors.push('#3498db');
+            }
+            
+            if (distributionData.length > 0) {
+                new Chart(distributionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: distributionLabels,
+                        datasets: [{
+                            data: distributionData,
+                            backgroundColor: distributionColors,
+                            borderWidth: 3,
+                            borderColor: '#fff',
+                            hoverBorderWidth: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / total) * 100);
+                                        return label + ': ' + value + ' (' + percentage + '%)';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                distributionCtx.parentElement.innerHTML = '<div class="text-center p-4"><i class="fas fa-chart-pie fa-3x text-muted mb-3"></i><p>No task data available yet.</p><small class="text-muted">Start accepting tasks to see your distribution.</small></div>';
+            }
+        } catch (error) {
+            console.error('Error creating distribution chart:', error);
+            distributionCtx.parentElement.innerHTML = '<div class="text-center p-4"><p>Chart could not be loaded</p></div>';
+        }
+    }
+    
+    // Dynamic greeting
+    const greeting = document.getElementById('greeting');
+    if (greeting) {
+        const hour = new Date().getHours();
+        if (hour < 12) {
+            greeting.textContent = 'Good Morning';
+        } else if (hour < 18) {
+            greeting.textContent = 'Good Afternoon';
+        } else {
+            greeting.textContent = 'Good Evening';
+        }
+    }
+    
+    // Auto-dismiss alerts
+    setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            if (alert.classList.contains('show')) {
+                alert.classList.remove('show');
+                setTimeout(() => alert.remove(), 150);
+            }
+        });
+    }, 5000);
+});
 </script>
 {% endblock %}

@@ -2,136 +2,303 @@
 {% block content %}
 {% load static %}
 
-<!-- Advanced Carousel Start -->
-<div class="container-fluid p-0 pb-5">
-    <div class="owl-carousel header-carousel position-relative">
-        <div class="owl-carousel-item position-relative">
-            <div class="carousel-bg" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 600%22><defs><linearGradient id=%22bg1%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%22100%25%22><stop offset=%220%25%22 style=%22stop-color:%23667eea%22/><stop offset=%22100%25%22 style=%22stop-color:%23764ba2%22/></linearGradient></defs><rect width=%221200%22 height=%22600%22 fill=%22url(%23bg1)%22/><g opacity=%220.1%22><rect x=%22100%22 y=%22100%22 width=%22200%22 height=%22150%22 rx=%2210%22 fill=%22white%22/><rect x=%22400%22 y=%22200%22 width=%22180%22 height=%22120%22 rx=%2210%22 fill=%22white%22/><rect x=%22700%22 y=%22150%22 width=%22160%22 height=%22140%22 rx=%2210%22 fill=%22white%22/></g><g opacity=%220.2%22><circle cx=%22150%22 cy=%22400%22 r=%2250%22 fill=%22%23ffc107%22/><circle cx=%22500%22 cy=%22450%22 r=%2240%22 fill=%22%2328a745%22/><circle cx=%22850%22 cy=%22380%22 r=%2245%22 fill=%22%23dc3545%22/></g><g opacity=%220.15%22><path d=%22M200,500 Q400,450 600,500 Q800,550 1000,500 L1000,600 L200,600 Z%22 fill=%22white%22/></g><g opacity=%220.25%22><polygon points=%22300,50 320,90 360,90 330,115 340,155 300,130 260,155 270,115 240,90 280,90%22 fill=%22%23f1c40f%22/><polygon points=%22800,80 815,110 845,110 825,130 830,160 800,145 770,160 775,130 755,110 785,110%22 fill=%22%23e67e22%22/></g><g opacity=%220.3%22><rect x=%22200%22 y=%22300%22 width=%2230%22 height=%2230%22 fill=%22%23007bff%22 transform=%22rotate(45 215 315)%22/><rect x=%22600%22 y=%22100%22 width=%2225%22 height=%2225%22 fill=%22%2317a2b8%22 transform=%22rotate(45 612.5 112.5)%22/></g></svg>'); background-size: cover; background-position: center; height: 100vh; min-height: 600px;"></div>
-            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(15, 32, 39, 0.7);">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-12 col-lg-8 text-center">
-                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To Fixtoria</h5>
-                            <h1 class="display-3 text-white animated slideInDown mb-4">Smart Way Easy Life...</h1>
-                            <p class="fs-5 fw-medium text-white mb-4 pb-2">Expert in Service. Repair. Maintenance.</p>
-                            <a href="{% url 'about' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft rounded-pill">
-                                <i class="fas fa-info-circle me-2"></i>Read More
+<!-- Professional Hero Section Start -->
+<div class="hero-section position-relative overflow-hidden">
+    <!-- Subtle Background -->
+    <div class="hero-background">
+        <div class="hero-shape shape-1" data-aos="fade-up" data-aos-delay="100"></div>
+        <div class="hero-shape shape-2" data-aos="fade-down" data-aos-delay="200"></div>
+        <div class="hero-shape shape-3" data-aos="fade-left" data-aos-delay="300"></div>
+    </div>
+    
+    <!-- Main Hero Content -->
+    <div class="container-fluid hero-content">
+        <div class="container">
+            <div class="row min-vh-100 align-items-center">
+                <div class="col-lg-6 pe-lg-5" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="hero-text">
+                        <!-- Hero Badge -->
+                        <div class="hero-badge mb-4" data-aos="zoom-in" data-aos-delay="200">
+                            <span class="badge bg-primary px-4 py-2 rounded-pill">
+                                <i class="fas fa-star me-2"></i>
+                                #1 Home Service Platform in Algeria
+                            </span>
+                        </div>
+                        
+                        <!-- Main Heading -->
+                        <h1 class="hero-title display-2 fw-bold mb-4" data-aos="fade-up" data-aos-delay="300">
+                            <span class="text-dark">Smart Way</span>
+                            <br>
+                            <span class="text-dark">Easy Life</span>
+                            <span class="hero-dots text-secondary">...</span>
+                        </h1>
+                        
+                        <!-- Subtitle -->
+                        <p class="hero-subtitle fs-5 text-muted mb-4 lh-base" data-aos="fade-up" data-aos-delay="400">
+                            Professional home services at your doorstep. Expert in <strong class="text-primary">Service</strong>, 
+                            <strong class="text-primary">Repair</strong> & <strong class="text-primary">Maintenance</strong>. 
+                            Get quality work done by verified professionals.
+                        </p>
+                        
+                        <!-- Hero Stats -->
+                        <div class="hero-stats mb-5" data-aos="fade-up" data-aos-delay="500">
+                            <div class="row g-4">
+                                <div class="col-4">
+                                    <div class="stat-item text-center">
+                                        <h3 class="text-primary mb-1 counter" data-count="1000">0</h3>
+                                        <small class="text-muted fw-semibold">Happy Clients</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-item text-center">
+                                        <h3 class="text-primary mb-1 counter" data-count="500">0</h3>
+                                        <small class="text-muted fw-semibold">Expert Workers</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-item text-center">
+                                        <h3 class="text-primary mb-1 counter" data-count="50">0</h3>
+                                        <small class="text-muted fw-semibold">Services</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Hero Buttons -->
+                        <div class="hero-buttons mb-5" data-aos="fade-up" data-aos-delay="600">
+                            <a href="{% url 'services' %}" class="btn btn-primary btn-lg px-5 py-3 me-3 rounded-pill">
+                                <i class="fas fa-tools me-2"></i>
+                                Explore Services
                             </a>
-                            <a href="{% url 'services' %}" class="btn btn-light py-md-3 px-md-5 animated slideInRight rounded-pill">
-                                <i class="fas fa-tools me-2"></i>Our Services
+                            <a href="{% url 'about' %}" class="btn btn-outline-primary btn-lg px-5 py-3 rounded-pill">
+                                <i class="fas fa-play-circle me-2"></i>
+                                Learn More
                             </a>
+                        </div>
+                        
+                        <!-- Trust Badges -->
+                        <div class="trust-badges" data-aos="fade-up" data-aos-delay="700">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="trust-badge d-flex align-items-center">
+                                        <div class="trust-icon me-3">
+                                            <i class="fas fa-shield-check text-success"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark">100% Verified</h6>
+                                            <small class="text-muted">Background checked workers</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="trust-badge d-flex align-items-center">
+                                        <div class="trust-icon me-3">
+                                            <i class="fas fa-clock text-warning"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark">Quick Response</h6>
+                                            <small class="text-muted">Same day service available</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="owl-carousel-item position-relative">
-            <div class="carousel-bg" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 600%22><defs><linearGradient id=%22bg2%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%22100%25%22><stop offset=%220%25%22 style=%22stop-color:%232c3e50%22/><stop offset=%22100%25%22 style=%22stop-color:%233498db%22/></linearGradient></defs><rect width=%221200%22 height=%22600%22 fill=%22url(%23bg2)%22/><g opacity=%220.1%22><circle cx=%22200%22 cy=%22150%22 r=%2280%22 fill=%22white%22/><circle cx=%22800%22 cy=%22400%22 r=%22120%22 fill=%22white%22/><circle cx=%221000%22 cy=%22200%22 r=%2260%22 fill=%22white%22/></g><g opacity=%220.05%22><path d=%22M0,300 Q300,200 600,300 T1200,300 L1200,600 L0,600 Z%22 fill=%22white%22/></g><g opacity=%220.3%22><rect x=%22100%22 y=%22100%22 width=%2240%22 height=%2240%22 fill=%22%23f39c12%22 transform=%22rotate(45 120 120)%22/><rect x=%22900%22 y=%22350%22 width=%2230%22 height=%2230%22 fill=%22%23e74c3c%22 transform=%22rotate(45 915 365)%22/><rect x=%22300%22 y=%22450%22 width=%2235%22 height=%2235%22 fill=%22%2327ae60%22 transform=%22rotate(45 317.5 467.5)%22/></g><g opacity=%220.2%22><path d=%22M150,250 L200,200 L250,250 L200,300 Z%22 fill=%22%239b59b6%22/><path d=%22M750,150 L800,100 L850,150 L800,200 Z%22 fill=%22%23e67e22%22/></g></svg>'); background-size: cover; background-position: center; height: 100vh; min-height: 600px;"></div>
-            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(15, 32, 39, 0.7);">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-12 col-lg-8 text-center">
-                            <h5 class="text-white text-uppercase mb-3 animated slideInDown">Welcome To Fixtoria</h5>
-                            <h1 class="display-3 text-white animated slideInDown mb-4">Best Home Services</h1>
-                            <p class="fs-5 fw-medium text-white mb-4 pb-2">Professional home maintenance and repair services at your doorstep.</p>
-                            <a href="{% url 'about' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft rounded-pill">
-                                <i class="fas fa-info-circle me-2"></i>Read More
-                            </a>
+                
+                <!-- Hero Image Section -->
+                <div class="col-lg-6 ps-lg-5" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="hero-image-container">
+                        <div class="hero-image-wrapper">
+                            <!-- Main Hero Image -->
+                            <div class="main-hero-image" data-aos="zoom-in" data-aos-delay="300">
+                                <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                                     alt="Professional Home Services" 
+                                     class="img-fluid rounded-4 shadow-lg">
+                            </div>
+                            
+                            <!-- Floating Service Cards -->
+                            <div class="floating-card card-1" data-aos="fade-up" data-aos-delay="500">
+                                <div class="service-card bg-white rounded-3 shadow p-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="service-icon bg-primary text-white rounded-circle me-3">
+                                            <i class="fas fa-wrench"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark">Plumbing</h6>
+                                            <small class="text-muted">Expert Service</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="floating-card card-2" data-aos="fade-up" data-aos-delay="600">
+                                <div class="service-card bg-white rounded-3 shadow p-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="service-icon bg-success text-white rounded-circle me-3">
+                                            <i class="fas fa-broom"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark">Cleaning</h6>
+                                            <small class="text-muted">Professional</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="floating-card card-3" data-aos="fade-up" data-aos-delay="700">
+                                <div class="service-card bg-white rounded-3 shadow p-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="service-icon bg-warning text-white rounded-circle me-3">
+                                            <i class="fas fa-bolt"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark">Electrical</h6>
+                                            <small class="text-muted">Certified</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Rating Card -->
+                            <div class="floating-card rating-card" data-aos="zoom-in" data-aos-delay="800">
+                                <div class="rating-card-content bg-white rounded-3 shadow p-4 text-center">
+                                    <div class="rating-stars mb-2">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                    </div>
+                                    <h4 class="text-primary mb-1 fw-bold">4.9/5</h4>
+                                    <small class="text-muted">Customer Rating</small>
+                                    <div class="mt-2">
+                                        <small class="text-success fw-semibold">
+                                            <i class="fas fa-check-circle me-1"></i>
+                                            Trusted by 1000+ customers
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" data-aos="bounce" data-aos-delay="1000">
+        <div class="scroll-arrow">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <small class="scroll-text">Scroll to explore</small>
+    </div>
 </div>
-<!-- Carousel End -->
+<!-- Hero Section End -->
 
-<!-- Feature Start -->
-<div class="container-xxl py-5">
+<!-- Features Section Start -->
+<div class="features-section py-5 bg-light">
     <div class="container">
-        <div class="row g-5">
-            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
-                <div class="feature-item rounded-4 bg-light p-4 text-center shadow-sm h-100">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle mb-4" style="width: 80px; height: 80px;">
-                        <i class="fa fa-user-check fa-2x"></i>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card h-100 bg-white rounded-3 p-4 text-center">
+                    <div class="feature-icon-wrapper mb-4">
+                        <div class="feature-icon bg-primary text-white rounded-circle mx-auto">
+                            <i class="fa fa-user-check fa-2x"></i>
+                        </div>
                     </div>
-                    <h5 class="mb-3">Professional Workers</h5>
-                    <p class="mb-0">Our team consists of highly trained and experienced professionals dedicated to quality service.</p>
+                    <h5 class="mb-3 fw-bold text-dark">Professional Workers</h5>
+                    <p class="text-muted mb-0">Our team consists of highly trained and experienced professionals dedicated to quality service.</p>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
-                <div class="feature-item rounded-4 bg-light p-4 text-center shadow-sm h-100">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle mb-4" style="width: 80px; height: 80px;">
-                        <i class="fa fa-check fa-2x"></i>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card h-100 bg-white rounded-3 p-4 text-center">
+                    <div class="feature-icon-wrapper mb-4">
+                        <div class="feature-icon bg-success text-white rounded-circle mx-auto">
+                            <i class="fa fa-check fa-2x"></i>
+                        </div>
                     </div>
-                    <h5 class="mb-3">Quality Services</h5>
-                    <p class="mb-0">We pride ourselves on delivering exceptional quality in every service we provide.</p>
+                    <h5 class="mb-3 fw-bold text-dark">Quality Services</h5>
+                    <p class="text-muted mb-0">We pride ourselves on delivering exceptional quality in every service we provide.</p>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
-                <div class="feature-item rounded-4 bg-light p-4 text-center shadow-sm h-100">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle mb-4" style="width: 80px; height: 80px;">
-                        <i class="fa fa-drafting-compass fa-2x"></i>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card h-100 bg-white rounded-3 p-4 text-center">
+                    <div class="feature-icon-wrapper mb-4">
+                        <div class="feature-icon bg-info text-white rounded-circle mx-auto">
+                            <i class="fa fa-drafting-compass fa-2x"></i>
+                        </div>
                     </div>
-                    <h5 class="mb-3">Free Consultation</h5>
-                    <p class="mb-0">Get expert advice and personalized recommendations with our free consultation service.</p>
+                    <h5 class="mb-3 fw-bold text-dark">Free Consultation</h5>
+                    <p class="text-muted mb-0">Get expert advice and personalized recommendations with our free consultation service.</p>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
-                <div class="feature-item rounded-4 bg-light p-4 text-center shadow-sm h-100">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle mb-4" style="width: 80px; height: 80px;">
-                        <i class="fa fa-headphones fa-2x"></i>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-card h-100 bg-white rounded-3 p-4 text-center">
+                    <div class="feature-icon-wrapper mb-4">
+                        <div class="feature-icon bg-warning text-white rounded-circle mx-auto">
+                            <i class="fa fa-headphones fa-2x"></i>
+                        </div>
                     </div>
-                    <h5 class="mb-3">Customer Support</h5>
-                    <p class="mb-0">Our dedicated support team is available to assist you with any questions or concerns.</p>
+                    <h5 class="mb-3 fw-bold text-dark">Customer Support</h5>
+                    <p class="text-muted mb-0">Our dedicated support team is available to assist you with any questions or concerns.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Feature End -->
+<!-- Features Section End -->
 
-<!-- About Start -->
-<div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
-    <div class="container about px-lg-0">
-        <div class="row g-0 mx-lg-0">
-            <div class="col-lg-6 ps-lg-0" style="min-height: 400px;">
-                <div class="position-relative h-100">
-                    <img class="position-absolute img-fluid w-100 h-100 rounded-4" src="{% static 'user_assets/img/about.jpg' %}" style="object-fit: cover;" alt="">
+<!-- About Section Start -->
+<div class="about-section py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="about-image-wrapper position-relative">
+                    <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="About Fixtoria" 
+                         class="img-fluid rounded-3 shadow">
+                    <div class="about-badge position-absolute top-0 start-0 m-4">
+                        <div class="badge bg-primary text-white px-3 py-2 rounded-pill">
+                            <i class="fas fa-award me-2"></i>
+                            Trusted Since 2022
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-6 about-text py-5 wow fadeIn" data-wow-delay="0.5s">
-                <div class="p-lg-5 pe-lg-0">
-                    <div class="section-title text-start">
-                        <span class="text-primary text-uppercase mb-2 d-inline-block">About Us</span>
-                        <h1 class="display-5 mb-4">Your Trusted Service Provider</h1>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="about-content">
+                    <div class="section-header mb-4">
+                        <span class="section-subtitle text-primary text-uppercase fw-bold mb-2 d-block">About Us</span>
+                        <h2 class="section-title display-5 fw-bold mb-4 text-dark">Your Trusted Service Provider</h2>
                     </div>
-                    <p class="mb-4 pb-2">Fixtoria was formed when our team decided to fill the vacuum for manpower in the service sector more than a year ago. Our team began by conducting surveys of potential service providers in and around Hubli, to create a handy database of 'domestic patrol,' as we like to refer to them.</p>
-                    <div class="row g-4 mb-4 pb-2">
-                        <div class="col-sm-6 wow fadeIn" data-wow-delay="0.1s">
-                            <div class="d-flex align-items-center rounded-4 p-3 bg-white shadow-sm">
-                                <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-primary rounded-circle" style="width: 60px; height: 60px;">
-                                    <i class="fa fa-users fa-2x text-white"></i>
+                    <p class="text-muted mb-4 fs-5 lh-base">
+                        Fixtoria was formed when our team decided to fill the vacuum for manpower in the service sector. 
+                        Our team began by conducting surveys of potential service providers in and around Algeria, 
+                        to create a handy database of 'domestic patrol,' as we like to refer to them.
+                    </p>
+                    <div class="row g-4 mb-4">
+                        <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="achievement-card bg-white rounded-3 p-4 shadow-sm text-center">
+                                <div class="achievement-icon bg-primary text-white rounded-circle mx-auto mb-3">
+                                    <i class="fa fa-users fa-2x"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <h2 class="text-primary mb-1" data-toggle="counter-up">1234</h2>
-                                    <p class="fw-medium mb-0">Happy Clients</p>
-                                </div>
+                                <h3 class="text-primary mb-1 fw-bold counter" data-count="1234">0</h3>
+                                <p class="text-muted mb-0 fw-semibold">Happy Clients</p>
                             </div>
                         </div>
-                        <div class="col-sm-6 wow fadeIn" data-wow-delay="0.3s">
-                            <div class="d-flex align-items-center rounded-4 p-3 bg-white shadow-sm">
-                                <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-primary rounded-circle" style="width: 60px; height: 60px;">
-                                    <i class="fa fa-check fa-2x text-white"></i>
+                        <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="200">
+                            <div class="achievement-card bg-white rounded-3 p-4 shadow-sm text-center">
+                                <div class="achievement-icon bg-success text-white rounded-circle mx-auto mb-3">
+                                    <i class="fa fa-check fa-2x"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <h2 class="text-primary mb-1" data-toggle="counter-up">1234</h2>
-                                    <p class="fw-medium mb-0">Services Done</p>
-                                </div>
+                                <h3 class="text-primary mb-1 fw-bold counter" data-count="2500">0</h3>
+                                <p class="text-muted mb-0 fw-semibold">Services Done</p>
                             </div>
                         </div>
                     </div>
-                    <a href="{% url 'about' %}" class="btn btn-primary py-3 px-5 rounded-pill">
+                    <a href="{% url 'about' %}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill">
                         <i class="fas fa-arrow-right me-2"></i>Explore More
                     </a>
                 </div>
@@ -139,47 +306,50 @@
         </div>
     </div>
 </div>
-<!-- About End -->
+<!-- About Section End -->
 
-<!-- Service Start -->
-<div class="container-xxl py-5">
+<!-- Services Section Start -->
+<div class="services-section py-5 bg-light">
     <div class="container">
-        <div class="section-title text-center">
-            <span class="text-primary text-uppercase mb-2 d-inline-block">What We Offer</span>
-            <h1 class="display-5 mb-5">Our Premium Services</h1>
+        <div class="section-header text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle text-primary text-uppercase fw-bold mb-2 d-block">What We Offer</span>
+            <h2 class="section-title display-5 fw-bold mb-4 text-dark">Our Premium Services</h2>
+            <p class="text-muted fs-5 mx-auto" style="max-width: 600px;">
+                Discover our comprehensive range of professional home services designed to make your life easier and more comfortable.
+            </p>
         </div>
         <div class="row g-4">
             {% for service in services %}
-            <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.{{ forloop.counter0 }}s">
-                <div class="service-item rounded-4 overflow-hidden shadow-sm h-100 position-relative">
-                    <div class="service-img position-relative overflow-hidden">
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+                <div class="service-card h-100 bg-white rounded-3 overflow-hidden shadow-sm">
+                    <div class="service-image position-relative">
                         <img class="img-fluid w-100" src="{{ service.img.url }}" alt="{{ service.Name }}" style="height: 250px; object-fit: cover;">
-                        <div class="service-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <div class="service-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                             {% if user.is_authenticated %}
-                                <a href="{% url 'bookservice' id=service.id %}" class="btn btn-primary px-4 py-3 rounded-pill">
+                                <a href="{% url 'bookservice' id=service.id %}" class="btn btn-primary btn-lg px-4 py-3 rounded-pill">
                                     <i class="fas fa-calendar-check me-2"></i>Book Now
                                 </a>
                             {% else %}
-                                <a href="{% url 'login' %}" class="btn btn-primary px-4 py-3 rounded-pill">
+                                <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4 py-3 rounded-pill">
                                     <i class="fas fa-sign-in-alt me-2"></i>Login to Book
                                 </a>
                             {% endif %}
                         </div>
                     </div>
-                    <div class="p-4 text-center">
-                        <h4 class="mb-3">{{ service.Name }}</h4>
-                        <p>{{ service.Description|truncatewords_html:20 }}</p>
-                        <div class="d-flex justify-content-between mt-3">
+                    <div class="service-content p-4">
+                        <h4 class="service-title mb-3 fw-bold text-dark">{{ service.Name }}</h4>
+                        <p class="text-muted mb-4">{{ service.Description|truncatewords_html:20 }}</p>
+                        <div class="service-actions d-flex justify-content-between">
                             {% if user.is_authenticated %}
-                                <a class="btn btn-outline-primary rounded-pill px-3" href="{% url 'bookservice' id=service.id %}">
+                                <a class="btn btn-outline-primary rounded-pill px-4" href="{% url 'bookservice' id=service.id %}">
                                     <i class="fas fa-calendar-check me-2"></i>Book Now
                                 </a>
                             {% else %}
-                                <a class="btn btn-outline-primary rounded-pill px-3" href="{% url 'login' %}">
+                                <a class="btn btn-outline-primary rounded-pill px-4" href="{% url 'login' %}">
                                     <i class="fas fa-sign-in-alt me-2"></i>Login
                                 </a>
                             {% endif %}
-                            <a class="btn btn-outline-secondary rounded-pill px-3" href="{% url 'all_workers' %}">
+                            <a class="btn btn-outline-secondary rounded-pill px-4" href="{% url 'all_workers' %}">
                                 <i class="fas fa-users me-2"></i>View Workers
                             </a>
                         </div>
@@ -190,293 +360,694 @@
         </div>
     </div>
 </div>
-<!-- Service End -->
+<!-- Services Section End -->
 
-<!-- Feature Start -->
-<div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
-    <div class="container feature px-lg-0">
-        <div class="row g-0 mx-lg-0">
-            <div class="col-lg-6 feature-text py-5 wow fadeIn" data-wow-delay="0.5s">
-                <div class="p-lg-5 ps-lg-0">
-                    <div class="section-title text-start">
-                        <span class="text-primary text-uppercase mb-2 d-inline-block">Why Choose Us</span>
-                        <h1 class="display-5 mb-4">Our Advantages</h1>
+<!-- Why Choose Us Section Start -->
+<div class="why-choose-section py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="why-choose-content">
+                    <div class="section-header mb-4">
+                        <span class="section-subtitle text-primary text-uppercase fw-bold mb-2 d-block">Why Choose Us</span>
+                        <h2 class="section-title display-5 fw-bold mb-4 text-dark">Our Advantages</h2>
                     </div>
-                    <p class="mb-4 pb-2">Fixtoria leverages Algeria's vast population to provide essential domestic and office support services. With expertise and a dedicated team, we cover various needs, including housework, childcare, security, driving, and more, making us a valuable social service provider.</p>
+                    <p class="text-muted mb-4 fs-5 lh-base">
+                        Fixtoria leverages Algeria's vast population to provide essential domestic and office support services. 
+                        With expertise and a dedicated team, we cover various needs, including housework, childcare, security, 
+                        driving, and more, making us a valuable social service provider.
+                    </p>
                     <div class="row g-4">
-                        <div class="col-6">
-                            <div class="d-flex align-items-center rounded-4 p-3 bg-white shadow-sm">
-                                <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-primary rounded-circle" style="width: 50px; height: 50px;">
-                                    <i class="fa fa-check fa-lg text-white"></i>
+                        <div class="col-6" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="advantage-card bg-white rounded-3 p-4 shadow-sm text-center">
+                                <div class="advantage-icon bg-primary text-white rounded-circle mx-auto mb-3">
+                                    <i class="fa fa-check fa-lg"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <p class="mb-0">Quality</p>
-                                    <h5 class="mb-0">Services</h5>
-                                </div>
+                                <h6 class="fw-bold mb-1 text-dark">Quality</h6>
+                                <h5 class="text-primary mb-0">Services</h5>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center rounded-4 p-3 bg-white shadow-sm">
-                                <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-primary rounded-circle" style="width: 50px; height: 50px;">
-                                    <i class="fa fa-user-check fa-lg text-white"></i>
+                        <div class="col-6" data-aos="zoom-in" data-aos-delay="200">
+                            <div class="advantage-card bg-white rounded-3 p-4 shadow-sm text-center">
+                                <div class="advantage-icon bg-success text-white rounded-circle mx-auto mb-3">
+                                    <i class="fa fa-user-check fa-lg"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <p class="mb-0">Professional</p>
-                                    <h5 class="mb-0">Workers</h5>
-                                </div>
+                                <h6 class="fw-bold mb-1 text-dark">Professional</h6>
+                                <h5 class="text-primary mb-0">Workers</h5>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center rounded-4 p-3 bg-white shadow-sm">
-                                <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-primary rounded-circle" style="width: 50px; height: 50px;">
-                                    <i class="fa fa-drafting-compass fa-lg text-white"></i>
+                        <div class="col-6" data-aos="zoom-in" data-aos-delay="300">
+                            <div class="advantage-card bg-white rounded-3 p-4 shadow-sm text-center">
+                                <div class="advantage-icon bg-info text-white rounded-circle mx-auto mb-3">
+                                    <i class="fa fa-drafting-compass fa-lg"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <p class="mb-0">Free</p>
-                                    <h5 class="mb-0">Consultation</h5>
-                                </div>
+                                <h6 class="fw-bold mb-1 text-dark">Free</h6>
+                                <h5 class="text-primary mb-0">Consultation</h5>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center rounded-4 p-3 bg-white shadow-sm">
-                                <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-primary rounded-circle" style="width: 50px; height: 50px;">
-                                    <i class="fa fa-headphones fa-lg text-white"></i>
+                        <div class="col-6" data-aos="zoom-in" data-aos-delay="400">
+                            <div class="advantage-card bg-white rounded-3 p-4 shadow-sm text-center">
+                                <div class="advantage-icon bg-warning text-white rounded-circle mx-auto mb-3">
+                                    <i class="fa fa-headphones fa-lg"></i>
                                 </div>
-                                <div class="ms-3">
-                                    <p class="mb-0">Customer</p>
-                                    <h5 class="mb-0">Support</h5>
-                                </div>
+                                <h6 class="fw-bold mb-1 text-dark">Customer</h6>
+                                <h5 class="text-primary mb-0">Support</h5>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 pe-lg-0" style="min-height: 400px;">
-                <div class="position-relative h-100">
-                    <img class="position-absolute img-fluid w-100 h-100 rounded-4" src="{% static 'user_assets/img/feature.jpg' %}" style="object-fit: cover;" alt="">
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="why-choose-image-wrapper position-relative">
+                    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Why Choose Fixtoria" 
+                         class="img-fluid rounded-3 shadow">
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Feature End -->
+<!-- Why Choose Us Section End -->
 
-<!-- Advanced Testimonial Start -->
-<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+<!-- Testimonials Section Start -->
+<div class="testimonials-section py-5 bg-light">
     <div class="container">
-        <div class="section-title text-center">
-            <span class="text-primary text-uppercase mb-2 d-inline-block">Testimonials</span>
-            <h1 class="display-5 mb-5">What Our Clients Say</h1>
+        <div class="section-header text-center mb-5" data-aos="fade-up">
+            <span class="section-subtitle text-primary text-uppercase fw-bold mb-2 d-block">Testimonials</span>
+            <h2 class="section-title display-5 fw-bold mb-4 text-dark">What Our Clients Say</h2>
+            <p class="text-muted fs-5 mx-auto" style="max-width: 600px;">
+                Read what our satisfied customers have to say about our professional home services.
+            </p>
         </div>
         <div class="owl-carousel testimonial-carousel">
             {% for feedback in feedbacks %}
-            <div class="testimonial-item bg-white text-center rounded-4 p-0 shadow-sm border">
-    <!-- Header with both photos -->
-    <div class="testimonial-header bg-gradient-primary text-white p-4 rounded-top-4">
-        <div class="row align-items-center">
-            <div class="col-5">
-                <div class="client-info text-start">
-                    <div class="client-photo mb-2">
-                        {% if feedback.user_profile_pic %}
-                        <img class="img-fluid rounded-circle border border-3 border-white shadow" src="{{ feedback.user_profile_pic.url }}" style="width: 60px; height: 60px; object-fit: cover;" alt="Client">
-                        {% else %}
-                        <img class="img-fluid rounded-circle border border-3 border-white shadow" src="{% static 'user_assets/img/default_user_icon.jpg' %}" style="width: 60px; height: 60px; object-fit: cover;" alt="Client">
-                        {% endif %}
+            <div class="testimonial-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+                <div class="testimonial-card bg-white rounded-3 shadow-sm overflow-hidden">
+                    <!-- Header with both photos -->
+                    <div class="testimonial-header bg-primary text-white p-4">
+                        <div class="row align-items-center">
+                            <div class="col-5">
+                                <div class="client-info text-start">
+                                    <div class="client-photo mb-2">
+                                        {% if feedback.user_profile_pic %}
+                                        <img class="img-fluid rounded-circle border border-3 border-white shadow" 
+                                             src="{{ feedback.user_profile_pic.url }}" 
+                                             style="width: 60px; height: 60px; object-fit: cover;" alt="Client">
+                                        {% else %}
+                                        <img class="img-fluid rounded-circle border border-3 border-white shadow" 
+                                             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                                             style="width: 60px; height: 60px; object-fit: cover;" alt="Client">
+                                        {% endif %}
+                                    </div>
+                                    <h6 class="mb-0 text-white fw-bold">{{ feedback.User.first_name }} {{ feedback.User.last_name }}</h6>
+                                    <small class="text-white-50">Client</small>
+                                </div>
+                            </div>
+                            <div class="col-2 text-center">
+                                <i class="fas fa-arrow-right fa-2x text-secondary"></i>
+                            </div>
+                            <div class="col-5">
+                                <div class="worker-info text-end">
+                                    <div class="worker-photo mb-2 d-flex justify-content-end">
+                                        {% if feedback.Employ.profile_pic %}
+                                        <img class="img-fluid rounded-circle border border-3 border-secondary shadow" 
+                                             src="{{ feedback.Employ.profile_pic.url }}" 
+                                             style="width: 60px; height: 60px; object-fit: cover;" alt="Worker">
+                                        {% else %}
+                                        <img class="img-fluid rounded-circle border border-3 border-secondary shadow" 
+                                             src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                                             style="width: 60px; height: 60px; object-fit: cover;" alt="Worker">
+                                        {% endif %}
+                                    </div>
+                                    <h6 class="mb-0 text-white fw-bold">{{ feedback.Employ.admin.first_name }} {{ feedback.Employ.admin.last_name }}</h6>
+                                    <small class="text-white-50">{{ feedback.Employ.designation }}</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h6 class="mb-0 text-white">{{ feedback.User.first_name }} {{ feedback.User.last_name }}</h6>
-                    <small class="text-white-50">Client</small>
+                    
+                    <!-- Content -->
+                    <div class="testimonial-content p-4">
+                        <div class="rating-stars mb-3 text-center">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= feedback.Rating %}
+                                    <i class="fas fa-star text-warning me-1"></i>
+                                {% else %}
+                                    <i class="far fa-star text-warning me-1"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span class="ms-2 text-muted fw-bold">({{ feedback.Rating }}/5)</span>
+                        </div>
+                        
+                        <blockquote class="mb-3 text-center">
+                            <p class="fs-6 fst-italic text-dark mb-0">"{{ feedback.Description }}"</p>
+                        </blockquote>
+                        
+                        <div class="feedback-meta text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt me-1 text-primary"></i>
+                                {{ feedback.Date|date:"F d, Y" }}
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-2 text-center">
-                <i class="fas fa-arrow-right fa-2x text-warning"></i>
-            </div>
-            <div class="col-5">
-                <div class="worker-info text-end">
-                    <div class="worker-photo mb-2 d-flex justify-content-end">
-                        {% if feedback.Employ.profile_pic %}
-                        <img class="img-fluid rounded-circle border border-3 border-warning shadow" src="{{ feedback.Employ.profile_pic.url }}" style="width: 60px; height: 60px; object-fit: cover;" alt="Worker">
-                        {% else %}
-                        <img class="img-fluid rounded-circle border border-3 border-warning shadow" src="{% static 'user_assets/img/default_user_icon.jpg' %}" style="width: 60px; height: 60px; object-fit: cover;" alt="Worker">
-                        {% endif %}
-                    </div>
-                    <h6 class="mb-0 text-white">{{ feedback.Employ.admin.first_name }} {{ feedback.Employ.admin.last_name }}</h6>
-                    <small class="text-white-50">{{ feedback.Employ.designation }}</small>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Content -->
-    <div class="testimonial-content p-4">
-        <div class="rating-stars mb-3">
-            {% for i in "12345" %}
-                {% if forloop.counter <= feedback.Rating %}
-                    <i class="fas fa-star text-warning me-1"></i>
-                {% else %}
-                    <i class="far fa-star text-warning me-1"></i>
-                {% endif %}
             {% endfor %}
-            <span class="ms-2 text-muted fw-bold">({{ feedback.Rating }}/5)</span>
-        </div>
-        
-        <blockquote class="mb-3 border-start border-primary border-4 ps-3">
-            <p class="fs-6 fst-italic text-dark">"{{ feedback.Description }}"</p>
-        </blockquote>
-        
-        <div class="feedback-meta">
-            <small class="text-muted">
-                <i class="fas fa-calendar-alt me-1 text-primary"></i>
-                {{ feedback.Date|date:"F d, Y" }}
-            </small>
         </div>
     </div>
 </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-<!-- Testimonial End -->
+<!-- Testimonials Section End -->
 
-<!-- Add custom CSS for this page -->
+<!-- Professional CSS Styles -->
 <style>
-    .carousel-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
+/* Hero Section Styles */
+.hero-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.05;
+    animation: float 12s ease-in-out infinite;
+}
+
+.hero-shape.shape-1 {
+    width: 200px;
+    height: 200px;
+    background: var(--primary);
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.hero-shape.shape-2 {
+    width: 150px;
+    height: 150px;
+    background: var(--secondary);
+    top: 60%;
+    left: 5%;
+    animation-delay: 2s;
+}
+
+.hero-shape.shape-3 {
+    width: 120px;
+    height: 120px;
+    background: var(--success);
+    top: 25%;
+    right: 15%;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 100px 0 60px;
+}
+
+.hero-badge .badge {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    line-height: 1.2;
+}
+
+.hero-dots {
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+}
+
+.stat-item {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    transition: var(--transition-normal);
+}
+
+.stat-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.trust-badge {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    transition: var(--transition-normal);
+}
+
+.trust-badge:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow-md);
+}
+
+.trust-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
+/* Hero Image Styles */
+.hero-image-container {
+    position: relative;
+    height: 600px;
+}
+
+.hero-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.main-hero-image {
+    position: relative;
+    z-index: 2;
+    width: 85%;
+    margin: 0 auto;
+}
+
+.main-hero-image img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
+
+.floating-card {
+    position: absolute;
+    z-index: 3;
+    animation: floatCard 4s ease-in-out infinite;
+}
+
+.floating-card.card-1 {
+    top: 15%;
+    left: -15%;
+    animation-delay: 0s;
+}
+
+.floating-card.card-2 {
+    top: 55%;
+    right: -20%;
+    animation-delay: 1s;
+}
+
+.floating-card.card-3 {
+    bottom: 35%;
+    left: -10%;
+    animation-delay: 2s;
+}
+
+.floating-card.rating-card {
+    bottom: 5%;
+    right: -15%;
+    animation-delay: 0.5s;
+}
+
+@keyframes floatCard {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.service-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    text-align: center;
+}
+
+.scroll-arrow {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.2rem;
+    animation: bounce 2s infinite;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    margin: 0 auto 8px;
+    border: 1px solid var(--gray-200);
+}
+
+.scroll-arrow:hover {
+    background: var(--primary);
+    color: white;
+    transform: scale(1.05);
+}
+
+.scroll-text {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-8px); }
+    60% { transform: translateY(-4px); }
+}
+
+/* Feature Cards */
+.feature-card {
+    transition: var(--transition-normal);
+    border: 1px solid var(--gray-200);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Achievement Cards */
+.achievement-card {
+    transition: var(--transition-normal);
+    border: 1px solid var(--gray-200);
+}
+
+.achievement-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.achievement-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Service Cards */
+.service-card {
+    transition: var(--transition-normal);
+    border: 1px solid var(--gray-200);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.service-overlay {
+    background: rgba(30, 64, 175, 0.9);
+    opacity: 0;
+    transition: var(--transition-slow);
+}
+
+.service-image:hover .service-overlay {
+    opacity: 1;
+}
+
+/* Advantage Cards */
+.advantage-card {
+    transition: var(--transition-normal);
+    border: 1px solid var(--gray-200);
+}
+
+.advantage-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.advantage-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Testimonial Cards */
+.testimonial-card {
+    transition: var(--transition-normal);
+    border: 1px solid var(--gray-200);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.testimonial-header {
+    background: var(--primary) !important;
+}
+
+.client-photo img, .worker-photo img {
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-normal);
+}
+
+.client-photo img:hover, .worker-photo img:hover {
+    transform: scale(1.02);
+}
+
+/* Section Headers */
+.section-subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+    .hero-content {
+        padding: 80px 0 50px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+        text-align: center;
+    }
+    
+    .hero-subtitle {
+        text-align: center;
+    }
+    
+    .hero-image-container {
+        height: 400px;
+        margin-top: 3rem;
+    }
+    
+    .main-hero-image {
+        width: 95%;
+    }
+    
+    .main-hero-image img {
+        height: 350px;
+    }
+    
+    .floating-card {
+        display: none;
+    }
+    
+    .hero-buttons {
+        text-align: center;
+    }
+    
+    .hero-buttons .btn {
+        margin-bottom: 1rem;
         width: 100%;
-        height: 100%;
-        z-index: 1;
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .hero-content {
+        padding: 60px 0 40px;
     }
     
-    .feature-item {
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+    .hero-title {
+        font-size: 2rem;
     }
     
-    .feature-item:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+    .hero-image-container {
+        height: 300px;
+        margin-top: 2rem;
     }
     
-    .service-item {
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+    .main-hero-image img {
+        height: 250px;
     }
     
-    .service-item:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+    .testimonial-header .row {
+        text-align: center !important;
     }
     
-    .service-overlay {
-        background: rgba(0, 0, 0, 0.8);
-        opacity: 0;
-        transition: all 0.5s ease;
+    .testimonial-header .col-5,
+    .testimonial-header .col-2 {
+        margin-bottom: 15px;
     }
     
-    .service-img:hover .service-overlay {
-        opacity: 1;
+    .client-info,
+    .worker-info {
+        text-align: center !important;
     }
     
-    .btn {
-        transition: all 0.3s ease;
+    .worker-photo {
+        justify-content: center !important;
     }
-    
-    .btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .testimonial-item {
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-    
-    .testimonial-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15) !important;
-    }
-    
-    .testimonial-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    }
-    
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    }
-    
-    .client-photo img, .worker-photo img {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
-        transition: all 0.3s ease;
-    }
-    
-    .client-photo img:hover, .worker-photo img:hover {
-        transform: scale(1.05);
-    }
-    
-    .rating-stars {
-        font-size: 1.2rem;
-    }
-    
-    .testimonial-content blockquote {
-        margin-left: 0;
-        font-style: italic;
-    }
-    
-    .rounded-4 {
-        border-radius: 15px !important;
-    }
-    
-    .rounded-top-4 {
-        border-top-left-radius: 15px !important;
-        border-top-right-radius: 15px !important;
-    }
-    
-    .owl-carousel .owl-item {
-        padding: 0 15px;
-    }
-    
-    .testimonial-carousel .owl-stage {
-        display: flex;
-        align-items: stretch;
-    }
-    
-    .testimonial-carousel .owl-item {
-        height: auto;
-    }
-    
-    .testimonial-carousel .testimonial-item {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .testimonial-content {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    
-    @media (max-width: 768px) {
-        .testimonial-header .row {
-            text-align: center !important;
-        }
-        
-        .testimonial-header .col-5,
-        .testimonial-header .col-2 {
-            margin-bottom: 15px;
-        }
-        
-        .client-info,
-        .worker-info {
-            text-align: center !important;
-        }
-        
-        .worker-photo {
-            justify-content: center !important;
-        }
-    }
+}
+
+/* Owl Carousel Customization */
+.owl-carousel .owl-item {
+    padding: 0 15px;
+}
+
+.testimonial-carousel .owl-stage {
+    display: flex;
+    align-items: stretch;
+}
+
+.testimonial-carousel .owl-item {
+    height: auto;
+}
+
+.testimonial-carousel .testimonial-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.testimonial-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Owl Carousel Navigation */
+.testimonial-carousel .owl-nav {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.testimonial-carousel .owl-nav button {
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    margin: 0 10px;
+    font-size: 18px;
+    transition: var(--transition-normal);
+}
+
+.testimonial-carousel .owl-nav button:hover {
+    background: var(--primary-dark);
+    transform: scale(1.1);
+}
+
+.testimonial-carousel .owl-dots {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.testimonial-carousel .owl-dots .owl-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--gray-300);
+    border-radius: 50%;
+    margin: 0 5px;
+    transition: var(--transition-normal);
+}
+
+.testimonial-carousel .owl-dots .owl-dot.active {
+    background: var(--primary);
+    transform: scale(1.2);
+}
 </style>
+
+<script>
+// Initialize Owl Carousel for testimonials
+$('.testimonial-carousel').owlCarousel({
+    autoplay: true,
+    smartSpeed: 1000,
+    center: false,
+    dots: true,
+    loop: true,
+    margin: 25,
+    nav: true,
+    navText: [
+        '<i class="fas fa-chevron-left"></i>',
+        '<i class="fas fa-chevron-right"></i>'
+    ],
+    responsiveClass: true,
+    responsive: {
+        0: {
+            items: 1
+        },
+        576: {
+            items: 1
+        },
+        768: {
+            items: 2
+        },
+        992: {
+            items: 2
+        },
+        1200: {
+            items: 3
+        }
+    }
+});
+</script>
 
 {% endblock %}

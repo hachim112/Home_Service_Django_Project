@@ -13,8 +13,8 @@
 
     <!-- Core CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
@@ -33,114 +33,215 @@
             --light-color: #F7FFF7;
             --gray-color: #E6EAEE;
             --text-color: #333;
-            --sidebar-width: 250px;
+            --sidebar-width: 280px;
+            --header-height: 80px;
             --gradient-accent: linear-gradient(135deg, #4ECDC4, #FF6B6B);
+            --gradient-primary: linear-gradient(135deg, #4ECDC4, #2cbfc7);
+            --gradient-success: linear-gradient(135deg, #2ecc71, #27ae60);
+            --gradient-warning: linear-gradient(135deg, #f1c40f, #f39c12);
+            --gradient-info: linear-gradient(135deg, #3498db, #2980b9);
+            --gradient-danger: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(to bottom right, #f5f9fc, #e0f7fa);
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+            background-attachment: fixed;
             color: var(--text-color);
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* Sidebar */
+        /* Enhanced Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: var(--sidebar-width);
             height: 100vh;
-            background: var(--gradient-accent);
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
             color: white;
             z-index: 1000;
-            transition: all 0.5s ease;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            border-radius: 0 20px 20px 0;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            border-radius: 0 25px 25px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
         }
 
         .sidebar-brand {
-            padding: 30px 20px;
+            padding: 30px 25px;
             text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-brand::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(78, 205, 196, 0.1), rgba(255, 107, 107, 0.1));
+            pointer-events: none;
         }
 
         .sidebar-brand h2 {
-            font-size: 26px;
-            font-weight: 700;
+            font-size: 28px;
+            font-weight: 800;
             color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1s ease-in;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 2px 10px rgba(78, 205, 196, 0.3); }
+            to { text-shadow: 0 2px 20px rgba(78, 205, 196, 0.6); }
+        }
+
+        .sidebar-brand .brand-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
         }
 
         .sidebar-menu ul {
             list-style: none;
-            padding: 20px 0;
+            padding: 0;
+        }
+
+        .sidebar-menu li {
+            margin: 5px 0;
         }
 
         .sidebar-menu li a {
             display: flex;
             align-items: center;
-            padding: 15px 25px;
-            color: white;
+            padding: 18px 25px;
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 0 25px 25px 0;
+            margin-right: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-menu li a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
             transition: all 0.3s ease;
-            border-radius: 0 15px 15px 0;
+            z-index: -1;
+        }
+
+        .sidebar-menu li a:hover::before,
+        .sidebar-menu li a.active::before {
+            left: 0;
         }
 
         .sidebar-menu li a:hover,
         .sidebar-menu li a.active {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateX(10px) scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: white;
+            transform: translateX(10px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
         }
 
         .sidebar-menu i {
             margin-right: 15px;
-            font-size: 20px;
-            width: 30px;
-            transition: transform 0.3s ease;
+            font-size: 18px;
+            width: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
         .sidebar-menu li a:hover i {
-            transform: rotate(15deg);
+            transform: rotate(15deg) scale(1.1);
         }
 
-        /* Main Content */
+        .sidebar-menu .menu-text {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Enhanced Header */
         .main-content {
             margin-left: var(--sidebar-width);
-            padding: 30px;
             min-height: 100vh;
-            transition: all 0.5s ease;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
         }
 
-        /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             padding: 20px 40px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-            animation: slideDown 0.5s ease;
-            position: relative;
+            margin: 20px 30px;
+            position: sticky;
+            top: 20px;
             z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .menu-toggle {
             font-size: 24px;
             cursor: pointer;
             color: var(--primary-color);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(78, 205, 196, 0.1);
         }
 
         .menu-toggle:hover {
-            transform: rotate(90deg);
+            transform: rotate(90deg) scale(1.1);
+            background: rgba(78, 205, 196, 0.2);
         }
 
         .search-form {
@@ -150,67 +251,95 @@
         }
 
         .search-input {
-            padding: 10px 15px 10px 45px;
+            padding: 12px 20px 12px 50px;
             border: none;
-            background: var(--gray-color);
+            background: rgba(78, 205, 196, 0.1);
             border-radius: 25px;
-            width: 50px;
-            transition: width 0.4s ease, background 0.3s ease;
+            width: 60px;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 14px;
+            color: var(--text-color);
         }
 
         .search-input:focus {
-            width: 250px;
+            width: 300px;
             background: white;
-            box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(78, 205, 196, 0.7);
         }
 
         .search-icon {
             position: absolute;
-            left: 15px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--primary-color);
             font-size: 16px;
+            z-index: 1;
         }
 
-        /* User Profile Styles - Improved for Profile Picture */
+        /* Enhanced User Profile */
         .user-profile {
             position: relative;
-            z-index: 1050; /* Higher z-index to ensure dropdown appears on top */
+            z-index: 1050;
         }
 
         .user-profile .user-info {
             display: flex;
             align-items: center;
-            padding: 8px 15px;
-            border-radius: 30px;
+            padding: 10px 20px;
+            border-radius: 25px;
             transition: all 0.3s ease;
             background: rgba(78, 205, 196, 0.1);
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(78, 205, 196, 0.2);
         }
 
         .user-profile .user-info:hover {
             background: rgba(78, 205, 196, 0.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
         }
 
-        /* Profile Picture Container */
         .user-profile .profile-pic-container {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             overflow: hidden;
-            margin-right: 10px;
-            box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
-            transition: transform 0.3s ease;
-            background: var(--gradient-accent);
+            margin-right: 12px;
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.4);
+            transition: all 0.3s ease;
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
-        /* Profile Picture Styling */
+        .user-profile .profile-pic-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         .user-profile .profile-pic {
             width: 100%;
             height: 100%;
@@ -218,11 +347,10 @@
             display: block;
         }
 
-        /* Fallback for when no image is available */
         .user-profile .profile-initial {
             color: white;
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 18px;
         }
 
         .user-profile:hover .profile-pic-container {
@@ -230,60 +358,72 @@
         }
 
         .user-profile .user-name {
-            font-weight: 500;
+            font-weight: 600;
             font-size: 14px;
-            margin-right: 5px;
+            margin-right: 8px;
+            color: var(--text-color);
         }
 
-        /* Improved dropdown menu styling */
+        .user-profile .dropdown-arrow {
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .user-profile.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Enhanced Dropdown */
         .user-dropdown-menu {
             position: absolute;
             right: 0;
-            top: calc(100% + 10px);
-            width: 220px;
+            top: calc(100% + 15px);
+            width: 250px;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-            padding: 10px 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 15px 0;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
-            z-index: 1050; /* Higher z-index to ensure it appears above other elements */
-            border: none;
+            transform: translateY(10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 1050;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(20px);
         }
 
         .user-dropdown-menu.show {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
         .user-dropdown-menu::before {
             content: '';
             position: absolute;
-            top: -10px;
-            right: 20px;
-            width: 20px;
-            height: 20px;
+            top: -8px;
+            right: 25px;
+            width: 16px;
+            height: 16px;
             background: white;
             transform: rotate(45deg);
-            border-radius: 4px;
-            box-shadow: -5px -5px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
+            box-shadow: -3px -3px 10px rgba(0, 0, 0, 0.05);
         }
 
         .user-dropdown-menu .dropdown-item {
-            padding: 12px 20px;
+            padding: 15px 25px;
             display: flex;
             align-items: center;
             color: var(--dark-color);
             font-weight: 500;
             transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .user-dropdown-menu .dropdown-item i {
-            margin-right: 12px;
-            font-size: 18px;
+            margin-right: 15px;
+            font-size: 16px;
             color: var(--primary-color);
             width: 20px;
             text-align: center;
@@ -293,6 +433,7 @@
         .user-dropdown-menu .dropdown-item:hover {
             background: rgba(78, 205, 196, 0.1);
             transform: translateX(5px);
+            color: var(--primary-color);
         }
 
         .user-dropdown-menu .dropdown-item:hover i {
@@ -300,7 +441,7 @@
         }
 
         .user-dropdown-menu .dropdown-divider {
-            margin: 8px 0;
+            margin: 10px 0;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
@@ -314,77 +455,116 @@
 
         .user-dropdown-menu .logout-item:hover {
             background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
         }
 
-        /* Card Styles */
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            backdrop-filter: blur(10px);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-header {
-            background: var(--gradient-accent);
-            color: white;
-            border-bottom: none;
-            padding: 20px;
-            font-weight: 600;
-            border-radius: 15px 15px 0 0;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Footer */
+        /* Enhanced Footer */
         .footer {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 30px 40px;
             text-align: center;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.5s ease;
+            border-radius: 20px;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.1);
+            margin: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* DataTables */
-        table.dataTable thead th {
-            background: var(--gradient-accent);
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-social a {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
             color: white;
-            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
 
-        table.dataTable tbody tr:hover {
-            background: rgba(78, 205, 196, 0.1);
-            transition: background 0.2s ease;
+        .footer-social a:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            animation: bounce 2s infinite;
         }
 
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
 
-        @keyframes fadeInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 992px) {
             .sidebar {
-                left: -250px;
+                left: -280px;
                 border-radius: 0;
             }
             .sidebar.active {
@@ -396,51 +576,156 @@
             .main-content.active {
                 margin-left: var(--sidebar-width);
             }
-            .search-input:focus {
-                width: 150px;
-            }
             .header {
-                padding: 15px 20px;
+                margin: 15px 20px;
+                padding: 15px 25px;
+            }
+            .search-input:focus {
+                width: 200px;
             }
             .user-profile .user-name {
                 display: none;
             }
-            .user-dropdown-menu {
-                right: 0;
-                left: auto;
+            .footer {
+                margin: 20px;
+                padding: 20px;
             }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header {
+                margin: 10px;
+                padding: 15px 20px;
+            }
+            .search-input:focus {
+                width: 150px;
+            }
+            .footer {
+                margin: 10px;
+                padding: 15px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(78, 205, 196, 0.3);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <h2>Fixtoria Worker</h2>
+            <h2>Fixtoria</h2>
+            <div class="brand-subtitle">Worker Portal</div>
         </div>
         <div class="sidebar-menu">
             <ul>
-                <li><a href="{% url 'workers_home' %}" class="{% if request.path == '/workers_home/' %}active{% endif %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li><a href="{% url 'available_requests' %}" class="{% if request.path == '/AvailableRequests/' %}active{% endif %}"><i class="fa fa-tasks"></i> Available Requests</a></li>
-                <li><a href="{% url 'WorkerpendingTask' %}" class="{% if request.path == '/WorkerpendingTask/' %}active{% endif %}"><i class="fa fa-clock-o"></i> Assigned Tasks</a></li>
-                <li><a href="{% url 'viewworkerfeedbacks' %}" class="{% if request.path == '/viewworkerfeedbacks/' %}active{% endif %}"><i class="fa fa-star"></i> Feedbacks</a></li>
-                <li><a href="{% url 'completed_requests' %}" class="{% if request.path == '/completed/' %}active{% endif %}"><i class="fa fa-check-circle"></i> Completed Tasks</a></li
-                <li><a href="{% url 'workerprofile' %}" class="{% if request.path == '/workerprofile/' %}active{% endif %}"><i class="fa fa-user"></i> Profile</a></li>
+                <li>
+                    <a href="{% url 'workers_home' %}" class="{% if request.path == '/workers_home/' %}active{% endif %}">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'available_requests' %}" class="{% if request.path == '/AvailableRequests/' %}active{% endif %}">
+                        <i class="fas fa-tasks"></i>
+                        <span class="menu-text">Available Requests</span>
+                        {% if available_count > 0 %}
+                        <span class="notification-badge">{{ available_count }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'WorkerpendingTask' %}" class="{% if request.path == '/WorkerpendingTask/' %}active{% endif %}">
+                        <i class="fas fa-clock"></i>
+                        <span class="menu-text">Assigned Tasks</span>
+                        {% if pending_requests > 0 %}
+                        <span class="notification-badge">{{ pending_requests }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'ViewColleagues' %}" class="{% if request.path == '/ViewColleagues/' %}active{% endif %}">
+                        <i class="fas fa-users"></i>
+                        <span class="menu-text">My Colleagues</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'viewworkerfeedbacks' %}" class="{% if request.path == '/viewworkerfeedbacks/' %}active{% endif %}">
+                        <i class="fas fa-star"></i>
+                        <span class="menu-text">Feedbacks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'completed_requests' %}" class="{% if request.path == '/completed/' %}active{% endif %}">
+                        <i class="fas fa-check-circle"></i>
+                        <span class="menu-text">Completed Tasks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'workerprofile' %}" class="{% if request.path == '/workerprofile/' %}active{% endif %}">
+                        <i class="fas fa-user"></i>
+                        <span class="menu-text">Profile</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content" id="mainContent">
         <div class="header">
-            <div class="header-left d-flex align-items-center">
-                <div class="menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></div>
-                <div class="search-form ml-4">
-                    <i class="fa fa-search search-icon"></i>
-                    <input type="text" class="search-input" placeholder="Search...">
+            <div class="header-left">
+                <div class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-form">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search tasks, clients...">
                 </div>
             </div>
-            <div class="user-profile">
+            <div class="user-profile" id="userProfile">
                 <div class="user-info" id="userProfileToggle">
                     <div class="profile-pic-container">
                         {% if request.user.is_authenticated and request.user.is_staff %}
@@ -455,19 +740,25 @@
                             <span class="profile-initial">{{ request.user.username|first|upper }}</span>
                         {% endif %}
                     </div>
-                    <span class="user-name ml-2">{{ request.user.get_full_name|default:request.user.username }}</span>
-                    <i class="fa fa-angle-down ml-2"></i>
+                    <span class="user-name">{{ request.user.get_full_name|default:request.user.username }}</span>
+                    <i class="fas fa-chevron-down dropdown-arrow"></i>
                 </div>
                 <div class="user-dropdown-menu" id="userDropdownMenu">
                     <a class="dropdown-item" href="{% url 'workerprofile' %}">
-                        <i class="fa fa-user"></i> My Profile
+                        <i class="fas fa-user"></i> My Profile
                     </a>
                     <a class="dropdown-item" href="#">
-                        <i class="fa fa-cog"></i> Settings
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-bell"></i> Notifications
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-question-circle"></i> Help & Support
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item logout-item" href="{% url 'logout' %}?next={% url 'index' %}">
-                        <i class="fa fa-sign-out"></i> Logout
+                        <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
                 </div>
             </div>
@@ -476,7 +767,20 @@
         {% block content %}{% endblock %}
 
         <div class="footer">
-            <p>Copyright © 2023 Fixtoria. All rights reserved.</p>
+            <div class="footer-content">
+                <p class="footer-text">© 2024 Fixtoria. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Support</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -487,45 +791,68 @@
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
         $(document).ready(function() {
-            // Sidebar toggle
-            $('#menu-toggle').click(function() {
-                $('.sidebar').toggleClass('active');
-                $('.main-content').toggleClass('active');
+            // Hide loading overlay
+            setTimeout(() => {
+                $('#loadingOverlay').removeClass('show');
+            }, 500);
+
+            // Sidebar toggle with enhanced animation
+            $('#menuToggle').click(function() {
+                $('#sidebar').toggleClass('active');
+                $('#mainContent').toggleClass('active');
+                
+                // Animate menu toggle icon
+                const icon = $(this).find('i');
+                if ($('#sidebar').hasClass('active')) {
+                    icon.removeClass('fa-bars').addClass('fa-times');
+                } else {
+                    icon.removeClass('fa-times').addClass('fa-bars');
+                }
             });
 
             // Initialize AOS animations
             AOS.init({
                 duration: 800,
                 easing: 'ease-in-out',
-                once: true
+                once: true,
+                offset: 100
             });
 
-            // Dynamic greeting based on time
-            const greeting = $('#greeting');
-            if (greeting.length) {
-                const hour = new Date().getHours();
-                greeting.text(hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening');
-            }
-            
+            // Enhanced search functionality
+            $('.search-input').on('focus', function() {
+                $(this).parent().addClass('search-active');
+            }).on('blur', function() {
+                if (!$(this).val()) {
+                    $(this).parent().removeClass('search-active');
+                }
+            });
+
             // Handle profile image errors
             $('.profile-pic').on('error', function() {
                 const username = $(this).attr('alt') || 'U';
                 $(this).parent().html('<span class="profile-initial">' + username.charAt(0).toUpperCase() + '</span>');
             });
             
-            // Custom dropdown toggle
+            // Enhanced dropdown toggle
             $('#userProfileToggle').on('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                $('#userDropdownMenu').toggleClass('show');
+                
+                const dropdown = $('#userDropdownMenu');
+                const profile = $('#userProfile');
+                
+                dropdown.toggleClass('show');
+                profile.toggleClass('active');
             });
             
             // Close dropdown when clicking outside
             $(document).on('click', function(e) {
                 if (!$(e.target).closest('.user-profile').length) {
                     $('#userDropdownMenu').removeClass('show');
+                    $('#userProfile').removeClass('active');
                 }
             });
             
@@ -533,7 +860,135 @@
             $('#userDropdownMenu').on('click', function(e) {
                 e.stopPropagation();
             });
+
+            // Smooth scrolling for anchor links
+            $('a[href^="#"]').on('click', function(event) {
+                var target = $(this.getAttribute('href'));
+                if (target.length) {
+                    event.preventDefault();
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 100
+                    }, 1000);
+                }
+            });
+
+            // Add loading state to buttons
+            $('button, .btn').on('click', function() {
+                const $this = $(this);
+                if (!$this.hasClass('no-loading')) {
+                    $this.addClass('loading');
+                    setTimeout(() => {
+                        $this.removeClass('loading');
+                    }, 2000);
+                }
+            });
+
+            // Auto-hide alerts
+            $('.alert').each(function() {
+                const $alert = $(this);
+                setTimeout(() => {
+                    $alert.fadeOut(500, function() {
+                        $(this).remove();
+                    });
+                }, 5000);
+            });
+
+            // Add ripple effect to clickable elements
+            $('.dashboard-card, .quick-action, .sidebar-menu a').on('click', function(e) {
+                const $this = $(this);
+                const ripple = $('<span class="ripple"></span>');
+                
+                $this.append(ripple);
+                
+                const x = e.pageX - $this.offset().left;
+                const y = e.pageY - $this.offset().top;
+                
+                ripple.css({
+                    left: x,
+                    top: y
+                }).addClass('animate');
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+
+            // Dynamic greeting based on time
+            const updateGreeting = () => {
+                const hour = new Date().getHours();
+                const greetingElement = $('.greeting');
+                if (greetingElement.length) {
+                    let greetingText = 'Good Evening';
+                    if (hour < 12) greetingText = 'Good Morning';
+                    else if (hour < 18) greetingText = 'Good Afternoon';
+                    greetingElement.text(greetingText);
+                }
+            };
+            updateGreeting();
+
+            // Add notification count animation
+            $('.notification-badge').each(function() {
+                const $this = $(this);
+                const count = parseInt($this.text());
+                if (count > 0) {
+                    $this.addClass('animate');
+                }
+            });
+
+            // Keyboard shortcuts
+            $(document).on('keydown', function(e) {
+                // Ctrl/Cmd + K for search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    $('.search-input').focus();
+                }
+                
+                // Escape to close dropdowns
+                if (e.key === 'Escape') {
+                    $('#userDropdownMenu').removeClass('show');
+                    $('#userProfile').removeClass('active');
+                }
+            });
         });
+
+        // Add CSS for ripple effect
+        const rippleCSS = `
+            <style>
+                .ripple {
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.6);
+                    transform: scale(0);
+                    animation: ripple-animation 0.6s linear;
+                    pointer-events: none;
+                }
+                
+                @keyframes ripple-animation {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+                
+                .loading {
+                    position: relative;
+                    pointer-events: none;
+                }
+                
+                .loading::after {
+                    content: '';
+                    position: absolute;
+                    width: 16px;
+                    height: 16px;
+                    margin: auto;
+                    border: 2px solid transparent;
+                    border-top-color: #ffffff;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+            </style>
+        `;
+        $('head').append(rippleCSS);
     </script>
 </body>
 </html>

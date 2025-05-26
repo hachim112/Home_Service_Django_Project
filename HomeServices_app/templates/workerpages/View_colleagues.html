@@ -2,167 +2,444 @@
 {% load static %}
 {% block content %}
 <style>
+    .colleagues-page {
+        padding: 20px;
+        min-height: calc(100vh - 200px);
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #4ecdc4, #2cbfc7);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-subtitle {
+        font-size: 1rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stats-bar {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .stat-item {
+        text-align: center;
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #4ecdc4, #2cbfc7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .search-filter-section {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-container {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 15px 20px 15px 50px;
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #4ecdc4;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4ecdc4;
+        font-size: 18px;
+    }
+
+    .service-filter {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .filter-label {
+        font-weight: 600;
+        color: #333;
+        white-space: nowrap;
+    }
+
+    .service-dropdown {
+        flex: 1;
+        max-width: 300px;
+        padding: 12px 20px;
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        font-size: 16px;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .service-dropdown:focus {
+        outline: none;
+        border-color: #4ecdc4;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+    }
+
+    .colleagues-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
     .colleague-card {
+        background: white;
         border-radius: 15px;
         overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
-    
+
     .colleague-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
     }
-    
+
     .colleague-header {
+        height: 80px;
+        background: linear-gradient(135deg, #4ecdc4, #2cbfc7);
         position: relative;
-        height: 100px;
-        background: var(--gradient-accent);
+        overflow: hidden;
     }
-    
+
+    .colleague-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+    }
+
     .colleague-avatar {
         position: absolute;
-        bottom: -40px;
-        left: 20px;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
         width: 80px;
         height: 80px;
         border-radius: 50%;
         border: 4px solid white;
-        background-color: #f8f9fa;
+        background: white;
         overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
     }
-    
+
+    .colleague-card:hover .colleague-avatar {
+        transform: translateX(-50%) scale(1.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
     .colleague-avatar img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
-    
+
+    .colleague-avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #4ecdc4, #2cbfc7);
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
     .colleague-body {
         padding: 50px 20px 20px;
+        text-align: center;
     }
-    
+
     .colleague-name {
-        font-weight: 600;
-        font-size: 18px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2c3e50;
         margin-bottom: 5px;
+        line-height: 1.2;
     }
-    
+
     .colleague-designation {
-        color: var(--primary-color);
-        font-weight: 500;
+        color: #4ecdc4;
+        font-weight: 600;
+        font-size: 0.9rem;
         margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
-    
+
     .colleague-info {
         margin-bottom: 15px;
+        text-align: left;
     }
-    
+
     .info-item {
         display: flex;
         align-items: center;
         margin-bottom: 8px;
-        color: #555;
-    }
-    
-    .info-item i {
-        width: 20px;
-        margin-right: 10px;
-        color: var(--primary-color);
-    }
-    
-    .colleague-footer {
-        padding: 15px 20px;
-        background: #f8f9fa;
-        border-top: 1px solid #eee;
-    }
-    
-    .badge-status {
-        display: inline-block;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 500;
-    }
-    
-    .badge-active {
-        background-color: rgba(46, 204, 113, 0.2);
-        color: #2ecc71;
-    }
-    
-    .badge-inactive {
-        background-color: rgba(231, 76, 60, 0.2);
-        color: #e74c3c;
-    }
-    
-    .badge-pending {
-        background-color: rgba(243, 156, 18, 0.2);
-        color: #f39c12;
-    }
-    
-    .search-box {
-        position: relative;
-        margin-bottom: 20px;
-    }
-    
-    .search-box input {
-        padding-left: 40px;
-        border-radius: 30px;
-    }
-    
-    .search-box i {
-        position: absolute;
-        left: 15px;
-        top: 12px;
-        color: #aaa;
-    }
-    
-    .filter-box {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
-    
-    .filter-item {
-        padding: 8px 15px;
-        border-radius: 20px;
-        background: #f8f9fa;
-        cursor: pointer;
+        padding: 5px 0;
         transition: all 0.3s ease;
     }
-    
-    .filter-item:hover, .filter-item.active {
-        background: var(--primary-color);
-        color: white;
+
+    .info-item:hover {
+        transform: translateX(3px);
     }
-    
+
+    .info-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 14px;
+        color: white;
+        background: linear-gradient(135deg, #4ecdc4, #2cbfc7);
+    }
+
+    .info-text {
+        color: #555;
+        font-weight: 500;
+        flex: 1;
+        font-size: 0.85rem;
+    }
+
+    .colleague-badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .status-badge:hover {
+        transform: scale(1.05);
+    }
+
+    .badge-active {
+        background: rgba(46, 204, 113, 0.15);
+        color: #27ae60;
+        border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .badge-pending {
+        background: rgba(243, 156, 18, 0.15);
+        color: #f39c12;
+        border: 1px solid rgba(243, 156, 18, 0.3);
+    }
+
+    .badge-inactive {
+        background: rgba(231, 76, 60, 0.15);
+        color: #e74c3c;
+        border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .badge-available {
+        background: rgba(52, 152, 219, 0.15);
+        color: #3498db;
+        border: 1px solid rgba(52, 152, 219, 0.3);
+    }
+
     .empty-state {
         text-align: center;
-        padding: 50px 20px;
+        padding: 60px 40px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     }
-    
-    .empty-state i {
-        font-size: 60px;
-        color: #ddd;
-        margin-bottom: 20px;
+
+    .empty-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 25px;
+        background: linear-gradient(135deg, #4ecdc4, #2cbfc7);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
     }
-    
-    .empty-state h4 {
-        font-weight: 600;
-        margin-bottom: 10px;
-        color: #555;
+
+    .empty-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 12px;
     }
-    
-    .empty-state p {
-        color: #777;
-        max-width: 500px;
+
+    .empty-description {
+        color: #7f8c8d;
+        font-size: 1rem;
+        max-width: 400px;
         margin: 0 auto;
+        line-height: 1.5;
+    }
+
+    .fade-in {
+        animation: fadeIn 0.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: translateX(-50%) scale(1); }
+        50% { transform: translateX(-50%) scale(1.05); }
+        100% { transform: translateX(-50%) scale(1); }
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .colleagues-page {
+            padding: 15px;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+        }
+        
+        .colleagues-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .stats-bar {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .service-filter {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .service-dropdown {
+            max-width: none;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .page-header {
+            padding: 20px;
+        }
+        
+        .search-filter-section {
+            padding: 20px;
+        }
+        
+        .colleague-avatar {
+            width: 70px;
+            height: 70px;
+        }
+        
+        .colleague-body {
+            padding: 40px 15px 15px;
+        }
     }
 </style>
 
-<div class="container-fluid">
+<div class="colleagues-page">
     <!-- Notifications -->
     {% if messages %}
     <div class="row mb-4">
@@ -179,138 +456,522 @@
     </div>
     {% endif %}
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">My Colleagues</h1>
+    <!-- Page Header -->
+    <div class="page-header fade-in">
+        <h1 class="page-title">
+            <i class="fas fa-users mr-3"></i>
+            My Colleagues
+        </h1>
+        <p class="page-subtitle">Connect and collaborate with fellow service professionals</p>
     </div>
-    
-    <div class="row">
-        <div class="col-md-4">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" class="form-control" id="searchColleagues" placeholder="Search colleagues...">
-            </div>
+
+    <!-- Statistics Bar -->
+    <div class="stats-bar fade-in">
+        <div class="stat-item">
+            <div class="stat-number" id="totalColleagues">{{ workers_records|length }}</div>
+            <div class="stat-label">Total Colleagues</div>
         </div>
-        <div class="col-md-8">
-            <div class="filter-box">
-                <div class="filter-item active" data-filter="all">All</div>
-                <div class="filter-item" data-filter="active">Active</div>
-                <div class="filter-item" data-filter="pending">Pending Verification</div>
-                <div class="filter-item" data-filter="same-service">Same Service</div>
-            </div>
+        <div class="stat-item">
+            <div class="stat-number" id="activeColleagues">0</div>
+            <div class="stat-label">Active Workers</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="filteredColleagues">{{ workers_records|length }}</div>
+            <div class="stat-label">Showing Results</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="availableColleagues">0</div>
+            <div class="stat-label">Available Now</div>
         </div>
     </div>
-    
+
+    <!-- Search and Filter Section -->
+    <div class="search-filter-section fade-in">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchColleagues" 
+                   placeholder="Search colleagues by name, service, or location..."
+                   value="{{ current_search|default:'' }}">
+        </div>
+        
+        <div class="service-filter">
+            <label class="filter-label">
+                <i class="fas fa-filter mr-2"></i>Filter by Service:
+            </label>
+            <select class="service-dropdown" id="serviceFilter">
+                <option value="all" {% if not current_service_filter %}selected{% endif %}>All Services</option>
+                {% for service in service_categories %}
+                    <option value="{{ service.Name|lower }}" 
+                            {% if current_service_filter == service.Name|lower %}selected{% endif %}>
+                        {{ service.Name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Colleagues Grid -->
     {% if workers_records %}
-        <div class="row" id="colleaguesContainer">
-            {% for worker in workers_records %}
-            <div class="col-lg-4 col-md-6 colleague-item" 
-                 data-name="{{ worker.admin.first_name|lower }} {{ worker.admin.last_name|lower }}"
-                 data-service="{{ worker.designation|lower }}"
-                 data-status="{% if worker.acc_activation %}active{% else %}pending{% endif %}">
-                <div class="card colleague-card">
-                    <div class="colleague-header"></div>
-                    <div class="colleague-avatar">
-                        {% if worker.profile_pic %}
-                            <img src="{{ worker.profile_pic.url }}" alt="{{ worker.admin.first_name }}">
-                        {% else %}
-                            <div class="d-flex align-items-center justify-content-center h-100 bg-light text-primary">
-                                <i class="fas fa-user fa-2x"></i>
-                            </div>
-                        {% endif %}
+    <div class="colleagues-grid" id="colleaguesContainer">
+        {% for worker in workers_records %}
+        <div class="colleague-card fade-in" 
+             data-name="{{ worker.admin.first_name|lower }} {{ worker.admin.last_name|lower }}"
+             data-service="{{ worker.designation|lower }}"
+             data-location="{{ worker.city|lower|default:'' }}"
+             data-email="{{ worker.admin.email|lower }}"
+             data-phone="{{ worker.contact_number|default:'' }}"
+             data-status="{% if worker.acc_activation %}active{% else %}pending{% endif %}"
+             data-availability="{% if worker.avalability_status %}available{% else %}unavailable{% endif %}">
+            
+            <div class="colleague-header"></div>
+            
+            <div class="colleague-avatar">
+                {% if worker.profile_pic %}
+                    <img src="{{ worker.profile_pic.url }}" alt="{{ worker.admin.first_name }} {{ worker.admin.last_name }}" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="colleague-avatar-placeholder" style="display: none;">
+                        {{ worker.admin.first_name|first|upper }}{{ worker.admin.last_name|first|upper }}
                     </div>
-                    <div class="colleague-body">
-                        <div class="colleague-name">{{ worker.admin.first_name }} {{ worker.admin.last_name }}</div>
-                        <div class="colleague-designation">{{ worker.designation }}</div>
-                        
-                        <div class="colleague-info">
-                            <div class="info-item">
-                                <i class="fas fa-envelope"></i>
-                                <span>{{ worker.admin.email }}</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fas fa-phone"></i>
-                                <span>{{ worker.contact_number }}</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>{{ worker.city }}</span>
-                            </div>
+                {% else %}
+                    <div class="colleague-avatar-placeholder">
+                        {{ worker.admin.first_name|first|upper }}{{ worker.admin.last_name|first|upper }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="colleague-body">
+                <h3 class="colleague-name">
+                    {{ worker.admin.first_name }} {{ worker.admin.last_name }}
+                </h3>
+                <div class="colleague-designation">{{ worker.designation }}</div>
+                
+                <div class="colleague-info">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
                         </div>
-                        
-                        <div>
-                            {% if worker.acc_activation %}
-                                <span class="badge-status badge-active">
-                                    <i class="fas fa-check-circle mr-1"></i> Active
-                                </span>
-                            {% else %}
-                                <span class="badge-status badge-pending">
-                                    <i class="fas fa-clock mr-1"></i> Pending Verification
-                                </span>
-                            {% endif %}
-                            
-                            {% if worker.avalability_status %}
-                                <span class="badge-status badge-active ml-2">
-                                    <i class="fas fa-user-check mr-1"></i> Available
-                                </span>
-                            {% else %}
-                                <span class="badge-status badge-inactive ml-2">
-                                    <i class="fas fa-user-times mr-1"></i> Unavailable
-                                </span>
-                            {% endif %}
+                        <div class="info-text">{{ worker.admin.email }}</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-phone"></i>
                         </div>
+                        <div class="info-text">{{ worker.contact_number|default:"Not provided" }}</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="info-text">{{ worker.city|default:"Location not specified" }}</div>
                     </div>
                 </div>
+                
+                <div class="colleague-badges">
+                    {% if worker.acc_activation %}
+                        <span class="status-badge badge-active">
+                            <i class="fas fa-check-circle"></i>
+                            Verified
+                        </span>
+                    {% else %}
+                        <span class="status-badge badge-pending">
+                            <i class="fas fa-clock"></i>
+                            Pending
+                        </span>
+                    {% endif %}
+                    
+                    {% if worker.avalability_status %}
+                        <span class="status-badge badge-available">
+                            <i class="fas fa-user-check"></i>
+                            Available
+                        </span>
+                    {% else %}
+                        <span class="status-badge badge-inactive">
+                            <i class="fas fa-user-times"></i>
+                            Busy
+                        </span>
+                    {% endif %}
+                </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <div class="card">
-            <div class="card-body empty-state">
-                <i class="fas fa-users"></i>
-                <h4>No Colleagues Found</h4>
-                <p>There are no other workers in the system at this time.</p>
-            </div>
+    <div class="empty-state fade-in">
+        <div class="empty-icon">
+            <i class="fas fa-users"></i>
         </div>
+        <h2 class="empty-title">No Colleagues Found</h2>
+        <p class="empty-description">
+            {% if current_search or current_service_filter %}
+                No colleagues match your current search criteria. Try adjusting your filters or search terms.
+            {% else %}
+                There are currently no other workers in the system. 
+                As more professionals join our platform, they will appear here for you to connect and collaborate with.
+            {% endif %}
+        </p>
+    </div>
     {% endif %}
 </div>
 
 <script>
-    // Auto-dismiss alerts after 5 seconds
-    $(document).ready(function() {
-        setTimeout(function() {
-            $('.alert').alert('close');
-        }, 5000);
+// Wait for DOM to be ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize jQuery if available, otherwise use vanilla JS
+    const $ = window.jQuery || function(selector) {
+        if (typeof selector === 'string') {
+            return document.querySelectorAll(selector);
+        } else if (typeof selector === 'function') {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', selector);
+            } else {
+                selector();
+            }
+        }
+        return selector;
+    };
+
+    // Helper functions for vanilla JS
+    function addClass(elements, className) {
+        if (elements.length) {
+            Array.from(elements).forEach(el => el.classList.add(className));
+        } else if (elements.classList) {
+            elements.classList.add(className);
+        }
+    }
+
+    function removeClass(elements, className) {
+        if (elements.length) {
+            Array.from(elements).forEach(el => el.classList.remove(className));
+        } else if (elements.classList) {
+            elements.classList.remove(className);
+        }
+    }
+
+    function show(elements) {
+        if (elements.length) {
+            Array.from(elements).forEach(el => {
+                el.style.display = '';
+                el.classList.remove('hidden');
+            });
+        } else if (elements.style) {
+            elements.style.display = '';
+            elements.classList.remove('hidden');
+        }
+    }
+
+    function hide(elements) {
+        if (elements.length) {
+            Array.from(elements).forEach(el => {
+                el.style.display = 'none';
+                el.classList.add('hidden');
+            });
+        } else if (elements.style) {
+            elements.style.display = 'none';
+            elements.classList.add('hidden');
+        }
+    }
+
+    // Calculate and update statistics
+    function updateStatistics() {
+        const allColleagues = document.querySelectorAll('.colleague-card');
+        const visibleColleagues = document.querySelectorAll('.colleague-card:not(.hidden):not([style*="display: none"])');
+        const activeColleagues = Array.from(visibleColleagues).filter(card => 
+            card.getAttribute('data-status') === 'active'
+        );
+        const availableColleagues = Array.from(visibleColleagues).filter(card => 
+            card.getAttribute('data-availability') === 'available'
+        );
         
-        // Search functionality
-        $("#searchColleagues").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $(".colleague-item").filter(function() {
-                $(this).toggle($(this).data("name").toLowerCase().indexOf(value) > -1);
+        // Animate counters
+        animateCounter('#totalColleagues', allColleagues.length);
+        animateCounter('#activeColleagues', activeColleagues.length);
+        animateCounter('#filteredColleagues', visibleColleagues.length);
+        animateCounter('#availableColleagues', availableColleagues.length);
+    }
+    
+    // Counter animation function
+    function animateCounter(selector, targetValue) {
+        const element = document.querySelector(selector);
+        if (!element) return;
+        
+        const startValue = parseInt(element.textContent) || 0;
+        const duration = 800;
+        const startTime = Date.now();
+        
+        function updateCounter() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const currentValue = Math.floor(startValue + (targetValue - startValue) * progress);
+            
+            element.textContent = currentValue;
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            }
+        }
+        
+        updateCounter();
+    }
+    
+    // Initialize statistics
+    updateStatistics();
+    
+    // Auto-dismiss alerts
+    setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            if (alert.querySelector('.close')) {
+                alert.querySelector('.close').click();
+            }
+        });
+    }, 5000);
+    
+    // Real-time search functionality
+    const searchInput = document.getElementById('searchColleagues');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            const colleagueCards = document.querySelectorAll('.colleague-card');
+            colleagueCards.forEach(function(card) {
+                const name = card.getAttribute('data-name') || '';
+                const service = card.getAttribute('data-service') || '';
+                const location = card.getAttribute('data-location') || '';
+                const email = card.getAttribute('data-email') || '';
+                const phone = card.getAttribute('data-phone') || '';
+                
+                const isMatch = name.includes(searchTerm) || 
+                               service.includes(searchTerm) || 
+                               location.includes(searchTerm) ||
+                               email.includes(searchTerm) ||
+                               phone.includes(searchTerm);
+                
+                if (isMatch) {
+                    show(card);
+                } else {
+                    hide(card);
+                }
+            });
+            
+            // Update statistics after search
+            updateStatistics();
+            
+            // Show/hide empty state
+            const visibleCards = document.querySelectorAll('.colleague-card:not(.hidden):not([style*="display: none"])');
+            if (visibleCards.length === 0 && searchTerm !== "") {
+                showNoResultsMessage("No colleagues found matching your search.");
+            } else {
+                hideNoResultsMessage();
+            }
+        });
+    }
+    
+    // Service filter functionality
+    const serviceFilter = document.getElementById('serviceFilter');
+    if (serviceFilter) {
+        serviceFilter.addEventListener('change', function() {
+            const selectedService = this.value.toLowerCase();
+            
+            const colleagueCards = document.querySelectorAll('.colleague-card');
+            colleagueCards.forEach(function(card) {
+                const workerService = card.getAttribute('data-service') || '';
+                
+                if (selectedService === "all") {
+                    show(card);
+                } else {
+                    const isMatch = workerService.includes(selectedService);
+                    if (isMatch) {
+                        show(card);
+                    } else {
+                        hide(card);
+                    }
+                }
+            });
+            
+            // Clear search when filtering
+            if (searchInput) {
+                searchInput.value = '';
+            }
+            
+            // Update statistics after filtering
+            updateStatistics();
+            
+            // Show/hide empty state
+            const visibleCards = document.querySelectorAll('.colleague-card:not(.hidden):not([style*="display: none"])');
+            if (visibleCards.length === 0) {
+                const serviceName = selectedService === "all" ? "colleagues" : selectedService + "s";
+                showNoResultsMessage(`No ${serviceName} found in the system.`);
+            } else {
+                hideNoResultsMessage();
+            }
+            
+            // Add stagger animation to visible cards
+            const visibleCardsArray = Array.from(visibleCards);
+            visibleCardsArray.forEach(function(card, index) {
+                card.style.animationDelay = (index * 0.1) + 's';
+                removeClass(card, 'fade-in');
+                addClass(card, 'fade-in');
             });
         });
+    }
+    
+    // Show no results message
+    function showNoResultsMessage(message) {
+        hideNoResultsMessage(); // Remove existing message first
         
-        // Filter functionality
-        $(".filter-item").on("click", function() {
-            $(".filter-item").removeClass("active");
-            $(this).addClass("active");
-            
-            var filter = $(this).data("filter");
-            
-            if (filter === "all") {
-                $(".colleague-item").show();
-            } else if (filter === "active") {
-                $(".colleague-item").hide();
-                $(".colleague-item[data-status='active']").show();
-            } else if (filter === "pending") {
-                $(".colleague-item").hide();
-                $(".colleague-item[data-status='pending']").show();
-            } else if (filter === "same-service") {
-                // Get current user's service (you'll need to add this data attribute)
-                var currentUserService = "{{ request.user.workers_set.first.designation|lower }}";
-                $(".colleague-item").hide();
-                $(".colleague-item[data-service='" + currentUserService + "']").show();
+        const noResultsHtml = `
+            <div id="noResultsMessage" class="empty-state fade-in">
+                <div class="empty-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h2 class="empty-title">No Results Found</h2>
+                <p class="empty-description">${message}</p>
+            </div>
+        `;
+        
+        const container = document.getElementById('colleaguesContainer');
+        if (container) {
+            container.insertAdjacentHTML('afterend', noResultsHtml);
+        }
+    }
+    
+    // Hide no results message
+    function hideNoResultsMessage() {
+        const existingMessage = document.getElementById('noResultsMessage');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+    }
+    
+    // Add hover effects to cards
+    const colleagueCards = document.querySelectorAll('.colleague-card');
+    colleagueCards.forEach(function(card) {
+        card.addEventListener('mouseenter', function() {
+            const avatar = this.querySelector('.colleague-avatar');
+            if (avatar) {
+                addClass(avatar, 'pulse');
+            }
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            const avatar = this.querySelector('.colleague-avatar');
+            if (avatar) {
+                removeClass(avatar, 'pulse');
             }
         });
     });
+    
+    // Smooth scroll for better UX
+    if (document.documentElement.style) {
+        document.documentElement.style.scrollBehavior = 'smooth';
+    }
+    
+    // Add staggered animation to colleague cards on page load
+    colleagueCards.forEach(function(card, index) {
+        card.style.animationDelay = (index * 0.1) + 's';
+    });
+    
+    // Handle image loading errors
+    const avatarImages = document.querySelectorAll('.colleague-avatar img');
+    avatarImages.forEach(function(img) {
+        img.addEventListener('error', function() {
+            const name = this.getAttribute('alt') || 'User';
+            const initials = name.split(' ').map(n => n.charAt(0)).join('').toUpperCase();
+            const placeholder = this.nextElementSibling;
+            
+            if (placeholder && placeholder.classList.contains('colleague-avatar-placeholder')) {
+                this.style.display = 'none';
+                placeholder.style.display = 'flex';
+                placeholder.textContent = initials;
+            } else {
+                // Create placeholder if it doesn't exist
+                const newPlaceholder = document.createElement('div');
+                newPlaceholder.className = 'colleague-avatar-placeholder';
+                newPlaceholder.textContent = initials;
+                this.parentNode.appendChild(newPlaceholder);
+                this.style.display = 'none';
+            }
+        });
+    });
+
+    // Clear search and filter functionality
+    function clearFilters() {
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        if (serviceFilter) {
+            serviceFilter.value = 'all';
+        }
+        
+        // Show all cards
+        const allCards = document.querySelectorAll('.colleague-card');
+        allCards.forEach(card => show(card));
+        
+        hideNoResultsMessage();
+        updateStatistics();
+    }
+
+    // Add clear filters button functionality if it exists
+    const clearButton = document.getElementById('clearFilters');
+    if (clearButton) {
+        clearButton.addEventListener('click', clearFilters);
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Ctrl/Cmd + K to focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            if (searchInput) {
+                searchInput.focus();
+            }
+        }
+        
+        // Escape to clear search
+        if (e.key === 'Escape') {
+            if (searchInput && searchInput === document.activeElement) {
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+                searchInput.blur();
+            }
+        }
+    });
+
+    // Add loading state for better UX
+    function showLoading() {
+        const container = document.getElementById('colleaguesContainer');
+        if (container) {
+            container.style.opacity = '0.6';
+            container.style.pointerEvents = 'none';
+        }
+    }
+
+    function hideLoading() {
+        const container = document.getElementById('colleaguesContainer');
+        if (container) {
+            container.style.opacity = '1';
+            container.style.pointerEvents = 'auto';
+        }
+    }
+
+    // Performance optimization: debounce search
+    let searchTimeout;
+    if (searchInput) {
+        const originalHandler = searchInput.onchange;
+        searchInput.addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            showLoading();
+            
+            searchTimeout = setTimeout(() => {
+                // The search logic is already in the input event listener above
+                hideLoading();
+            }, 150);
+        });
+    }
+
+    console.log('Colleagues page initialized successfully');
+});
 </script>
 {% endblock %}

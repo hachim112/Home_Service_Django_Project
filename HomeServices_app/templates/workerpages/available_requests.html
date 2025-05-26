@@ -16,7 +16,7 @@
     
     .request-header {
         padding: 15px 20px;
-        background: var(--gradient-accent);
+        background: linear-gradient(135deg, #4ecdc4, #44a08d);
         color: white;
         font-weight: 600;
         display: flex;
@@ -65,7 +65,7 @@
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background: var(--gradient-accent);
+        background: linear-gradient(135deg, #4ecdc4, #44a08d);
         color: white;
         display: flex;
         align-items: center;
@@ -93,13 +93,13 @@
         padding: 15px;
         border-radius: 10px;
         margin-bottom: 15px;
-        border-left: 4px solid var(--primary-color);
+        border-left: 4px solid #4ecdc4;
     }
     
     .service-type {
         display: inline-block;
         background: rgba(78, 205, 196, 0.1);
-        color: var(--primary-color);
+        color: #4ecdc4;
         padding: 5px 15px;
         border-radius: 20px;
         font-weight: 500;
@@ -113,18 +113,21 @@
     }
     
     .btn-accept {
-        background: var(--gradient-accent);
+        background: linear-gradient(135deg, #4ecdc4, #44a08d);
         border: none;
         color: white;
         padding: 8px 20px;
         border-radius: 8px;
         font-weight: 500;
         transition: all 0.3s ease;
+        text-decoration: none;
     }
     
     .btn-accept:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        color: white;
+        text-decoration: none;
     }
     
     .empty-state {
@@ -159,9 +162,7 @@
             {% for message in messages %}
             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                 {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% endfor %}
         </div>
@@ -171,30 +172,30 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3">Available Service Requests</h1>
         <div class="d-flex">
-            <div class="dropdown mr-2">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-filter mr-1"></i> Filter
+            <div class="dropdown me-2">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-filter me-1"></i> Filter
                 </button>
-                <div class="dropdown-menu" aria-labelledby="filterDropdown">
-                    <a class="dropdown-item" href="?filter=all">All Requests</a>
-                    <a class="dropdown-item" href="?filter=specific">Specifically Chosen</a>
-                    <a class="dropdown-item" href="?filter=autofast">AutoFast Requests</a>
-                </div>
+                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                    <li><a class="dropdown-item" href="?filter=all">All Requests</a></li>
+                    <li><a class="dropdown-item" href="?filter=specific">Specifically Chosen</a></li>
+                    <li><a class="dropdown-item" href="?filter=autofast">AutoFast Requests</a></li>
+                </ul>
             </div>
             <div class="dropdown">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-sort mr-1"></i> Sort
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-sort me-1"></i> Sort
                 </button>
-                <div class="dropdown-menu" aria-labelledby="sortDropdown">
-                    <a class="dropdown-item" href="?sort=newest">Newest First</a>
-                    <a class="dropdown-item" href="?sort=oldest">Oldest First</a>
-                </div>
+                <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                    <li><a class="dropdown-item" href="?sort=newest">Newest First</a></li>
+                    <li><a class="dropdown-item" href="?sort=oldest">Oldest First</a></li>
+                </ul>
             </div>
         </div>
     </div>
     
     <div class="alert alert-info">
-        <i class="fas fa-info-circle mr-2"></i> These are service requests that match your skills and are waiting for a worker to accept.
+        <i class="fas fa-info-circle me-2"></i> These are service requests that match your skills and are waiting for a worker to accept.
         The first worker to accept a request will be assigned to it.
     </div>
     
@@ -207,11 +208,11 @@
                         <div>{{ service_request.service.Name }}</div>
                         {% if service_request.is_specifically_chosen %}
                             <span class="badge-specific">
-                                <i class="fas fa-user-check mr-1"></i> Specifically Chosen
+                                <i class="fas fa-user-check me-1"></i> Specifically Chosen
                             </span>
                         {% else %}
                             <span class="badge-autofast">
-                                <i class="fas fa-bolt mr-1"></i> AutoFast Request
+                                <i class="fas fa-bolt me-1"></i> AutoFast Request
                             </span>
                         {% endif %}
                     </div>
@@ -223,13 +224,13 @@
                             <div class="customer-details">
                                 <div class="customer-name">{{ service_request.user.admin.first_name }} {{ service_request.user.admin.last_name }}</div>
                                 <div class="customer-location">
-                                    <i class="fas fa-map-marker-alt mr-1"></i> {{ service_request.Address }}, {{ service_request.city.name }}
+                                    <i class="fas fa-map-marker-alt me-1"></i> {{ service_request.Address }}, {{ service_request.city.name }}
                                 </div>
                             </div>
                         </div>
                         
                         <div class="service-type">
-                            <i class="fas fa-tools mr-1"></i> {{ service_request.service.Name }}
+                            <i class="fas fa-tools me-1"></i> {{ service_request.service.Name }}
                         </div>
                         
                         <div class="problem-description">
@@ -239,15 +240,15 @@
                         
                         <!-- Add date and time information -->
                         <div class="d-flex mb-3">
-                            <div class="mr-4">
-                                <i class="far fa-calendar-alt mr-1"></i> 
+                            <div class="me-4">
+                                <i class="far fa-calendar-alt me-1"></i> 
                                 <strong>Preferred Date:</strong> 
-                                <span class="badge badge-light">{{ service_request.preferred_date|date:"F d, Y" }}</span>
+                                <span class="badge bg-light text-dark">{{ service_request.preferred_date|date:"F d, Y" }}</span>
                             </div>
                             <div>
-                                <i class="far fa-clock mr-1"></i> 
+                                <i class="far fa-clock me-1"></i> 
                                 <strong>Preferred Time:</strong> 
-                                <span class="badge badge-light">
+                                <span class="badge bg-light text-dark">
                                     {% if service_request.preferred_time == 'morning' %}
                                         Morning (8:00 AM - 12:00 PM)
                                     {% elif service_request.preferred_time == 'afternoon' %}
@@ -260,15 +261,15 @@
                         </div>
                         
                         <div class="request-date">
-                            <i class="far fa-calendar-alt mr-1"></i> Requested on {{ service_request.dateofrequest|date:"F d, Y" }}
+                            <i class="far fa-calendar-alt me-1"></i> Requested on {{ service_request.dateofrequest|date:"F d, Y" }}
                         </div>
                     </div>
                     <div class="request-footer">
                         <div>
-                            <i class="fas fa-phone-alt mr-1"></i> {{ service_request.contact }}
+                            <i class="fas fa-phone-alt me-1"></i> {{ service_request.contact }}
                         </div>
-                        <a href="{% url 'acceptrequest' action='accept' id=service_request.id %}" class="btn btn-accept">
-                            <i class="fas fa-check mr-1"></i> Accept Request
+                        <a href="{% url 'acceptrequest' 'accept' service_request.id %}" class="btn btn-accept">
+                            <i class="fas fa-check me-1"></i> Accept Request
                         </a>
                     </div>
                 </div>
@@ -288,25 +289,31 @@
 
 <script>
     // Auto-dismiss alerts after 5 seconds
-    $(document).ready(function() {
+    document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
-            $('.alert').alert('close');
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
         }, 5000);
 
         // Handle accept button click
-        $('.btn-accept').on('click', function(e) {
-            // Disable the button to prevent multiple clicks
-            $(this).prop('disabled', true);
-            $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i> Accepting...');
-            
-            // Get the card element
-            var card = $(this).closest('.request-card');
-            
-            // Add a fade-out animation
-            card.css('transition', 'all 0.5s ease');
-            card.css('opacity', '0.5');
-            
-            // Let the default link action proceed
+        document.querySelectorAll('.btn-accept').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                // Disable the button to prevent multiple clicks
+                this.style.pointerEvents = 'none';
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Accepting...';
+                
+                // Get the card element
+                var card = this.closest('.request-card');
+                
+                // Add a fade-out animation
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '0.5';
+                
+                // Let the default link action proceed
+            });
         });
     });
 </script>

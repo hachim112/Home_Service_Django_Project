@@ -14,42 +14,48 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
     
-    .task-header {
-        padding: 15px 20px;
+    .table-responsive {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .table th {
         background: linear-gradient(135deg, #2ecc71, #27ae60);
         color: white;
         font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        border: none;
+        padding: 15px;
     }
     
-    .task-body {
-        padding: 20px;
+    .table td {
+        vertical-align: middle;
+        padding: 15px;
+        border-bottom: 1px solid #f1f1f1;
     }
     
-    .task-footer {
-        padding: 15px 20px;
-        background: #f8f9fa;
-        border-top: 1px solid #eee;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .table tr:hover {
+        background-color: rgba(46, 204, 113, 0.05);
     }
-    
-    .badge-completed {
+
+    .customer-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
         background: linear-gradient(135deg, #2ecc71, #27ae60);
         color: white;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-weight: 500;
-        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 600;
+        margin-right: 10px;
     }
-    
+
     .badge-specific {
         background: linear-gradient(135deg, #9b59b6, #8e44ad);
         color: white;
-        padding: 5px 10px;
+        padding: 6px 12px;
         border-radius: 20px;
         font-weight: 500;
         font-size: 12px;
@@ -58,76 +64,21 @@
     .badge-autofast {
         background: linear-gradient(135deg, #3498db, #2980b9);
         color: white;
-        padding: 5px 10px;
+        padding: 6px 12px;
         border-radius: 20px;
         font-weight: 500;
         font-size: 12px;
     }
-    
-    .customer-info {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-    
-    .customer-avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: var(--gradient-accent);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        margin-right: 15px;
-    }
-    
-    .customer-details {
-        flex: 1;
-    }
-    
-    .customer-name {
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-    
-    .customer-location {
-        font-size: 14px;
-        color: #666;
-    }
-    
-    .problem-description {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        border-left: 4px solid #2ecc71;
-    }
-    
-    .service-type {
-        display: inline-block;
-        background: rgba(46, 204, 113, 0.1);
-        color: #2ecc71;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-weight: 500;
-        font-size: 14px;
-        margin-bottom: 15px;
-    }
-    
-    .task-date {
-        color: #666;
-        font-size: 14px;
-    }
-    
+
     .empty-state {
         text-align: center;
-        padding: 50px 20px;
+        padding: 60px 20px;
+        background: #f8f9fa;
+        border-radius: 15px;
     }
     
     .empty-state i {
-        font-size: 60px;
+        font-size: 64px;
         color: #ddd;
         margin-bottom: 20px;
     }
@@ -143,64 +94,77 @@
         max-width: 500px;
         margin: 0 auto;
     }
-    
-    .task-details-section {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 15px;
-        margin-top: 15px;
+
+    /* Enhanced Modal Styles */
+    .modal-xl {
+        max-width: 1000px;
     }
-    
-    .task-details-section h5 {
+
+    .modal-header {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+        border-bottom: none;
+        padding: 20px 30px;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
         font-weight: 600;
+    }
+
+    .modal-body {
+        padding: 30px;
+        background: #f8f9fa;
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #2ecc71;
+    }
+
+    .info-card h5 {
+        color: #2ecc71;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        font-size: 1.2rem;
+    }
+
+    .info-card h5 i {
+        margin-right: 12px;
+        width: 24px;
+        font-size: 1.1rem;
+    }
+
+    .info-row {
+        display: flex;
         margin-bottom: 15px;
-        color: #333;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
     }
-    
-    .detail-item {
-        margin-bottom: 10px;
+
+    .info-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
     }
-    
-    .detail-label {
+
+    .info-label {
         font-weight: 600;
         color: #555;
+        min-width: 140px;
+        margin-right: 15px;
+        font-size: 0.95rem;
     }
-    
-    .detail-value {
+
+    .info-value {
         color: #333;
-    }
-    
-    .table-responsive {
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    
-    .table th {
-        background: var(--gradient-accent);
-        color: white;
-        font-weight: 600;
-        border: none;
-    }
-    
-    .table td {
-        vertical-align: middle;
-    }
-    
-    .table tr:hover {
-        background-color: rgba(78, 205, 196, 0.05);
-    }
-    
-    .details-row {
-        background-color: #f8f9fa;
-    }
-    
-    .details-card {
-        margin: 0;
-        border-radius: 0;
-    }
-    
-    .details-card .card-header {
-        border-radius: 0;
+        flex: 1;
+        font-size: 0.95rem;
     }
 
     .customer-avatar-lg {
@@ -212,39 +176,212 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 32px;
-    }
-    
-    .customer-info {
-        margin-top: 20px;
-    }
-    
-    .info-item {
-        display: flex;
-        margin-bottom: 15px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-    }
-    
-    .info-label {
-        width: 100px;
+        font-size: 28px;
         font-weight: 600;
-        color: #555;
+        margin: 0 auto 20px;
+        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
     }
-    
-    .info-value {
+
+    .price-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 25px;
+        margin-top: 20px;
+        border: 2px solid #2ecc71;
+    }
+
+    .price-card h5 {
+        color: #2ecc71;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .price-input-group {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .price-input {
         flex: 1;
+        padding: 12px 16px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .price-input:focus {
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    }
+
+    .btn-set-price {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-set-price:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        color: white;
+    }
+
+    .btn-set-price:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .current-price {
+        background: #e8f5e8;
+        color: #2ecc71;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 18px;
+        text-align: center;
+        border: 2px solid #2ecc71;
+        margin-bottom: 15px;
+    }
+
+    .modal-footer {
+        background: white;
+        border-top: 2px solid #e9ecef;
+        padding: 20px 30px;
+    }
+
+    .btn-download-pdf {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-download-pdf:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        color: white;
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .status-completed {
+        background: #e8f5e8;
+        color: #2ecc71;
+        border: 2px solid #2ecc71;
+    }
+
+    .timeline-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        border-left: 4px solid #2ecc71;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .timeline-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: #2ecc71;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 18px;
+    }
+
+    .timeline-content h6 {
+        margin: 0 0 5px 0;
+        font-weight: 600;
         color: #333;
     }
-    
-    .customer-details-link {
-        color: #2ecc71;
-        font-weight: 600;
-        text-decoration: none;
+
+    .timeline-content p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
     }
-    
-    .customer-details-link:hover {
-        text-decoration: underline;
+
+    .loading-spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #2ecc71;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .success-message {
+        display: none;
+        background: #e8f5e8;
+        color: #2ecc71;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 15px;
+        border: 1px solid #2ecc71;
+        font-weight: 500;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .modal-xl {
+            max-width: 95%;
+            margin: 10px auto;
+        }
+        
+        .info-row {
+            flex-direction: column;
+        }
+        
+        .info-label {
+            min-width: auto;
+            margin-bottom: 5px;
+        }
+        
+        .price-input-group {
+            flex-direction: column;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
     }
 </style>
 
@@ -266,7 +403,10 @@
     {% endif %}
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">Completed Requests</h1>
+        <h1 class="h3">
+            <i class="fas fa-clipboard-check mr-2 text-success"></i>
+            Completed Requests
+        </h1>
         <div class="d-flex">
             <div class="dropdown mr-2">
                 <button class="btn btn-outline-success dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -297,71 +437,73 @@
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>Request</th>
-                                <th>Customer</th>
-                                <th>Contact</th>
-                                <th>Date Completed</th>
-                                <th>Selection Method</th>
-                                <th>Actions</th>
+                                <th><i class="fas fa-tools mr-2"></i>Service</th>
+                                <th><i class="fas fa-user mr-2"></i>Customer</th>
+                                <th><i class="fas fa-phone mr-2"></i>Contact</th>
+                                <th><i class="fas fa-calendar mr-2"></i>Completed</th>
+                                <th><i class="fas fa-tag mr-2"></i>Method</th>
+                                <th><i class="fas fa-dollar-sign mr-2"></i>Price</th>
+                                <th><i class="fas fa-cog mr-2"></i>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for request in completed_requests %}
-                            <tr class="clickable-row" data-id="{{ request.id }}">
-                                <td>{{ request.requests.service.Name }}</td>
-                                <td><a href="#" class="customer-details-link">{{ request.requests.user.admin.first_name }} {{ request.requests.user.admin.last_name }}</a></td>
-                                <td>{{ request.requests.contact }}</td>
-                                <td>{{ request.Date|date:"F d, Y" }}</td>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-wrench mr-2 text-success"></i>
+                                        <strong>{{ request.requests.service.Name }}</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="customer-avatar">
+                                            {{ request.requests.user.admin.first_name|first|upper }}{{ request.requests.user.admin.last_name|first|upper }}
+                                        </div>
+                                        <div>
+                                            <strong>{{ request.requests.user.admin.first_name }} {{ request.requests.user.admin.last_name }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ request.requests.user.admin.email }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <i class="fas fa-phone mr-1 text-muted"></i>
+                                    {{ request.requests.contact }}
+                                </td>
+                                <td>
+                                    <i class="fas fa-calendar-check mr-1 text-success"></i>
+                                    {{ request.Date|date:"M d, Y" }}
+                                    <br>
+                                    <small class="text-muted">{{ request.Date|date:"g:i A" }}</small>
+                                </td>
                                 <td>
                                     {% if request.worker_specifically_chosen %}
-                                        <span class="badge badge-success">
-                                            <i class="fas fa-user-check mr-1"></i> Specifically Chosen
+                                        <span class="badge badge-specific">
+                                            <i class="fas fa-user-check mr-1"></i> Specific
                                         </span>
                                     {% else %}
-                                        <span class="badge badge-primary">
+                                        <span class="badge badge-autofast">
                                             <i class="fas fa-bolt mr-1"></i> AutoFast
                                         </span>
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-primary view-details-btn">
+                                    <span class="price-display" id="price-{{ request.id }}">
+                                        {% if request.price %}
+                                            <strong class="text-success">${{ request.price }}</strong>
+                                        {% else %}
+                                            <span class="text-muted">Not Set</span>
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary view-details-btn" 
+                                            data-request-id="{{ request.id }}"
+                                            data-toggle="modal" 
+                                            data-target="#requestDetailsModal">
                                         <i class="fas fa-eye mr-1"></i> View Details
                                     </button>
-                                </td>
-                            </tr>
-                            <tr class="details-row" style="display: none;">
-                                <td colspan="6">
-                                    <div class="card details-card">
-                                        <div class="card-header bg-light">
-                                            <strong>Service Request Details</strong>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h5>Customer Information</h5>
-                                                    <p><strong>Name:</strong> {{ request.requests.user.admin.first_name }} {{ request.requests.user.admin.last_name }}</p>
-                                                    <p><strong>Email:</strong> {{ request.requests.user.admin.email }}</p>
-                                                    <p><strong>Phone:</strong> {{ request.requests.contact }}</p>
-                                                    <p><strong>Address:</strong> {{ request.requests.House_No }}, {{ request.requests.Address }}, {{ request.requests.city.name }}, {{ request.requests.pin }}</p>
-                                                    <p><strong>Landmark:</strong> {{ request.requests.landmark|default:"Not provided" }}</p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <h5>Problem Details</h5>
-                                                    <p><strong>Service Type:</strong> {{ request.requests.service.Name }}</p>
-                                                    <p><strong>Description:</strong> {{ request.requests.Problem_Description }}</p>
-                                                    <p><strong>Selection Method:</strong> 
-                                                        {% if request.worker_specifically_chosen %}
-                                                            <span class="badge badge-success">Specifically Chosen</span>
-                                                        {% else %}
-                                                            <span class="badge badge-primary">AutoFast</span>
-                                                        {% endif %}
-                                                    </p>
-                                                    <p><strong>Date Requested:</strong> {{ request.requests.dateofrequest|date:"F d, Y" }}</p>
-                                                    <p><strong>Date Completed:</strong> {{ request.Date|date:"F d, Y" }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -375,121 +517,495 @@
             <div class="card-body empty-state">
                 <i class="fas fa-clipboard-check"></i>
                 <h4>No Completed Requests</h4>
-                <p>You haven't completed any service requests yet. Once you complete a task, it will appear here.</p>
+                <p>You haven't completed any service requests yet. Once you complete a task, it will appear here for review and pricing.</p>
             </div>
         </div>
     {% endif %}
+</div>
 
-    <!-- Customer Details Modal -->
-    <div class="modal fade" id="customerDetailsModal" tabindex="-1" role="dialog" aria-labelledby="customerDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="customerDetailsModalLabel">Customer Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="customer-profile">
-                        <div class="text-center mb-4">
-                            <div class="customer-avatar-lg mx-auto">
-                                <i class="fas fa-user"></i>
+<!-- Enhanced Request Details Modal -->
+<div class="modal fade" id="requestDetailsModal" tabindex="-1" role="dialog" aria-labelledby="requestDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="requestDetailsModalLabel">
+                    <i class="fas fa-clipboard-list mr-2"></i>
+                    Service Request Details
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Customer Information -->
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h5><i class="fas fa-user"></i>Customer Information</h5>
+                            <div class="text-center mb-3">
+                                <div class="customer-avatar-lg" id="modal-customer-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
                             </div>
-                            <h4 class="mt-3 customer-name">John Doe</h4>
+                            <div class="info-row">
+                                <span class="info-label">Full Name:</span>
+                                <span class="info-value" id="modal-customer-name">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Email:</span>
+                                <span class="info-value" id="modal-customer-email">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Phone:</span>
+                                <span class="info-value" id="modal-customer-phone">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Address:</span>
+                                <span class="info-value" id="modal-customer-address">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Landmark:</span>
+                                <span class="info-value" id="modal-customer-landmark">-</span>
+                            </div>
                         </div>
-                        
-                        <div class="customer-info">
-                            <div class="info-item">
-                                <div class="info-label"><i class="fas fa-envelope mr-2"></i>Email:</div>
-                                <div class="info-value customer-email">customer@example.com</div>
+                    </div>
+
+                    <!-- Service Information -->
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h5><i class="fas fa-tools"></i>Service Information</h5>
+                            <div class="info-row">
+                                <span class="info-label">Service Type:</span>
+                                <span class="info-value" id="modal-service-type">-</span>
                             </div>
-                            <div class="info-item">
-                                <div class="info-label"><i class="fas fa-phone mr-2"></i>Phone:</div>
-                                <div class="info-value customer-phone">+1234567890</div>
+                            <div class="info-row">
+                                <span class="info-label">Problem:</span>
+                                <span class="info-value" id="modal-problem-description">-</span>
                             </div>
-                            <div class="info-item">
-                                <div class="info-label"><i class="fas fa-map-marker-alt mr-2"></i>Address:</div>
-                                <div class="info-value customer-address">123 Main St, City, State, 12345</div>
+                            <div class="info-row">
+                                <span class="info-label">Selection:</span>
+                                <span class="info-value" id="modal-selection-method">-</span>
                             </div>
-                            <div class="info-item">
-                                <div class="info-label"><i class="fas fa-map-pin mr-2"></i>Landmark:</div>
-                                <div class="info-value customer-landmark">Near Shopping Mall</div>
+                            <div class="info-row">
+                                <span class="info-label">Status:</span>
+                                <span class="info-value">
+                                    <span class="status-badge status-completed">
+                                        <i class="fas fa-check-circle"></i>
+                                        Completed
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Timeline -->
+                        <div class="info-card">
+                            <h5><i class="fas fa-clock"></i>Timeline</h5>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6>Request Created</h6>
+                                    <p id="modal-request-date">-</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6>Service Completed</h6>
+                                    <p id="modal-completion-date">-</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                <!-- Price Section -->
+                <div class="price-card">
+                    <h5><i class="fas fa-dollar-sign mr-2"></i>Service Pricing</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="current-price" id="modal-current-price">
+                                Price Not Set
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="price-input-group">
+                                <input type="number" 
+                                       class="price-input" 
+                                       id="modal-price-input" 
+                                       placeholder="Enter service price"
+                                       min="0" 
+                                       step="0.01">
+                                <button class="btn btn-set-price" id="set-price-btn">
+                                    <span class="btn-text">Set Price</span>
+                                    <div class="loading-spinner"></div>
+                                </button>
+                            </div>
+                            <div class="success-message" id="price-success-message">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Price updated successfully!
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-2"></i>Close
+                </button>
+                <button type="button" class="btn btn-download-pdf" id="download-pdf-btn">
+                    <i class="fas fa-file-pdf mr-2"></i>
+                    Download PDF
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Auto-dismiss alerts after 5 seconds
-    $(document).ready(function() {
-        setTimeout(function() {
-            $('.alert').alert('close');
-        }, 5000);
-        
-        // Toggle details row
-        $('.view-details-btn').on('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+document.addEventListener('DOMContentLoaded', function() {
+    let currentRequestId = null;
+    let currentRequestData = null;
+
+    // Store request data properly escaped for JavaScript
+    const requestsData = {};
+    {% for request in completed_requests %}
+    requestsData[{{ request.id }}] = {
+        id: {{ request.id }},
+        customerName: "{{ request.requests.user.admin.first_name|escapejs }} {{ request.requests.user.admin.last_name|escapejs }}",
+        customerEmail: "{{ request.requests.user.admin.email|escapejs }}",
+        customerPhone: "{{ request.requests.contact|escapejs }}",
+        customerAddress: "{{ request.requests.House_No|escapejs }}, {{ request.requests.Address|escapejs }}, {{ request.requests.city.name|escapejs }}, {{ request.requests.pin|escapejs }}",
+        customerLandmark: "{{ request.requests.landmark|default:'Not provided'|escapejs }}",
+        serviceType: "{{ request.requests.service.Name|escapejs }}",
+        problemDescription: "{{ request.requests.Problem_Description|escapejs }}",
+        selectionMethod: "{% if request.worker_specifically_chosen %}Specifically Chosen{% else %}AutoFast{% endif %}",
+        requestDate: "{{ request.requests.dateofrequest|date:'F d, Y \\a\\t g:i A'|escapejs }}",
+        completionDate: "{{ request.Date|date:'F d, Y \\a\\t g:i A'|escapejs }}",
+        price: {% if request.price %}"{{ request.price }}"{% else %}null{% endif %}
+    };
+    {% endfor %}
+
+    // Handle view details button click
+    document.querySelectorAll('.view-details-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            currentRequestId = this.getAttribute('data-request-id');
+            currentRequestData = requestsData[currentRequestId];
             
-            var detailsRow = $(this).closest('tr').next('.details-row');
-            
-            // Hide all other details rows
-            $('.details-row').not(detailsRow).hide();
-            
-            // Toggle current details row
-            detailsRow.toggle();
-        });
-        
-        // Make entire row clickable
-        $('.clickable-row').on('click', function() {
-            $(this).find('.view-details-btn').click();
-        });
-        
-        // Customer details modal
-        $('.customer-details-link').on('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Get the row and details row
-            var row = $(this).closest('tr');
-            var detailsRow = row.next('.details-row');
-            
-            // If details row is hidden, show it first to access the data
-            var wasHidden = detailsRow.is(':hidden');
-            if (wasHidden) {
-                detailsRow.show();
+            if (currentRequestData) {
+                populateModal(currentRequestData);
             }
-            
-            // Get customer details from the details row
-            var name = detailsRow.find('p:contains("Name:")').text().replace('Name:', '').trim();
-            var email = detailsRow.find('p:contains("Email:")').text().replace('Email:', '').trim();
-            var phone = detailsRow.find('p:contains("Phone:")').text().replace('Phone:', '').trim();
-            var address = detailsRow.find('p:contains("Address:")').text().replace('Address:', '').trim();
-            var landmark = detailsRow.find('p:contains("Landmark:")').text().replace('Landmark:', '').trim();
-            
-            // Hide the details row again if it was hidden before
-            if (wasHidden) {
-                detailsRow.hide();
-            }
-            
-            // Populate modal with customer details
-            $('#customerDetailsModal .customer-name').text(name);
-            $('#customerDetailsModal .customer-email').text(email);
-            $('#customerDetailsModal .customer-phone').text(phone);
-            $('#customerDetailsModal .customer-address').text(address);
-            $('#customerDetailsModal .customer-landmark').text(landmark);
-            
-            // Show modal
-            $('#customerDetailsModal').modal('show');
         });
     });
+
+    function populateModal(data) {
+        // Customer information
+        document.getElementById('modal-customer-name').textContent = data.customerName;
+        document.getElementById('modal-customer-email').textContent = data.customerEmail;
+        document.getElementById('modal-customer-phone').textContent = data.customerPhone;
+        document.getElementById('modal-customer-address').textContent = data.customerAddress;
+        document.getElementById('modal-customer-landmark').textContent = data.customerLandmark;
+        
+        // Update customer avatar
+        const avatar = document.getElementById('modal-customer-avatar');
+        const initials = data.customerName.split(' ').map(function(n) { return n.charAt(0); }).join('').toUpperCase();
+        avatar.textContent = initials;
+
+        // Service information
+        document.getElementById('modal-service-type').textContent = data.serviceType;
+        document.getElementById('modal-problem-description').textContent = data.problemDescription;
+        
+        const selectionMethodElement = document.getElementById('modal-selection-method');
+        if (data.selectionMethod === 'Specifically Chosen') {
+            selectionMethodElement.innerHTML = '<span class="badge badge-specific"><i class="fas fa-user-check mr-1"></i> Specifically Chosen</span>';
+        } else {
+            selectionMethodElement.innerHTML = '<span class="badge badge-autofast"><i class="fas fa-bolt mr-1"></i> AutoFast</span>';
+        }
+
+        // Timeline
+        document.getElementById('modal-request-date').textContent = data.requestDate;
+        document.getElementById('modal-completion-date').textContent = data.completionDate;
+
+        // Price information
+        const currentPriceElement = document.getElementById('modal-current-price');
+        const priceInput = document.getElementById('modal-price-input');
+        
+        if (data.price) {
+            currentPriceElement.textContent = '$' + data.price;
+            currentPriceElement.className = 'current-price';
+            priceInput.value = data.price;
+        } else {
+            currentPriceElement.textContent = 'Price Not Set';
+            currentPriceElement.className = 'current-price text-muted';
+            priceInput.value = '';
+        }
+
+        // Reset success message
+        document.getElementById('price-success-message').style.display = 'none';
+    }
+
+    // Handle set price button
+    document.getElementById('set-price-btn').addEventListener('click', function() {
+        const priceInput = document.getElementById('modal-price-input');
+        const price = parseFloat(priceInput.value);
+        
+        if (!price || price <= 0) {
+            alert('Please enter a valid price');
+            return;
+        }
+
+        // Show loading state
+        const btnText = this.querySelector('.btn-text');
+        const spinner = this.querySelector('.loading-spinner');
+        btnText.style.display = 'none';
+        spinner.style.display = 'inline-block';
+        this.disabled = true;
+
+        // Simulate API call (replace with actual AJAX call to your Django view)
+        setTimeout(function() {
+            // Update the price in the modal
+            const currentPriceElement = document.getElementById('modal-current-price');
+            currentPriceElement.textContent = '$' + price.toFixed(2);
+            currentPriceElement.className = 'current-price';
+
+            // Update the price in the table
+            const tablePrice = document.getElementById('price-' + currentRequestId);
+            if (tablePrice) {
+                tablePrice.innerHTML = '<strong class="text-success">$' + price.toFixed(2) + '</strong>';
+            }
+
+            // Update stored data
+            if (currentRequestData) {
+                currentRequestData.price = price.toFixed(2);
+            }
+
+            // Show success message
+            document.getElementById('price-success-message').style.display = 'block';
+
+            // Reset button state
+            btnText.style.display = 'inline';
+            spinner.style.display = 'none';
+            document.getElementById('set-price-btn').disabled = false;
+
+            // Hide success message after 3 seconds
+            setTimeout(function() {
+                document.getElementById('price-success-message').style.display = 'none';
+            }, 3000);
+
+        }, 1000); // Simulate network delay
+    });
+
+    // Handle PDF download
+    document.getElementById('download-pdf-btn').addEventListener('click', function() {
+        if (!currentRequestData) {
+            alert('No request data available');
+            return;
+        }
+
+        generatePDF(currentRequestData);
+    });
+
+    function generatePDF(data) {
+        // Create a new window for PDF content
+        const printWindow = window.open('', '_blank');
+        
+        const pdfContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Service Request Details - ${data.customerName}</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 40px;
+                        color: #333;
+                        line-height: 1.6;
+                    }
+                    .header {
+                        text-align: center;
+                        border-bottom: 3px solid #2ecc71;
+                        padding-bottom: 20px;
+                        margin-bottom: 30px;
+                    }
+                    .header h1 {
+                        color: #2ecc71;
+                        margin: 0;
+                        font-size: 28px;
+                    }
+                    .header p {
+                        margin: 5px 0;
+                        color: #666;
+                    }
+                    .section {
+                        margin-bottom: 25px;
+                        padding: 20px;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        background: #f9f9f9;
+                    }
+                    .section h2 {
+                        color: #2ecc71;
+                        margin-top: 0;
+                        margin-bottom: 15px;
+                        font-size: 18px;
+                        border-bottom: 2px solid #2ecc71;
+                        padding-bottom: 5px;
+                    }
+                    .detail-row {
+                        display: flex;
+                        margin-bottom: 10px;
+                        padding: 8px 0;
+                        border-bottom: 1px solid #eee;
+                    }
+                    .detail-row:last-child {
+                        border-bottom: none;
+                    }
+                    .detail-label {
+                        font-weight: bold;
+                        min-width: 150px;
+                        color: #555;
+                    }
+                    .detail-value {
+                        flex: 1;
+                        color: #333;
+                    }
+                    .status-completed {
+                        background: #e8f5e8;
+                        color: #2ecc71;
+                        padding: 5px 15px;
+                        border-radius: 15px;
+                        font-weight: bold;
+                        display: inline-block;
+                    }
+                    .price-highlight {
+                        background: #2ecc71;
+                        color: white;
+                        padding: 15px 25px;
+                        border-radius: 8px;
+                        font-size: 24px;
+                        font-weight: bold;
+                        text-align: center;
+                        margin: 15px 0;
+                    }
+                    .footer {
+                        margin-top: 40px;
+                        text-align: center;
+                        color: #666;
+                        font-size: 12px;
+                        border-top: 1px solid #ddd;
+                        padding-top: 20px;
+                    }
+                    @media print {
+                        body { margin: 20px; }
+                        .no-print { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>🏠 Home Services - Service Receipt</h1>
+                    <p>Generated on ${new Date().toLocaleDateString()}</p>
+                    <p>Request ID: #${data.id}</p>
+                </div>
+
+                <div class="section">
+                    <h2>👤 Customer Information</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Full Name:</span>
+                        <span class="detail-value">${data.customerName}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">${data.customerEmail}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value">${data.customerPhone}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">${data.customerAddress}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Landmark:</span>
+                        <span class="detail-value">${data.customerLandmark}</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>🔧 Service Information</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Service Type:</span>
+                        <span class="detail-value">${data.serviceType}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Problem Description:</span>
+                        <span class="detail-value">${data.problemDescription}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Selection Method:</span>
+                        <span class="detail-value">${data.selectionMethod}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value"><span class="status-completed">✅ Completed</span></span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>⏰ Service Timeline</h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Request Created:</span>
+                        <span class="detail-value">${data.requestDate}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Service Completed:</span>
+                        <span class="detail-value">${data.completionDate}</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>💰 Payment Information</h2>
+                    ${data.price ? 
+                        `<div class="price-highlight">Total Amount: $${data.price}</div>` : 
+                        '<div class="detail-value">Price not set</div>'
+                    }
+                </div>
+
+                <div class="footer">
+                    <p><strong>Thank you for choosing our Home Services!</strong></p>
+                    <p>This document was generated automatically by our system.</p>
+                    <p>For any questions or support, please contact us.</p>
+                </div>
+
+                <script>
+                    window.onload = function() {
+                        window.print();
+                    }
+                </script>
+            </body>
+            </html>
+        `;
+
+        printWindow.document.write(pdfContent);
+        printWindow.document.close();
+    }
+
+    // Auto-dismiss alerts
+    setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            const closeBtn = alert.querySelector('.close');
+            if (closeBtn) {
+                closeBtn.click();
+            }
+        });
+    }, 5000);
+});
 </script>
+
 {% endblock %}
